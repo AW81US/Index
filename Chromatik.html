@@ -2375,7 +2375,7 @@ function init() {
   const sharedColors = params.get('c');
   if (sharedColors) {
     name = params.get('n') || 'SHARED_PALETTE';
-    sharedCoins.split('-').slice(0, SLOTS).forEach((h, i) => {
+    sharedColors.split('-').slice(0, SLOTS).forEach((h, i) => {
       const parsed = fromHex(h);
       if (parsed) swatches[i] = parsed;
     });
