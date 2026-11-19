@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07080d">
 <title>Chromatik // Elite Edition</title>
-<!-- JSZip for Procreate Swatches (.swatches) export and import -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +29,6 @@
   --font-mono: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* 5-STOP WARM TO COOL THEMES */
 [data-theme="ember"] {
   --bg: #120b07; --surface: #1c120c; --panel2: #291b12; --ink: #fdf6ee; --muted: #b89f8d; --line: #3d281c;
   --accent: #f97316; --accent-ink: #ffffff; --slot-empty: #160e09; --danger: #f87171;
@@ -71,7 +69,6 @@ body {
   background-image: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 8%) 0%, transparent 70%);
 }
 
-/* Color Blindness Simulation Filters */
 body.sim-protan .previewable { filter: url(#cb-protan); }
 body.sim-deutan .previewable { filter: url(#cb-deutan); }
 body.sim-tritan .previewable { filter: url(#cb-tritan); }
@@ -102,7 +99,6 @@ header.top::before {
 .brand h1 { font-family: var(--font-heading); font-size: 19px; font-weight: 800; letter-spacing: 0.02em; color: var(--ink); }
 .brand p { color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: 0.02em; }
 
-/* WARM-TO-COOL SNAP SCROLLER */
 .theme-snap-shell {
   display: flex; align-items: center; gap: 6px;
   background: var(--panel2); border: 1px solid var(--line);
@@ -167,7 +163,6 @@ header.top::before {
   background: var(--accent); transform: scale(1.3);
 }
 
-/* WARM-TO-COOL SPECTRUM SLIDER BAR */
 .temp-slide-box {
   display: flex; flex-direction: column; gap: 6px;
   background: var(--panel2); border: 1px solid var(--line);
@@ -228,10 +223,6 @@ input[type="range"].temp-range {
 .grow { flex: 1; }
 .muted { color: var(--muted); }
 .mono { font-family: var(--font-mono); }
-
-.view-switch { display: inline-flex; background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 3px; gap: 3px; }
-.view-switch button { background: transparent; border: 0; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; color: var(--muted); transition: all .2s; }
-.view-switch button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
 .palette-name-wrap { display: flex; gap: 8px; align-items: stretch; }
 .palette-name-input {
@@ -372,7 +363,6 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
 .sw:hover .plus { display: grid; }
 .sw .plus:hover { background: var(--accent); transform: scale(1.15); }
 
-/* MULTI-STOP GRADIENT EDITOR */
 .stop-list { display: flex; flex-direction: column; gap: 6px; max-height: 156px; overflow-y: auto; padding-right: 2px; }
 .stop-row {
   display: grid; grid-template-columns: 32px minmax(0, 1fr) 54px auto; gap: 6px; align-items: center;
@@ -386,6 +376,67 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
   word-break: break-all; user-select: all; line-height: 1.45;
 }
 .send-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+
+/* HUE STEP MATRIX TAB */
+.hue-rule-note {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.hue-rule-note strong { color: var(--ink); }
+.hue-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+  gap: 8px;
+  max-height: 210px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.hue-card {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  transition: border-color .15s, transform .15s;
+}
+.hue-card:hover, .hue-card.active {
+  border-color: var(--accent);
+}
+.hue-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.hue-card-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.2);
+  flex: none;
+}
+.hue-strip {
+  display: grid;
+  height: 12px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.hue-strip span {
+  display: block;
+  height: 100%;
+}
 
 .stage { position: relative; border-radius: 10px; overflow: hidden; background: var(--panel2); border: 1px solid var(--line); height: 200px; display: grid; place-items: center; box-shadow: inset 0 2px 6px rgba(0,0,0,0.4); }
 #imgView { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
@@ -409,9 +460,6 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
 }
 .toast[hidden] { display: none; }
 @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-
-body.phone-view { padding: 12px 10px 60px; }
-body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-radius: 16px; padding: 16px 14px; background: var(--bg); box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
 </style>
 </head>
 <body>
@@ -426,10 +474,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
       </div>
     </div>
     <div class="row">
-      <div class="view-switch" role="group" aria-label="Screen view mode">
-        <button type="button" id="viewPcBtn" aria-pressed="true">&#128187; Desktop</button>
-        <button type="button" id="viewPhoneBtn" aria-pressed="false">&#128241; Phone</button>
-      </div>
       <select id="cbSim" style="width:auto;padding:6px 10px;font-size:11px" title="Color Blindness Simulator">
         <option value="none">&#128065;&#65039; Normal Vision</option>
         <option value="protan">Protanopia (No Red)</option>
@@ -438,7 +482,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
         <option value="achroma">Achromatopsia (Mono)</option>
       </select>
 
-      <!-- 5-STOP WARM-TO-COOL SNAP SCROLLER -->
       <div class="theme-snap-shell" role="group" aria-label="Theme temperature scroller (Warm to Cool)">
         <button type="button" id="themePrevBtn" class="theme-nav-btn" title="Warmer Theme">&#9664;</button>
         <div class="theme-pips">
@@ -483,7 +526,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
   </header>
 
   <div class="bench">
-    <!-- COLUMN 1: PALETTE WORKBENCH -->
     <div class="col">
       <section class="card" aria-label="Palette Grid">
         <div class="row" style="justify-content:space-between">
@@ -512,7 +554,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           </div>
         </div>
 
-        <!-- GLOBAL PALETTE ADJUSTMENTS -->
         <hr style="border:0;border-top:1px solid var(--line);margin:4px 0">
         <div class="row" style="justify-content:space-between">
           <span class="label">Global Palette Shift</span>
@@ -558,7 +599,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
       </section>
     </div>
 
-    <!-- COLUMN 2: COLOR LAB & FINE-TUNING -->
     <div class="col">
       <section class="card" aria-label="Color Lab">
         <div class="row" style="justify-content:space-between">
@@ -605,20 +645,20 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
 
         <div class="chip-block" style="display:flex;flex-direction:column;gap:10px">
           <div class="row" style="justify-content:space-between">
-            <span class="label">Tailwind Scale (10 Steps)</span>
-            <button id="deployTwScaleBtn" type="button" class="btn small primary">Deploy 10</button>
+            <span class="label">Tailwind Scale</span>
+            <button id="deployTwScaleBtn" type="button" class="btn small primary">Deploy</button>
           </div>
           <div id="twScale" class="shades previewable"></div>
 
           <div class="row" style="justify-content:space-between;margin-top:2px">
-            <span class="label">Hues (10 Spectra)</span>
-            <button id="deployHuesBtn" type="button" class="btn small primary">Deploy 10</button>
+            <span class="label">Hues</span>
+            <button id="deployHuesBtn" type="button" class="btn small primary">Deploy</button>
           </div>
           <div id="hues" class="shades previewable"></div>
 
           <div class="row" style="justify-content:space-between;margin-top:2px">
-            <span class="label">Tones &amp; Shades Matrix (30 Gradations)</span>
-            <button id="deployTonesShadesBtn" type="button" class="btn small primary">Deploy 30</button>
+            <span class="label">Tones &amp; Shades Matrix</span>
+            <button id="deployTonesShadesBtn" type="button" class="btn small primary">Deploy</button>
           </div>
           <div id="tonesShades" class="shades previewable" style="grid-template-columns: repeat(10, minmax(0, 1fr));"></div>
         </div>
@@ -633,7 +673,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
       </section>
     </div>
 
-    <!-- COLUMN 3: ADVANCED GENERATORS & AI STUDIO -->
     <div class="col col-image">
       <section class="card" aria-label="Advanced Studio Tools">
         <div class="tabs-wrapper">
@@ -642,7 +681,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           <button type="button" id="scrollRightBtn" class="scroll-arrow right" title="Scroll Right">&#9654;</button>
         </div>
 
-        <!-- TAB 1: GRADIENTS -->
         <div class="panel-tab on" id="p-grad">
           <div class="row" style="justify-content:space-between">
             <span class="label">Multi-Stop Gradient</span>
@@ -671,9 +709,9 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
 
           <span class="label" style="font-size:10px">Send Gradient Stops to Palette Editor</span>
           <div class="send-grid-3">
-            <button type="button" class="btn small primary" data-grad-send="10">Send 10</button>
-            <button type="button" class="btn small primary" data-grad-send="20">Send 20</button>
-            <button type="button" class="btn small primary" data-grad-send="30">Send 30</button>
+            <button type="button" class="btn small primary" data-grad-send="10">Send</button>
+            <button type="button" class="btn small primary" data-grad-send="20">Send</button>
+            <button type="button" class="btn small primary" data-grad-send="30">Send</button>
           </div>
 
           <div class="row" style="justify-content:space-between">
@@ -683,7 +721,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           <div id="gradCssCode" class="css-code-box"></div>
         </div>
 
-        <!-- TAB 2: TONAL RAMPS -->
         <div class="panel-tab" id="p-ramp">
           <span class="label">Tonal Ramp Generator</span>
           <div class="row" style="gap:8px">
@@ -710,7 +747,18 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           <button id="rampAdd" type="button" class="btn primary">Deploy to Palette</button>
         </div>
 
-        <!-- TAB 3: AI GENERATOR -->
+        <!-- HUE STEP MATRIX (H000 - H350 + B&W) -->
+        <div class="panel-tab" id="p-huematrix">
+          <span class="label">Hue H000–350 &amp; B&amp;W Step Matrix</span>
+          <div class="row">
+            <select id="hueMatrixSelect" class="grow"></select>
+            <button type="button" id="deployHueMatrixBtn" class="btn small primary">Load H000</button>
+          </div>
+          <div id="hueMatrixRule" class="hue-rule-note"></div>
+          <div id="hueMatrixSwatches" class="chips previewable" style="max-height: 135px; overflow-y: auto;"></div>
+          <div id="hueMatrixCatalog" class="hue-matrix-grid previewable"></div>
+        </div>
+
         <div class="panel-tab" id="p-ai">
           <span class="label">AI Prompt Palette Synthesizer</span>
           <div style="display:flex;flex-direction:column;gap:10px">
@@ -730,7 +778,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           </div>
         </div>
 
-        <!-- TAB 4: IMAGE EXTRACTOR -->
         <div class="panel-tab" id="p-image">
           <span class="label">Vision Extraction Engine</span>
           <div class="stage" id="stage">
@@ -765,65 +812,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           </div>
         </div>
 
-        <!-- TAB 5: PASTELS -->
-        <div class="panel-tab" id="p-pastel">
-          <span class="label">Dedicated Pastels [30 Spectra]</span>
-          <div class="row">
-            <select id="pastelCat" class="grow">
-              <option value="softPinks">Soft Pinks &amp; Roses</option>
-              <option value="dreamyLavenders">Dreamy Lavenders &amp; Purples</option>
-              <option value="sereneBlues">Serene Blues &amp; Sky</option>
-              <option value="mintGreens">Mint &amp; Fresh Greens</option>
-              <option value="sunshineYellows">Sunshine Yellows &amp; Ambers</option>
-              <option value="warmPeaches">Warm Peaches &amp; Corals</option>
-              <option value="cozyNeutrals">Cozy Neutrals &amp; Earth Tones</option>
-              <option value="tealsAquas">Teals, Aquas &amp; Cyans</option>
-              <option value="multicolorRainbow">Multicolor Rainbow Matrix</option>
-              <option value="earthyBotanicals">Earthy Botanicals &amp; Spices</option>
-            </select>
-          </div>
-          <div class="temp-slide-box">
-            <div class="temp-slide-head">
-              <span>TEMPERATURE SLIDE</span>
-              <span id="pastelTempVal">0 (Neutral)</span>
-            </div>
-            <div class="temp-slide-row">
-              <span class="temp-tag-warm">WARM</span>
-              <input id="pastelTempSlide" class="temp-range" type="range" min="-100" max="100" value="0">
-              <span class="temp-tag-cool">COOL</span>
-            </div>
-          </div>
-          <div class="chips" id="pastelOut" style="max-height: 185px; overflow-y: auto;"></div>
-          <button id="pastelAdd" type="button" class="btn primary">Load 30 Spectrum</button>
-        </div>
-
-        <!-- TAB 6: SKIN TONES -->
-        <div class="panel-tab" id="p-skin">
-          <span class="label">Portrait Skin Tones [30 Grades]</span>
-          <div class="row">
-            <select id="skinCategory" class="grow">
-              <option value="1">Grade 1: Fair &amp; Light Complexions</option>
-              <option value="2">Grade 2: Medium &amp; Olive Complexions</option>
-              <option value="3">Grade 3: Tan &amp; Caramel Complexions</option>
-              <option value="4">Grade 4: Deep &amp; Rich Complexions</option>
-            </select>
-          </div>
-          <div class="temp-slide-box">
-            <div class="temp-slide-head">
-              <span>UNDERTONE SLIDE</span>
-              <span id="skinTempVal">0 (Balanced)</span>
-            </div>
-            <div class="temp-slide-row">
-              <span class="temp-tag-warm">WARM</span>
-              <input id="skinTempSlide" class="temp-range" type="range" min="-100" max="100" value="0">
-              <span class="temp-tag-cool">COOL</span>
-            </div>
-          </div>
-          <div class="chips" id="skinOut" style="max-height: 195px; overflow-y: auto;"></div>
-          <button id="skinAdd" type="button" class="btn primary">Load 30 Grades</button>
-        </div>
-
-        <!-- TAB 7: CURATED THEMES & BRANDS -->
         <div class="panel-tab" id="p-themes">
           <span class="label">Master Color Themes Catalog</span>
           <div class="row">
@@ -846,11 +834,10 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
               <span class="temp-tag-cool">COOL</span>
             </div>
           </div>
-          <div class="chips" id="themeOut" style="max-height: 165px; overflow-y: auto;"></div>
+          <div class="chips" id="themeOut" style="max-height: 195px; overflow-y: auto;"></div>
           <button id="loadThemeBtn" type="button" class="btn primary">Deploy Theme</button>
         </div>
 
-        <!-- TAB 8: PROJECT FOLDERS & ARCHIVE -->
         <div class="panel-tab" id="p-lib">
           <span class="label">Project Collections &amp; Archive</span>
           <div class="row">
@@ -865,7 +852,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
           <div class="lib" id="libOut" style="max-height: 200px; overflow-y: auto;"></div>
         </div>
 
-        <!-- TAB 9: ACCESSIBILITY & COLOR BLINDNESS ASSISTANCE -->
         <div class="panel-tab" id="p-a11y">
           <span class="label">Color Blindness &amp; Accessibility Audit</span>
           <div style="display:flex;flex-direction:column;gap:10px">
@@ -890,7 +876,6 @@ body.phone-view .app { max-width: 410px; border: 1px solid var(--line); border-r
 
 <div id="toast" class="toast" hidden></div>
 
-<!-- Color Vision Simulation Filters -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="cb-protan"><feColorMatrix type="matrix" values="0.152286 1.052583 -0.204868 0 0  0.114503 0.786281 0.099216 0 0  -0.003882 -0.048116 1.051998 0 0  0 0 0 1 0"/></filter>
   <filter id="cb-deutan"><feColorMatrix type="matrix" values="0.367322 0.860646 -0.227968 0 0  0.280085 0.672501 0.047413 0 0  -0.011820 0.042940 0.968881 0 0  0 0 0 1 0"/></filter>
@@ -975,7 +960,7 @@ function applyTemperatureShift(sw, tempVal) {
   return { ...rgbToHsb(r, g, b), alpha: 1, colorSpace: 0 };
 }
 
-function formatTempLabel(val, zeroText = 'Neutral') {
+function formatTempLabel(val, zeroText = 'Original') {
   const v = Number(val);
   if (v === 0) return '0 (' + zeroText + ')';
   return v < 0 ? v + ' (Warm)' : '+' + v + ' (Cool)';
@@ -1151,7 +1136,6 @@ function toast(msg, ms = 2400) {
   t._tid = setTimeout(() => t.hidden = true, ms);
 }
 
-/* 5-STOP WARM-TO-COOL THEME SCROLLER LOGIC */
 const THEME_STOPS = ['ember', 'sand', 'neutral', 'cobalt', 'glacier'];
 let activeThemeIdx = 3;
 let isProgrammaticScroll = false;
@@ -1416,7 +1400,7 @@ function makeColorDraggable(btn, getRgb) {
 const huesOf10 = sw => [...Array(10).keys()].map(k => hsbToRgb((sw.hue + k / 10) % 1, sw.saturation, sw.brightness));
 
 const tonesShadesOf30 = sw => {
-  const [L, A, B] = rgbToOklab(swRgb(sw));
+  const [, A, B] = rgbToOklab(swRgb(sw));
   const result = [];
   for (let i = 0; i < 30; i++) {
     const t = i / 29;
@@ -1428,7 +1412,7 @@ const tonesShadesOf30 = sw => {
 };
 
 const tailwindScaleOf10 = sw => {
-  const [L, A, B] = rgbToOklab(swRgb(sw));
+  const [, A, B] = rgbToOklab(swRgb(sw));
   const stops = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.96].reverse();
   return stops.map(targetL => {
     const chromaScale = targetL > 0.85 ? 0.3 : targetL < 0.25 ? 0.5 : 1.0;
@@ -1941,14 +1925,160 @@ $$('[data-preset]').forEach(btn => {
   });
 });
 
-/* TABS: Gradients (#p-grad) and Ramps (#p-ramp) in separate tabs */
+/* HUE STEP MATRIX (H000 - H350 + B&W) */
+const HUE_MATRIX_DEGREES = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350];
+
+function buildHueMatrixSteps(hueCode) {
+  if (hueCode === 'BW') {
+    const bwSteps = [];
+    for (let bPct = 0; bPct <= 100; bPct += 5) {
+      bwSteps.push({ hue: 0, saturation: 0, brightness: bPct / 100, alpha: 1, colorSpace: 0 });
+    }
+    return bwSteps;
+  }
+
+  const deg = clamp(Number(hueCode) || 0, 0, 350);
+  const hNorm = deg / 360;
+  const hueSteps = [];
+
+  for (let bPct = 10; bPct <= 100; bPct += 10) {
+    hueSteps.push({ hue: hNorm, saturation: 1, brightness: bPct / 100, alpha: 1, colorSpace: 0 });
+  }
+
+  for (let sPct = 90; sPct >= 10; sPct -= 10) {
+    hueSteps.push({ hue: hNorm, saturation: sPct / 100, brightness: 1, alpha: 1, colorSpace: 0 });
+  }
+
+  return hueSteps;
+}
+
+function buildBwPreview10() {
+  const preview = [];
+  for (let bPct = 0; bPct <= 100; bPct += 10) {
+    preview.push({ hue: 0, saturation: 0, brightness: bPct / 100, alpha: 1, colorSpace: 0 });
+  }
+  return preview;
+}
+
+function renderHueMatrixTab() {
+  const sel = $('hueMatrixSelect');
+  const ruleEl = $('hueMatrixRule');
+  if (!sel) return;
+  const code = sel.value || '0';
+  const isBw = code === 'BW';
+  const label = isBw ? 'B&W' : 'H' + String(code).padStart(3, '0');
+  const swList = buildHueMatrixSteps(code);
+
+  if (ruleEl) {
+    if (isBw) {
+      ruleEl.innerHTML = '<strong>B&amp;W:</strong> 0% to 100% Brightness in <strong>5% increments</strong> (Card preview below shows 0%–100% every 10%).';
+    } else {
+      ruleEl.innerHTML = '<strong>' + label + ' (' + code + '&deg;):</strong> Steps 1–10 keep <strong>100% Saturation</strong> while Brightness rises <strong>10% &rarr; 100%</strong> (+10%). Steps 11–19 lock <strong>100% Brightness</strong> while Saturation drops <strong>90% &rarr; 10%</strong> (&minus;10%).';
+    }
+  }
+
+  renderChipGrid($('hueMatrixSwatches'), swList);
+  $('deployHueMatrixBtn').textContent = 'Load ' + label;
+
+  $$('.hue-card', $('hueMatrixCatalog')).forEach(card => {
+    card.classList.toggle('active', card.dataset.code === code);
+  });
+}
+
+function initHueMatrixTab() {
+  const sel = $('hueMatrixSelect');
+  const catalog = $('hueMatrixCatalog');
+  if (!sel || !catalog) return;
+
+  sel.innerHTML = '';
+  HUE_MATRIX_DEGREES.forEach(deg => {
+    const code = String(deg);
+    const label = 'H' + String(deg).padStart(3, '0') + ' (' + deg + '\u00B0)';
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = label;
+    sel.appendChild(opt);
+  });
+  const bwOpt = document.createElement('option');
+  bwOpt.value = 'BW';
+  bwOpt.textContent = 'B&W (0%–100% by 5%)';
+  sel.appendChild(bwOpt);
+
+  catalog.innerHTML = '';
+  const allCodes = [...HUE_MATRIX_DEGREES.map(String), 'BW'];
+  allCodes.forEach(code => {
+    const isBw = code === 'BW';
+    const label = isBw ? 'B&W (0–100%)' : 'H' + String(code).padStart(3, '0') + ' (' + code + '\u00B0)';
+    const swFull = buildHueMatrixSteps(code);
+    const baseHex = isBw ? '#808080' : toHex({ hue: Number(code) / 360, saturation: 1, brightness: 1, alpha: 1, colorSpace: 0 });
+
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'hue-card';
+    card.dataset.code = code;
+    card.title = 'Inspect ' + label;
+
+    const head = document.createElement('div');
+    head.className = 'hue-card-head';
+    head.innerHTML = '<span>' + label + '</span><span class="hue-card-swatch" style="background:' + baseHex + '"></span>';
+
+    if (isBw) {
+      const bw10 = buildBwPreview10();
+      const stripBw = document.createElement('div');
+      stripBw.className = 'hue-strip';
+      stripBw.style.gridTemplateColumns = 'repeat(' + bw10.length + ', minmax(0, 1fr))';
+      bw10.forEach(s => {
+        const seg = document.createElement('span');
+        seg.style.background = toHex(s);
+        stripBw.appendChild(seg);
+      });
+      card.append(head, stripBw);
+    } else {
+      const stripBrt = document.createElement('div');
+      stripBrt.className = 'hue-strip';
+      stripBrt.style.gridTemplateColumns = 'repeat(10, minmax(0, 1fr))';
+      swFull.slice(0, 10).forEach(s => {
+        const seg = document.createElement('span');
+        seg.style.background = toHex(s);
+        stripBrt.appendChild(seg);
+      });
+
+      const stripSat = document.createElement('div');
+      stripSat.className = 'hue-strip';
+      stripSat.style.gridTemplateColumns = 'repeat(9, minmax(0, 1fr))';
+      swFull.slice(10, 19).forEach(s => {
+        const seg = document.createElement('span');
+        seg.style.background = toHex(s);
+        stripSat.appendChild(seg);
+      });
+
+      card.append(head, stripBrt, stripSat);
+    }
+
+    card.addEventListener('click', () => {
+      sel.value = code;
+      renderHueMatrixTab();
+    });
+    catalog.appendChild(card);
+  });
+
+  sel.addEventListener('change', renderHueMatrixTab);
+  $('deployHueMatrixBtn').addEventListener('click', () => {
+    const code = sel.value || '0';
+    const list = buildHueMatrixSteps(code);
+    const label = code === 'BW' ? 'BW_5PCT' : 'H' + String(code).padStart(3, '0');
+    addToEmpty(list, true, label);
+  });
+
+  renderHueMatrixTab();
+}
+
 const TAB_DEFS = [
   { id: 'p-grad', label: '\ud83d\udcca Gradients' },
   { id: 'p-ramp', label: '\ud83d\udcc8 Ramps' },
+  { id: 'p-huematrix', label: '\ud83c\udf08 Hue H000–350' },
   { id: 'p-ai', label: '\u2728 AI Synth' },
   { id: 'p-image', label: '\ud83d\uddbc Image Extract' },
-  { id: 'p-pastel', label: '\ud83c\udf38 Pastels' },
-  { id: 'p-skin', label: '\ud83e\uddd1 Skin Tones' },
   { id: 'p-themes', label: '\ud83c\udfa8 Themes' },
   { id: 'p-lib', label: '\ud83d\udcc1 Archive' },
   { id: 'p-a11y', label: '\ud83d\udc41 A11y Audit' }
@@ -1971,7 +2101,6 @@ TAB_DEFS.forEach((t, idx) => {
 $('scrollLeftBtn').addEventListener('click', () => tabsEl.scrollBy({ left: -140, behavior: 'smooth' }));
 $('scrollRightBtn').addEventListener('click', () => tabsEl.scrollBy({ left: 140, behavior: 'smooth' }));
 
-/* AI GENERATOR */
 let aiGeneratedList = [];
 const KEYWORD_HUES = {
   cyberpunk: [300, 185, 260, 330, 195], space: [240, 270, 310, 190, 220],
@@ -2024,7 +2153,6 @@ $('aiDeployBtn').addEventListener('click', () => {
   addToEmpty(aiGeneratedList, true, title);
 });
 
-/* IMAGE EXTRACTOR */
 let loadedImg = null, imgZoom = 1, imgPanX = 0, imgPanY = 0, isPanning = false, panStart = { x: 0, y: 0 };
 const canvas = $('imgView'), ctx = canvas.getContext('2d', { willReadFrequently: true });
 
@@ -2180,7 +2308,6 @@ $('fillImgBtn').addEventListener('click', () => {
   addToEmpty(picked.map(p => ({ ...p.hsb, alpha: 1, colorSpace: 0 })), true, 'VISION_EXTRACT');
 });
 
-/* GRADIENTS TAB (MULTI-STOP, CSS EXPORT & SEND 10 / 20 / 30 TO PALETTE EDITOR) */
 let gradStops = [
   { color: '#3B82F6', pos: 0 },
   { color: '#8B5CF6', pos: 50 },
@@ -2348,8 +2475,8 @@ $$('[data-grad-send]').forEach(btn => {
   btn.addEventListener('click', () => {
     const count = Number(btn.dataset.gradSend) || 10;
     const sampled = sampleGradientStops(count);
-    addToEmpty(sampled, true, 'GRADIENT_' + count);
-    toast('Sent ' + count + ' Gradient Stops to Palette Editor');
+    addToEmpty(sampled, true, 'GRADIENT');
+    toast('Sent Gradient Stops to Palette Editor');
   });
 });
 
@@ -2361,7 +2488,6 @@ $('copyGradCssBtn').addEventListener('click', () => {
   toast('Copied CSS Gradient');
 });
 
-/* RAMPS TAB */
 function updateRamp() {
   const r = clamp(Number($('rampR').value) || 0, 0, 255);
   const g = clamp(Number($('rampG').value) || 0, 0, 255);
@@ -2413,76 +2539,64 @@ $('rampMode').addEventListener('change', updateRamp);
 $('rampSteps').addEventListener('input', updateRamp);
 $('rampAdd').addEventListener('click', () => addToEmpty(rampList, false));
 
-/* PASTELS TAB */
-const PASTEL_HUES = {
-  softPinks: [330, 355], dreamyLavenders: [260, 295], sereneBlues: [195, 225],
-  mintGreens: [130, 165], sunshineYellows: [42, 62], warmPeaches: [12, 32],
-  cozyNeutrals: [25, 45], tealsAquas: [170, 195], multicolorRainbow: [0, 360],
-  earthyBotanicals: [75, 125]
+const PASTEL_SPECS = {
+  'Soft Pinks & Roses': [330, 355, false],
+  'Dreamy Lavenders & Purples': [260, 295, false],
+  'Serene Blues & Sky': [195, 225, false],
+  'Mint & Fresh Greens': [130, 165, false],
+  'Sunshine Yellows & Ambers': [42, 62, false],
+  'Warm Peaches & Corals': [12, 32, false],
+  'Cozy Neutrals & Earth Tones': [25, 45, true],
+  'Teals, Aquas & Cyans': [170, 195, false],
+  'Multicolor Rainbow Matrix': [0, 360, false],
+  'Earthy Botanicals & Spices': [75, 125, false]
 };
-let currentPastels = [];
-function renderPastels() {
-  const cat = $('pastelCat').value;
-  const temp = Number($('pastelTempSlide').value) || 0;
-  $('pastelTempVal').textContent = formatTempLabel(temp, 'Neutral');
 
-  const [minH, maxH] = PASTEL_HUES[cat] || [0, 360];
-  const isNeutral = cat === 'cozyNeutrals';
-  currentPastels = [...Array(30).keys()].map(i => {
+function generatePastelList(label) {
+  const [minH, maxH, isNeutral] = PASTEL_SPECS[label] || [0, 360, false];
+  return [...Array(30).keys()].map(i => {
     const t = i / 29;
     const h = ((minH + (maxH - minH) * t) % 360) / 360;
     const s = isNeutral ? 0.08 + (i % 5) * 0.03 : 0.18 + (i % 6) * 0.04;
     const b = 0.86 + (i % 5) * 0.028;
-    const baseSw = { hue: h, saturation: s, brightness: clamp(b, 0, 0.99), alpha: 1, colorSpace: 0 };
-    return applyTemperatureShift(baseSw, temp);
+    return { hue: h, saturation: s, brightness: clamp(b, 0, 0.99), alpha: 1, colorSpace: 0 };
   });
-  renderChipGrid($('pastelOut'), currentPastels);
 }
-$('pastelCat').addEventListener('change', renderPastels);
-$('pastelTempSlide').addEventListener('input', renderPastels);
-$('pastelAdd').addEventListener('click', () => addToEmpty(currentPastels, true, $('pastelCat').selectedOptions[0].text.toUpperCase()));
 
-/* SKIN TONES TAB */
-let currentSkins = [];
-function renderSkins() {
-  const grade = Number($('skinCategory').value) || 1;
-  const temp = Number($('skinTempSlide').value) || 0;
-  $('skinTempVal').textContent = formatTempLabel(temp, 'Balanced');
+const SKIN_PROFILES = {
+  'Grade 1: Fair & Light Complexions': {
+    bMin: 0.85, bMax: 0.97, sMin: 0.12, sMax: 0.34,
+    rows: [
+      { h: 31, sBoost: 0.02 }, { h: 24, sBoost: 0.03 }, { h: 20, sBoost: 0.00 },
+      { h: 14, sBoost: 0.02 }, { h: 35, sBoost: -0.03 }
+    ]
+  },
+  'Grade 2: Medium & Olive Complexions': {
+    bMin: 0.64, bMax: 0.84, sMin: 0.28, sMax: 0.52,
+    rows: [
+      { h: 32, sBoost: 0.04 }, { h: 24, sBoost: 0.03 }, { h: 20, sBoost: 0.00 },
+      { h: 14, sBoost: 0.02 }, { h: 36, sBoost: -0.04 }
+    ]
+  },
+  'Grade 3: Tan & Caramel Complexions': {
+    bMin: 0.42, bMax: 0.63, sMin: 0.42, sMax: 0.68,
+    rows: [
+      { h: 30, sBoost: 0.05 }, { h: 22, sBoost: 0.04 }, { h: 18, sBoost: 0.00 },
+      { h: 12, sBoost: 0.03 }, { h: 34, sBoost: -0.05 }
+    ]
+  },
+  'Grade 4: Deep & Rich Complexions': {
+    bMin: 0.16, bMax: 0.41, sMin: 0.48, sMax: 0.76,
+    rows: [
+      { h: 28, sBoost: 0.05 }, { h: 20, sBoost: 0.04 }, { h: 16, sBoost: 0.00 },
+      { h: 10, sBoost: 0.04 }, { h: 32, sBoost: -0.06 }
+    ]
+  }
+};
 
-  const gradeProfiles = {
-    1: {
-      bMin: 0.85, bMax: 0.97, sMin: 0.12, sMax: 0.34,
-      rows: [
-        { h: 31, sBoost: 0.02 }, { h: 24, sBoost: 0.03 }, { h: 20, sBoost: 0.00 },
-        { h: 14, sBoost: 0.02 }, { h: 35, sBoost: -0.03 }
-      ]
-    },
-    2: {
-      bMin: 0.64, bMax: 0.84, sMin: 0.28, sMax: 0.52,
-      rows: [
-        { h: 32, sBoost: 0.04 }, { h: 24, sBoost: 0.03 }, { h: 20, sBoost: 0.00 },
-        { h: 14, sBoost: 0.02 }, { h: 36, sBoost: -0.04 }
-      ]
-    },
-    3: {
-      bMin: 0.42, bMax: 0.63, sMin: 0.42, sMax: 0.68,
-      rows: [
-        { h: 30, sBoost: 0.05 }, { h: 22, sBoost: 0.04 }, { h: 18, sBoost: 0.00 },
-        { h: 12, sBoost: 0.03 }, { h: 34, sBoost: -0.05 }
-      ]
-    },
-    4: {
-      bMin: 0.16, bMax: 0.41, sMin: 0.48, sMax: 0.76,
-      rows: [
-        { h: 28, sBoost: 0.05 }, { h: 20, sBoost: 0.04 }, { h: 16, sBoost: 0.00 },
-        { h: 10, sBoost: 0.04 }, { h: 32, sBoost: -0.06 }
-      ]
-    }
-  };
-
-  const prof = gradeProfiles[grade] || gradeProfiles[1];
+function generateSkinList(label) {
+  const prof = SKIN_PROFILES[label] || SKIN_PROFILES['Grade 1: Fair & Light Complexions'];
   const cols = 6, rows = 5, list = [];
-
   for (let r = 0; r < rows; r++) {
     const rowSpec = prof.rows[r];
     for (let c = 0; c < cols; c++) {
@@ -2490,90 +2604,1992 @@ function renderSkins() {
       const b = prof.bMax - t * (prof.bMax - prof.bMin);
       const s = clamp(prof.sMin + t * (prof.sMax - prof.sMin) + rowSpec.sBoost, 0.08, 0.85);
       const h = (((rowSpec.h + (t * 2 - 1)) % 360) + 360) % 360 / 360;
-      const baseSw = { hue: h, saturation: s, brightness: b, alpha: 1, colorSpace: 0 };
-      list.push(applyTemperatureShift(baseSw, temp));
+      list.push({ hue: h, saturation: s, brightness: b, alpha: 1, colorSpace: 0 });
     }
   }
-
-  currentSkins = list;
-  renderChipGrid($('skinOut'), currentSkins);
+  return list;
 }
-$('skinCategory').addEventListener('change', renderSkins);
-$('skinTempSlide').addEventListener('input', renderSkins);
-$('skinAdd').addEventListener('click', () => addToEmpty(currentSkins, true, 'SKIN_GRADE_' + $('skinCategory').value));
 
-/* MASTER COLOR THEMES CATALOG */
-const RAW_THEMES_TEXT = `
-[Seasonal Themes]
-Summer (Bright, warm, sun-drenched): #FFD166, #EF476F, #06D6A0, #118AB2, #FAF3DD
-Spring (Fresh, pastel, blooming): #FFB7B2, #B5EAD7, #FFF07C, #9ADCFF, #C7CEEA
-Autumn (Earthy, warm, rich): #D95D39, #F18805, #8C1C13, #586F2C, #3D2B1F
-Winter (Cool, crisp, muted): #D8E2DC, #2B4141, #1D2D44, #721817, #F8F9FA
+const RAW_MASTER_THEMES_TXT = `================================================================================
+COLOR THEME REFERENCE LIST
+================================================================================
 
-[Natural & Biological Sources]
-Plants (Forest to Grass): #132A13, #254E2A, #4F772D, #90A955, #ECF39E
-Earth (Sand & Soil): #EAE0D5, #C6AC8F, #9E583D, #5E503F, #22181C
-Flowers (Botanical Petals): #D90429, #FB8500, #9D4EDD, #3A86FF, #FF006E
-Minerals (Raw Pigments): #0B6E4F, #1D4E89, #7B2CBF, #E9D758, #4A4E69
-Rocks (Geological Strata): #E5E5E5, #D6CCC2, #8D99AE, #4A5759, #2B2D2F
-Fire (Combustion Spectrum): #FFF3B0, #FFBA08, #F48C06, #D00000, #370617
-Animals (Fur, Insects & Reef): #C8553D, #D4A373, #006466, #F77F00, #E63946
+SEASONAL THEMES
 
-[Modern & Minimalist]
+Summer (Bright, warm, sun-drenched)
+Sunbeam Yellow: #FFD166
+Coral Reef: #EF476F
+Ocean Turquoise: #06D6A0
+Deep Sky Blue: #118AB2
+Warm Sand: #FAF3DD
+
+Spring (Fresh, pastel, blooming)
+Cherry Blossom: #FFB7B2
+Sprout Green: #B5EAD7
+Daffodil: #FFF07C
+Robin's Egg: #9ADCFF
+Lilac Mist: #C7CEEA
+
+Autumn (Earthy, warm, rich)
+Burnt Sienna: #D95D39
+Harvest Gold: #F18805
+Cranberry: #8C1C13
+Olive Leaf: #586F2C
+Espresso Bark: #3D2B1F
+
+Winter (Cool, crisp, muted)
+Glacial Ice: #D8E2DC
+Frosted Pine: #2B4141
+Midnight Slate: #1D2D44
+Berry Frost: #721817
+Snow Drift: #F8F9FA
+
+NATURAL & BIOLOGICAL SOURCES
+
+Plants (Dense forest greens through grass greens)
+Deep Canopy: #132A13
+Pine Needle: #254E2A
+Mossy Fern: #4F772D
+Meadow Grass: #90A955
+Fresh Shoot: #ECF39E
+
+Earth (Sand and varied soil colors)
+Pale Dune: #EAE0D5
+Ochre Sand: #C6AC8F
+Red Clay Soil: #9E583D
+Rich Loam: #5E503F
+Deep Peat: #22181C
+
+Flowers (Vibrant botanical petals)
+Rose Crimson: #D90429
+Marigold Orange: #FB8500
+Lavender Petal: #9D4EDD
+Cornflower Blue: #3A86FF
+Hibiscus Pink: #FF006E
+
+Minerals (Crystalline and raw earth pigments)
+Malachite Green: #0B6E4F
+Lapis Lazuli: #1D4E89
+Amethyst Quartz: #7B2CBF
+Raw Sulfur: #E9D758
+Hematite Iron: #4A4E69
+
+Rocks (Different types of rock)
+Limestone Cream: #E5E5E5
+Sandstone Buff: #D6CCC2
+Granite Speckle: #8D99AE
+Slate Blue-Grey: #4A5759
+Basalt Black: #2B2D42
+
+Fire (Combustion spectrum)
+White-Hot Core: #FFF3B0
+Solar Flare: #FFBA08
+Ember Orange: #F48C06
+Flame Red: #D00000
+Charred Ash: #370617
+
+Animals (Fur, insects, and marine animals)
+Fox Red Fur: #C8553D
+Tawny Pelt: #D4A373
+Iridescent Beetle: #006466
+Monarch Wing: #F77F00
+Deep Reef Coral: #E63946
+
+Human Blood (Oxygenated to deoxygenated)
+Arterial Scarlet: #D90429
+Fresh Crimson: #9B0000
+Venous Maroon: #660708
+Coagulated Dark: #370617
+
+Alien Blood (Exotic biological fluids)
+Bioluminescent Cyan: #00F5D4
+Acidic Lime: #80ED99
+Violet Ichor: #9B5DE5
+Golden Hemolymph: #FEE440
+Cobalt Plasma: #00BBF9
+
+Alien Creatures (Skin tones)
+Blue Skin (Cerulean / Deep Navy): #48CAE4, #023E8A
+Green Skin (Sage / Reptilian): #80B918, #2B9348
+Orange Skin (Tangerine / Rust): #F3722C, #BC4749
+Yellow Skin (Sulfur / Amber): #F9C74F, #F8961E
+Purple Skin (Orchid / Eggplant): #B5179E, #480CA8
+Red Skin (Vermilion / Oxblood): #E5383B, #660708
+
+MATERIAL-INSPIRED THEMES
+
+Plastic (Synthetic, saturated, smooth)
+ABS White: #F4F4F6
+Toy Primary Red: #E63946
+Electric Blue: #0077B6
+Neon Highlighter: #CCFF33
+Polypropylene Black: #1E1E24
+
+Wood (Natural grains and stains)
+Raw Birch: #F3D5B5
+Golden Oak: #D4A373
+Warm Cherry: #A44A3F
+Rich Walnut: #582F0E
+Ebony Stain: #281B12
+
+Stone (Carved and weathered masonry)
+Travertine: #EAE2B7
+Weathered Marble: #CED4DA
+River Stone: #6C757D
+Soapstone: #495057
+Obsidian: #212529
+
+Metal (Reflective and oxidized alloys)
+Brushed Aluminum: #D8E2DC
+Polished Silver: #ADB5BD
+Warm Brass: #D4AF37
+Burnished Copper: #B87333
+Gunmetal Steel: #343A40
+
+Glass (Translucent, tinted, frosted)
+Clear Tint: #F8F9FA
+Sea Glass Green: #A8DADC
+Frosted Ice: #E0FBFC
+Amber Bottle: #CA6702
+Cobalt Glass: #005F73
+
+Rubber (Matte, vulcanized, industrial)
+Raw Latex: #E9EDC9
+Eraser Pink: #F28482
+Industrial Blue: #3D5A80
+Tread Grey: #4A4E69
+Vulcanized Tire: #1A1A1D
+
+Fabric (Woven textiles and dyes)
+Unbleached Linen: #FAF0CA
+Raw Cotton: #F4F1DE
+Indigo Denim: #2B4570
+Crimson Velvet: #780000
+Charcoal Wool: #333533
+
+Paper (Pulp, parchment, stationery)
+Archival White: #FDFCF0
+Antique Parchment: #EDE0D4
+Newsprint Grey: #D3D3D3
+Kraft Cardboard: #B08968
+Manila Folder: #F3D58D
+
+Ceramic (Glazed and unglazed pottery)
+Porcelain White: #FFFFFF
+Celadon Glaze: #A3B18A
+Terracotta Pot: #E07A5F
+Cobalt Porcelain: #1D3557
+Stoneware Speckle: #8D8741
+
+Concrete (Brutalist, cured, aggregate)
+Fresh Pour: #D8D8D8
+Cured Sidewalk: #B5B5B5
+Weathered Brutalist: #8C8C8C
+Wet Cement: #5E5E5E
+Asphalt Aggregate: #2E2E2E
+
+Leather (Tanned hides and patinas)
+Natural Veg-Tan: #E6CCB2
+Saddle Tan: #B08968
+Cognac Patina: #9C6644
+Oxblood Hide: #5E1914
+Distressed Black: #252422
+
+Clay (Earth modeling compounds)
+Kaolin White: #F2E9E4
+Buff Stoneware: #C9ADA7
+Red Earthenware: #9A4444
+Modeling Grey: #7F7F7F
+Dark Umber Clay: #4A3B32
+
+PAINTING MEDIUMS
+
+Oil
+Description: Pigment suspended in drying oils (linseed, walnut, poppy seed). Dries slowly; rich color depth and smooth blending.
+Titanium White: #F8F9FA
+Yellow Ochre: #CC8B3C
+Burnt Umber: #4A2C2A
+Ultramarine Deep: #1B263B
+Alizarin Crimson: #780116
+
+Acrylic
+Description: Pigment in a polymer emulsion. Water-soluble when wet; flexible and water-resistant when dry.
+Cadmium Red: #E32636
+Phthalo Blue: #000F89
+Hansa Yellow: #E9D66B
+Titanium Buff: #E5D3B3
+Mars Black: #1C1C1C
+
+Watercolor
+Description: Translucent pigment bound with gum arabic, activated with water. Uses paper white for highlights and builds delicate washes.
+Paper White: #FFFDF9
+Wash Cerulean: #72EFDD
+Rose Madder Wash: #F4978E
+Gamboge Tint: #F9C74F
+Payne's Grey: #536878
+
+Gouache
+Description: Opaque watercolor with a flat, matte finish.
+Chalky White: #F7F7F2
+Matte Coral: #F25C54
+Velvet Teal: #2A9D8F
+Flat Mustard: #E9C46A
+Plum Matte: #5E3060
+
+Pastel
+Description: Powdered pigment pressed into sticks with minimal binder. Applied dry and blended or layered.
+Soft Peach: #FFDAB9
+Dusty Periwinkle: #A2D2FF
+Chalk Lavender: #CDB4DB
+Muted Sage: #CCD5AE
+Warm Chalk: #FAF0CA
+
+Tempera
+Description: Fast-drying paint with a water-soluble binder (traditionally egg yolk). Produces crisp details and a satin-matte finish.
+Eggshell Cream: #F0EAD6
+Vermilion Egg: #D9381E
+Azurite Blue: #2E5A88
+Malachite Tempera: #3B7A57
+Gold Leaf Ochre: #D4AF37
+
+Encaustic
+Description: Pigment mixed with heated beeswax and damar resin. Applied molten and fused with heat.
+Raw Beeswax: #F3D58D
+Honey Amber: #D9822B
+Milky Resin: #EAE2B7
+Warm Sienna: #8D4004
+Smoked Wax: #3D2B1F
+
+Fresco
+Description: Pigment mixed with water and applied to wet lime plaster, becoming bound as the plaster dries.
+Lime Plaster: #F4F1EA
+Terracotta Earth: #C86D51
+Fresco Ochre: #D9A05B
+Egyptian Blue: #4A7C9B
+Terre Verte: #6B8E78
+
+Spray Paint (Aerosol)
+Description: Paint released as a fine mist; commonly used for murals, street art, and gradients.
+Neon Magenta: #FF007F
+Electric Cyan: #00FFFF
+Acid Green: #39FF14
+Chrome Silver: #C0C0C0
+Matte Black: #121212
+
+Ink Wash (Sumi-e)
+Description: Ink diluted with water to create monochromatic tones and gradients.
+Rice Paper: #FAF9F6
+Light Mist Wash: #D3D3D3
+Medium Tea Wash: #8E8E8E
+Charcoal Tone: #4A4A4A
+Pure Sumi Black: #0F0F0F
+
+Casein
+Description: Fast-drying, water-soluble paint made with milk protein. Dries to a durable, velvety matte finish.
+Milk White: #FBFBF8
+Velvety Terracotta: #B55239
+Muted Cobalt: #3D5A80
+Sage Casein: #7A8B76
+Deep Umber: #3B2F2F
+
+Enamel
+Description: Paint that dries to a hard, durable, glossy shell; used on metal, glass, wood, and ceramics.
+High-Gloss White: #FFFFFF
+Fire Engine Red: #CE2029
+Industrial Yellow: #FFB703
+Machinery Green: #2B9348
+Jet Black: #000000
+
+ATMOSPHERIC & LIGHTING THEMES
+
+Twilight & Dusk (Transitioning sky tones)
+Alpenglow Pink: #FF9EBB
+Horizon Violet: #9D4EDD
+Indigo Dusk: #3C096C
+Starlight Silver: #E0E1DD
+Velvet Midnight: #10002B
+
+Weather Phenomena (Storms and clarity)
+Foggy Mist: #E5E9EC
+Stormcloud Grey: #5C677D
+Lightning Flash: #FFF3B0
+Sunshower Gold: #F4A261
+Ozone Blue: #277DA1
+
+Bioluminescence (Deep-sea and nocturnal glow)
+Abyssal Black: #03071E
+Jellyfish Neon: #FF007F
+Foxfire Green: #38B000
+Dinoflagellate Blue: #00F5D4
+Phosphor White: #F8F9FA
+
+Neon Noir (Cyberpunk and rainy city reflections)
+Rain-Slick Asphalt: #161A1D
+Sodium Streetlight: #FF9E00
+Laser Magenta: #F72585
+Hologram Cyan: #4CC9F0
+Shadow Alley: #0B090A
+
+CULINARY & BOTANICAL INFUSIONS
+
+Spices & Teas (Warm, aromatic, dried)
+Matcha Powder: #84A98C
+Turmeric Root: #E09F3E
+Saffron Thread: #D95D39
+Cinnamon Bark: #7F4F24
+Hibiscus Steep: #6A040F
+
+Citrus & Orchard (Zesty, bright, ripe)
+Blood Orange: #D00000
+Yuzu Zest: #FFD166
+Meyer Lemon: #FFF07C
+Fig Skin: #4A2545
+Pomegranate Seed: #9B2226
+
+Coffee & Roasts (Rich, toasted, creamy)
+Steamed Milk: #FAF5EE
+Caramel Crema: #D4A373
+Blonde Roast: #A98467
+Espresso Shot: #582F0E
+Dark French Roast: #231709
+
+Candy & Confectionery (Pastel, glossy, sugary)
+Cotton Candy: #FFAFCC
+Pistachio Gelato: #B7E4C7
+Blue Raspberry: #4EA8DE
+Butterscotch Drop: #F4A261
+Licorice Twist: #1B1B1E
+
+GEMSTONES, COSMOS & RETRO ERAS
+
+Precious & Semi-Precious Gems (Cut and raw mineral brilliance)
+Rose Quartz: #F4ACB7
+Peridot Spark: #9EF01A
+Citrine Sun: #FFBA08
+Sapphire Velvet: #03045E
+Black Tourmaline: #1C1C1C
+
+Celestial & Deep Space (Nebulae, planets, and voids)
+Nebula Dust: #B5179E
+Solar Corona: #FFB703
+Martian Regolith: #BC4749
+Lunar Mare: #8D99AE
+Event Horizon: #0B090A
+
+1950s Diner (Classic chrome and soda-fountain pastels)
+Cherry Cola: #9B2226
+Mint Milkshake: #A8DADC
+Chrome Trim: #E5E5E5
+Pastel Teal: #457B9D
+Checkered Black: #1D1E22
+
+1970s Retro (Warm earth tones and shag-carpet hues)
+Avocado Green: #606C38
+Harvest Mustard: #DDA15E
+Burnt Tangerine: #BC6C25
+Shag Brown: #432818
+Cream Vinyl: #FEFAE0
+
+1980s Synthwave (Electric neon grids and dark horizons)
+Electric Purple: #7209B7
+Hot Pink: #F72585
+Sunset Orange: #FB5607
+Grid Cyan: #00F5D4
+VHS Black: #10002B
+
+1990s Grunge (Washed textiles and muted flannel)
+Flannel Crimson: #780000
+Faded Denim: #4A6FA5
+Acid Wash: #A3B4C8
+Doc Martens Black: #1A1A1D
+Bleached Bone: #EAE2B7
+
+ARCHITECTURE & DIGITAL INTERFACES
+
+Industrial & Urban (Weathered steel, concrete, and hazard tones)
+Rust Patina: #9E2A2B
+Galvanized Zinc: #ADB5BD
+Caution Yellow: #FFB703
+Concrete Rebar: #495057
+Oil Slick: #1B263B
+
+Minimalist UI (Clean modern screen neutrals)
+Pure Canvas: #FFFFFF
+Off-White Surface: #F8F9FA
+Subtle Border: #DEE2E6
+Slate Muted: #6C757D
+Ink Primary: #212529
+
+Game Boy DMG (Classic monochrome LCD greens)
+Screen Backlight: #CADC9F
+Pea Soup Light: #9BBC0F
+Olive Screen: #8BAC0F
+Moss Shadow: #306230
+Pixel Dark: #0F380F
+
+CRT Terminal (Phosphor glow and cathode glass)
+Phosphor Amber: #FFB000
+Matrix Green: #00FF41
+Scanline Grey: #333533
+Phosphor White: #E0E1DD
+Cathode Black: #0D0D0D
+
+================================================================================
+METAL THEMES
+================================================================================
+
+Precious Golds & Yellow Metals
+Classic Gold: #FFD700, #FFDF00, #CFB53B, #B5A642
+Yellow Gold: #FFDF00, #FFD700, #E6BE8A, #D4AF37
+Champagne Gold: #F7E7CE, #F3E5AB, #E6BE8A, #D4AF37
+Antique Gold: #CFB53B, #B69B4C, #A57C1B, #9C7C38
+Alchemical Gold: #FFC107, #FFB300, #DF9B00, #C78C32
+Electrum: #FFB300, #FFBF00, #F6A600, #D4AF37
+Honey Gold: #D4AF37, #DF9B00, #C78C32, #B38F4E
+Amber Gold: #FFBF00, #F6A600, #DF9B00, #C78C32
+Molten Gold: #F6A600, #FFBF00, #DF9B00, #C78C32
+Imperial Gold: #D4AF37, #FFD700, #C78C32, #B38F4E
+
+Silver, Platinum & White Metals
+Sterling Silver: #C0C0C0, #D1D5DB, #E5E4E2, #B2BABB
+Platinum: #E5E4E2, #CED0DD, #C2C6D1, #B2BABB
+White Gold: #E8E8E8, #D8D8D8, #C5C6D0, #E2EBEE
+Chrome: #D1D5DB, #E2E7EC, #CFD9DE, #B2BABB
+Mercury / Quicksilver: #E0E0E0, #9EAAAD, #B2BABB, #C4CCD4
+Palladium: #CED0DD, #E2E7EC, #C2C6D1, #D8D8D8
+Rhodium: #E2E7EC, #D0D6E2, #C4CCD4, #E2EBEE
+Silver Leaf: #E6E8FA, #CFD9DE, #D0D6E2, #E2EBEE
+Liquid Metal Silver: #B2BABB, #D1D5DB, #9EAAAD, #C4CCD4
+Astral Silver: #C4CCD4, #D0D6E2, #E2EBEE, #CFD9DE
+
+Copper, Rose & Warm Red Metals
+Copper: #B87333, #8B4513, #AD6A42, #964B00
+Rose Gold: #B76E79, #A8604E, #D4A5A5, #9E7B7B
+Rose Bronze: #A8604E, #B87333, #AD6A42, #A85A32
+Red Gold: #AB4E52, #8A3324, #5C1D24, #B76E79
+Dark Copper: #8B4513, #996515, #964B00, #AD6A42
+Aged Copper: #996515, #B87333, #8B4513, #AD6A42
+Gilded Rose: #D4A5A5, #B76E79, #E6BE8A, #D4AF37
+Desert Copper: #A76B45, #AD6A42, #B87333, #964B00
+Industrial Copper: #AD6A42, #B87333, #A85A32, #964B00
+Burnished Copper: #964B00, #8B4513, #AD6A42, #996515
+
+Bronzes & Antique Earth Tones
+Brushed Bronze: #CD7F32, #A57C1B, #9C7C38, #8E5A3C
+Dark Bronze: #3D2314, #5C4033, #4A3B32, #804A00
+Venetian Bronze: #5C4033, #3D2314, #4A3B32, #56402E
+Weathered Bronze: #56402E, #3D2314, #5C4033, #4A3B32
+Bronze Gold: #A57C1B, #9C7C38, #CD7F32, #B38F4E
+Sunset Bronze: #8E5A3C, #CD7F32, #9C7C38, #804A00
+Golden Bronze: #9C7C38, #A57C1B, #B38F4E, #CD7F32
+Deep Bronze: #4A3B32, #3D2314, #5C4033, #804A00
+Molten Bronze: #804A00, #8E5A3C, #A57C1B, #CD7F32
+Golden Bronze Alloy: #B38F4E, #9C7C38, #A57C1B, #CD7F32
+
+Irons, Steels & Industrial Grays
+Gunmetal: #2A3439, #36454F, #42464B, #383D3B
+Cast Iron: #2C3539, #2B2D2F, #393635, #383D3B
+Iron Gray: #4F4A45, #717478, #525559, #6E7478
+Metallic Charcoal: #36454F, #2A3439, #42464B, #383D3B
+Tantalum: #4A4A4D, #38383B, #3C4142, #525559
+Burnished Steel: #5A6B7C, #4682B4, #3A6073, #8C92AC
+Tungsten: #38383B, #4A4A4D, #3C4142, #2B2D2F
+Dark Steel: #3C4142, #2B2D2F, #383D3B, #525559
+Industrial Iron: #525559, #4F4A45, #717478, #393635
+Dark Iron: #2B2D2F, #2C3539, #383D3B, #393635
+
+Nickels, Brasses & Alloys
+Brass: #B5A642, #D4AF37, #C3A35E, #CD9575
+Polished Nickel: #C5C6D0, #B0B5B9, #42464B, #808080
+Satin Nickel: #B0B5B9, #C5C6D0, #71797E, #808080
+Yellow Brass: #D4AF37, #B5A642, #C3A35E, #CD9575
+Raw Brass: #C3A35E, #B5A642, #D4AF37, #CD9575
+Antique Brass: #CD9575, #C3A35E, #B5A642, #9C7C38
+Dark Nickel: #42464B, #71797E, #53565A, #36454F
+Pewter: #71797E, #53565A, #8A9A86, #7B8B8E
+Dark Pewter: #53565A, #71797E, #42464B, #36454F
+Titanium: #878681, #6E7478, #A3A3A3, #B0B5B9
+
+Modern Tech & Aerospace Metals
+Magnesium: #A3A3A3, #878681, #6E7478, #B0B5B9
+Smoked Chrome: #585A5B, #42464B, #36454F, #D1D5DB
+Frosted Aluminum: #C4CDD4, #808080, #A3A3A3, #CFD9DE
+Brushed Aluminum: #808080, #C4CDD4, #A3A3A3, #6E7478
+Steel Wire: #8C92AC, #717478, #4682B4, #5A6B7C
+Steel Gray: #717478, #525559, #383D3B, #6E7478
+Muted Platinum: #C2C6D1, #CED0DD, #B2BABB, #E5E4E2
+Frosty Platinum: #D8D8D8, #E5E4E2, #CED0DD, #C2C6D1
+Titanium Gray: #6E7478, #878681, #A3A3A3, #525559
+Rose Titanium: #9E7B7B, #B76E79, #878681, #C2C6D1
+
+Patina, Oxides & Weathered Finishes
+Oxidized Copper: #4A7C59, #3B7A57, #5A7369, #5A6B7C
+Copper Patina: #3B7A57, #4A7C59, #5A7369, #8A3324
+Iron Ore: #393635, #4F4A45, #383D3B, #2C3539
+Iron Rust: #8A3324, #996515, #8B4513, #5C4033
+Brass Patina: #5A7369, #4A7C59, #3B7A57, #71797E
+Coppery Bronze: #A85A32, #CD7F32, #B87333, #8E5A3C
+Dark Steel Gray: #383D3B, #3C4142, #2B2D2F, #525559
+Tarnished Silver: #9FA1A6, #71797E, #878681, #B0B5B9
+Silver Pewter: #8A9A86, #71797E, #B2BEB5, #CFD9DE
+Silver Ash: #B2BEB5, #8A9A86, #CFD9DE, #9FA1A6
+
+Mythical, Mineral & Crystalline Metals
+Orichalcum: #CC9900, #FFC107, #FFBF00, #D4AF37
+Bismuth: #5B6E88, #0047AB, #3A6073, #4682B4
+Pyrite (Fool's Gold): #B69B4C, #CFB53B, #D4AF37, #A57C1B
+Cobalt Metal: #0047AB, #3A6073, #4682B4, #5B6E88
+Zinc: #7B8B8E, #71797E, #A3A3A3, #525559
+Steel Blue Metal: #4682B4, #3A6073, #0047AB, #5A6B7C
+Steel Blue Shimmer: #3A6073, #4682B4, #0047AB, #8C92AC
+Glacial Silver: #E2EBEE, #D0D6E2, #E5E4E2, #CFD9DE
+Obsidian Metal: #1B1E23, #2A3439, #2C3539, #36454F
+Metallic Teal: #005A60, #3B7A57, #4A7C59, #0047AB
+
+Shimmering, Luminous & Exotic Alloys
+Metallic Violet: #5B3256, #5C1D24, #0047AB, #2A3439
+Pale Gold: #E6BE8A, #F7E7CE, #F3E5AB, #D4AF37
+Golden Ochre: #C78C32, #B38F4E, #A57C1B, #CD7F32
+Solar Gold: #DF9B00, #F6A600, #FFBF00, #FFC107
+Liquid Mercury: #9EAAAD, #B2BABB, #E0E0E0, #C4CCD4
+Golden Sand: #DAA520, #D4AF37, #C78C32, #E6BE8A
+Metallic Burgundy: #5C1D24, #5B3256, #8A3324, #3D2314
+Starlight Gold: #F3E5AB, #F7E7CE, #E6BE8A, #FFD700
+Star Silver: #D0D6E2, #E2EBEE, #E2E7EC, #C4CCD4
+Silver Frost: #CFD9DE, #E2E7EC, #E2EBEE, #D0D6E2
+
+================================================================================
+NATURE THEMES
+================================================================================
+
+Terrestrial Environments & Biomes
+Desert: #E3A857, #C28E38, #A46E2F, #80531D
+Tundra: #E2ECF2, #C5D8E4, #9FBECF, #789BB5
+Forest: #2E5A27, #457A3C, #1E3D19, #5C8A53
+Rainforest: #1A4D2E, #285E38, #0D2817, #3D8556
+Grassland: #9ACD32, #85B520, #B4E15C, #6B8E23
+Savanna: #D4A373, #CCD5AE, #E9EDC9, #FAEDCD
+Wetland: #5F6F52, #B99470, #86A789, #2C3E2D
+Mountains: #6E7B8B, #52606D, #3E4A56, #8B99A8
+Arctic: #F0F8FF, #E0EEEE, #B9D3EE, #8DB6CD
+Taiga (Boreal Forest): #1C3A27, #2D4A35, #122619, #405E48
+Chaparral: #B5935E, #8C6D3F, #664E29, #D2B48C
+Temperate Woodland: #79553D, #556B2F, #8FBC8F, #3F4C21
+Tropical Dry Forest: #A07855, #6B4F33, #C49A6C, #4D341F
+Alpine: #DCDCDC, #A9B7C6, #687A8F, #4A5868
+Prairie: #D2B48C, #DEB887, #BC8F8F, #8FBC8F
+Steppe: #C2B280, #D2B48C, #A39160, #8A7950
+Shrubland: #8F8F59, #6B6B38, #A3A375, #525226
+Coastal Region: #4682B4, #5CACEE, #E0EEEE, #CD853F
+Mangrove Forest: #2E4F4F, #0E8388, #CBE4DE, #2C3333
+Mediterranean Forest: #556B2F, #8B7355, #CD6600, #385E0F
+Deciduous Forest: #8B4513, #D2691E, #CD853F, #556B2F
+Coniferous Forest: #1B3022, #2A4736, #3E5F48, #122217
+Subarctic Taiga: #34495E, #2C3E50, #7F8C8D, #BDC3C7
+Thorn Scrub: #BDB76B, #808000, #556B2F, #BC8F8F
+High Mountain Meadow: #7CCD7C, #98FB98, #00CD66, #FFEC8B
+Bamboo Forest: #556B2F, #6B8E23, #9ACD32, #385E0F
+Cloud Forest: #4A6B6C, #2E4F4F, #708090, #A2B9BC
+Oasis: #2E8B57, #3CB371, #F4A460, #FFD700
+Semi-Arid Desert: #C49A6C, #A07855, #8C6239, #D2B48C
+Salt Flat: #F5F5F5, #E5E5E5, #D4D4D4, #FFFFFF
+Badlands: #8B4513, #A0522D, #CD5C5C, #BC8F8F
+Karst Landscape: #708090, #778899, #B0C4DE, #2F4F4F
+Subtropical Steppe: #D2B48C, #C2B280, #DEB887, #A07855
+Mossy Tundra: #556B2F, #6B8E23, #8F8F59, #BDB76B
+Redwood Forest: #5A2E2E, #7A3B3B, #3D1F1F, #994D4D
+
+Aquatic Environments & Waterways
+Ocean: #003366, #006699, #3399CC, #66CCCC
+Coral Reef: #FF6F59, #FFB347, #FFD166, #4ECDC4
+Freshwater Lake: #4A90E2, #50E3C2, #417505, #B8E986
+River: #2B7A78, #3AAFA9, #DEF2F1, #17252A
+Pond: #336633, #669966, #99CC99, #CCE6CC
+Marsh: #6A7B5E, #4A5D4E, #8C9E7A, #323E34
+Swamp: #2C3531, #3D4C44, #1B2420, #4E6157
+Estuary: #386641, #6A994E, #A7C957, #F2E8CF
+Deep Sea: #03045E, #023E8A, #0077B6, #0096C7
+Kelp Forest: #2C4A3E, #3C6E52, #1C3127, #52796F
+Open Sea: #001F3F, #0074D9, #7FDBFF, #39CCCC
+Lagoon: #48D1CC, #20B2AA, #008B8B, #006666
+Mangrove Estuary: #3A5F0B, #2E4F4F, #556B2F, #1C2833
+Tropical Beach: #F4A460, #FFD700, #AFEEEE, #00CED1
+Arctic Sea: #B0E0E6, #87CEEB, #4682B4, #1C39BB
+Glacier Lake: #7EC0EE, #5CACEE, #1874CD, #104E8B
+Spring Water: #E0FFFF, #AFEEEE, #00FFFF, #008B8B
+Fjord Waters: #2F4F4F, #3B5998, #483D8B, #191970
+River Delta: #8FBC8F, #556B2F, #BDB76B, #4682B4
+Hydrothermal Vent: #8B0000, #FF4500, #FF8C00, #1A1A1A
+Deep Ocean Trench: #0B0C10, #1F2833, #C5C6C7, #66FCF1
+Bioluminescent Bay: #000033, #00008B, #00FFFF, #7FFFD4
+Salt Marsh: #808000, #556B2F, #6B8E23, #B8860B
+Fen and Bog: #3B4D3C, #5C765D, #8FA38F, #232E24
+Alpine Stream: #B0E0E6, #4682B4, #5F9EA0, #E0FFFF
+Riverbank: #A0522D, #8B4513, #D2B48C, #556B2F
+Tidal Pool: #20B2AA, #008B8B, #4682B4, #5F9EA0
+Waterfall: #E0FFFF, #B0E0E6, #87CEEB, #FFFFFF
+Submarine Volcano: #FF4500, #8B0000, #2F4F4F, #1C1C1C
+Atoll: #00CED1, #48D1CC, #FFF8DC, #F4A460
+Oceanic Gyre: #003366, #004080, #0059B3, #0073E6
+Brackish Lagoon: #2E5A5B, #3D7A7B, #528B8B, #79CDCD
+Iceberg: #F0F8FF, #E6F2FF, #CCE6FF, #99CCFF
+Subterranean River: #1C2833, #2E4053, #5D6D7E, #85929E
+Mangrove Lagoon: #233D4D, #619B8A, #A1C181, #FCCA46
+
+Geological Formations & Other Landscapes
+Canyon: #A0522D, #CD853F, #D2691E, #8B4513
+Valley: #557A46, #85A375, #9EBC8C, #B4D3B2
+Cave: #1A1A1A, #2F2F2F, #4A4A4A, #636363
+Glacier: #E0FFFF, #AFEEEE, #B0E0E6, #87CEEB
+Volcano: #3D0C02, #8B0000, #FF4500, #2C2C2C
+Plateau: #C49A6C, #A07855, #8C6239, #E3C196
+Cliffside: #5C5C5C, #787878, #9E9E9E, #BDBDBD
+Island: #20B2AA, #F4A460, #3CB371, #87CEFA
+Fjord: #2F4F4F, #4682B4, #5F9EA0, #708090
+Dunes: #EDC9AF, #DEB887, #D2B48C, #C2B280
+Mesa: #CD5C5C, #BC8F8F, #D2B48C, #8B4513
+Butte: #A0522D, #CD853F, #DEB887, #D2691E
+Caldera: #2C2C2C, #4F4F4F, #8B0000, #CD5C5C
+Geothermal Spring: #00CED1, #FFD700, #FF4500, #9370DB
+Sinkhole: #2F4F4F, #36454F, #4A607A, #1A1A1A
+Granite Outcrop: #D3D3D3, #A9A9A9, #808080, #696969
+Sandstone Arch: #D2691E, #CD853F, #F4A460, #DEB887
+Talus Slope: #708090, #6C7B8B, #536878, #36454F
+Moraine: #5C5C5C, #6E7B8B, #838B8B, #4F4F4F
+Salt Dome: #FDFDFD, #F0F0F0, #DCDCDC, #C0C0C0
+Lava Field: #1A1A1A, #331A00, #660000, #FF3300
+Basalt Columns: #1F2124, #2D3136, #3C4048, #4D515B
+Limestone Cave: #D3D3D3, #C0C0C0, #A9A9A9, #E0E0E0
+Sandstone Canyon: #C49A6C, #A07855, #CD853F, #8B4513
+Obsidian Flow: #0D0D0D, #1A1A1A, #262626, #333333
+Chalk Cliffs: #FFFFFF, #FAFAFA, #F0F0F0, #E5E5E5
+Alluvial Fan: #D2B48C, #C49A6C, #A07855, #DEB887
+Salt Flat Playa: #F8F8F8, #EEEEEE, #E2E2E2, #D6D6D6
+Stalactite Cavern: #363636, #4F4F4F, #787878, #B0C4DE
+Polar Ice Cap: #FFFFFF, #F0F8FF, #E0FFFF, #C6E2FF
+
+================================================================================
+NEON THEMES
+================================================================================
+
+Vibrant Neon Pinks & Magentas
+Electric Pink: #FF007F, #FF3399, #FF66B2, #FF99CC
+Hot Pink Neon: #FF1493, #FF69B4, #FF82AB, #FFB5C5
+Neon Magenta: #FF00FF, #CC00CC, #FF33FF, #FF66FF
+Cyber Pink: #FF2A6D, #FF5C8D, #FF8EAD, #FFBFCF
+Laser Magenta: #E6007A, #FF1CAE, #FF4DD2, #FF80DF
+Shocking Pink: #FC0FC0, #FF33CC, #FF66D9, #FF99E6
+Bubblegum Neon: #FF0099, #FF33AD, #FF66C2, #FF99D6
+Radical Rose: #FF2400, #FF4500, #FF6347, #FF7F50
+Fluorescent Fuchsia: #FF0055, #FF3377, #FF6699, #FF99BB
+Atomic Pink: #FB607F, #FF7F9F, #FF9FBF, #FFBFDF
+Sunset Neon Pink: #FF2E93, #FF5CA7, #FF8BBB, #FFBACF
+Neon Orchid: #D900FF, #E133FF, #E966FF, #F199FF
+Neon Rose Quartz: #FF4DA6, #FF73B9, #FF99CC, #FFBFDF
+Rave Pink: #FF0088, #FF33AA, #FF66CC, #FF99EE
+Neon Plum: #B800FF, #CC33FF, #D666FF, #E099FF
+
+Electric Purples & Violets
+Neon Purple: #8A2BE2, #9932CC, #BA55D3, #DA70D6
+Cyber Violet: #7B00FF, #9433FF, #AD66FF, #C699FF
+Electric Indigo: #4B0082, #6A0DAD, #8A2BE2, #9932CC
+Ultra Violet: #6500B0, #8000FF, #9933FF, #B366FF
+Laser Purple: #9400D3, #A233D8, #B066DE, #BD99E4
+Neon Amethyst: #9900CC, #AA33DD, #BB66EE, #CC99FF
+Rave Purple: #5500FF, #7733FF, #9966FF, #BB99FF
+Cosmic Violet: #3D0C02, #4A0080, #6600CC, #8000FF
+Neon Lavender: #B266FF, #C488FF, #D6AAFF, #E8CCFF
+Bright Orchid: #DA70D6, #E082DE, #E695E6, #EFA7EE
+Electric Mauve: #D473D4, #DE8ADE, #E8A1E8, #F2B8F2
+Neon Grape: #6A0DAD, #7D22CE, #9037EF, #A34FFF
+Hyper Violet: #7A00CC, #9433D6, #AD66E0, #C699EB
+Glow Purple: #800080, #9932CC, #BA55D3, #DA70D6
+Neon Thistle: #D8BFD8, #E2CDE2, #ECDBEC, #F6E9F6
+
+Blazing Neons & Blues
+Electric Blue: #00FFFF, #00BFFF, #1E90FF, #0047AB
+Neon Cyan: #00FFFF, #33FFFF, #66FFFF, #99FFFF
+Laser Blue: #0080FF, #3399FF, #66B2FF, #99CCFF
+Cyber Blue: #00F0FF, #33F3FF, #66F6FF, #99F9FF
+Rave Blue: #0044FF, #3366FF, #6688FF, #99AAFF
+Neon Azure: #007FFF, #339FFF, #66BFFF, #99DFFF
+Fluorescent Cobalt: #0047AB, #1E6BE6, #3D8FF0, #5CB3FA
+Atomic Blue: #00BFFF, #33CCFF, #66DDFF, #99EEFF
+Neon Turquoise: #00EDEB, #33F1EF, #66F5F3, #99F9F7
+High-Voltage Blue: #00A8FF, #33B8FF, #66C8FF, #99D8FF
+Neon Sky: #87CEEB, #9CE2FF, #B2EAFF, #C7F2FF
+Neon Teal: #008080, #00A3A3, #00C6C6, #00E5E5
+Laser Aqua: #00FFCD, #33FFD6, #66FFE0, #99FFE9
+Electric Seafoam: #00FFAA, #33FFBB, #66FFCC, #99FFDD
+Neon Sapphire: #0F52BA, #2E75C9, #4D98D8, #6CBCE7
+Fluorescent Aqua: #00FFFF, #1AE6E6, #33CCCC, #4DB3B3
+Supercharged Blue: #0033FF, #335FFF, #668BFF, #99B7FF
+Neon Ice Blue: #E0FFFF, #B0FFFF, #80FFFF, #50FFFF
+Vibrant Cyan: #00CED1, #20B2AA, #48D1CC, #00FFFF
+Neon Aqua Glow: #00FFFF, #33FFFF, #66FFFF, #99FFFF
+
+Radiant Neon Greens
+Electric Lime: #00FF00, #33FF33, #66FF66, #99FF99
+Neon Green: #39FF14, #5CFF33, #7FFF52, #A3FF71
+Laser Green: #00FF66, #33FF85, #66FFA3, #99FFC2
+Cyber Green: #00FF48, #33FF6C, #66FF91, #99FFB5
+Rave Green: #33FF00, #5CFF33, #85FF66, #ADFF99
+Fluorescent Chartreuse: #7FFF00, #8CFF33, #99FF66, #A6FF99
+Toxic Green: #00FF33, #33FF5C, #66FF85, #99FFAD
+Slime Neon: #BFFF00, #CCFF33, #D9FF66, #E6FF99
+Atomic Green: #00FF7F, #33FF99, #66FFB2, #99FFCC
+Neon Emerald: #50C878, #70D692, #90E4AD, #B0F2C8
+High-Voltage Lime: #ADFF2F, #B8FF47, #C2FF5C, #CDFF71
+Neon Mint: #AAF0D1, #B9F3D8, #C8F6E0, #D7F9E7
+Acid Green: #B2EC5D, #BFEF73, #CBF289, #D8F59F
+Fluorescent Spring Green: #00FF7F, #2EE673, #5DCC66, #8CB259
+Bright Jade: #00A36C, #1ECB8B, #3DE3A9, #5CFBC7
+Radioactive Green: #39FF14, #4EE62E, #63CC47, #78B361
+Neon Pistachio: #93C572, #A3CE85, #B4D799, #C4E0AC
+Laser Lime: #76FF03, #8CFF33, #A3FF66, #B9FF99
+Electric Olive: #9ACD32, #A8D552, #B6DD72, #C4E591
+Neon Green Glow: #00FF00, #33FF33, #66FF66, #99FF99
+
+Blazing Neon Yellows & Oranges
+Electric Yellow: #FFFF00, #FFFF33, #FFFF66, #FFFF99
+Neon Yellow: #CCFF00, #D6FF33, #E0FF66, #EBFF99
+Laser Yellow: #FFEA00, #FFED33, #FFF066, #FFF399
+Cyber Yellow: #FFD700, #FFDF33, #FFE666, #FFEE99
+Fluorescent Gold: #FFD700, #FFC107, #FFB300, #FFA000
+Neon Amber: #FFBF00, #FFC833, #FFD166, #FFDA99
+Electric Orange: #FF6600, #FF8033, #FF9966, #FFB299
+Neon Orange: #FF5F1F, #FF7A42, #FF9566, #FFAF8B
+Laser Orange: #FF4500, #FF6333, #FF8166, #FF9E99
+Cyber Orange: #FF7F00, #FF9933, #FFB266, #FFCC99
+Fluorescent Tangerine: #FFA500, #FFB733, #FFC866, #FFDA99
+Atomic Orange: #FF6700, #FF8533, #FF9E66, #FFBC99
+Rave Orange: #FF3300, #FF5C33, #FF8566, #FFAD99
+Sunset Neon Orange: #FF4500, #FF5722, #FF7043, #FF8A65
+Glow Yellow: #FFFF33, #FFFF66, #FFFF99, #FFFFCC
+
+Luminous Neon Reds & Multicols
+Electric Red: #FF0000, #FF3333, #FF6666, #FF9999
+Neon Red: #FE019A, #FF1A75, #FF334D, #FF0033
+Laser Red: #FF0033, #FF335C, #FF6685, #FF99AF
+Cyber Red: #FF2400, #FF472E, #FF6B5C, #FF8F8A
+Fluorescent Crimson: #DC143C, #E23D5C, #E8667D, #EE8FA9
+Neon Coral: #FF6F61, #FF857B, #FF9C94, #FFB2AD
+Plasma Neon: #FF007F, #9400D3, #00FFFF, #39FF14
+Cyberpunk Spectrum: #FF007F, #00F0FF, #39FF14, #FFEA00
+Synthwave Glow: #FF2A6D, #05D9E8, #FF00FF, #7B00FF
+Vaporwave Neon: #FF71CE, #01CDFE, #05FFA1, #B967FF
+Laser Grid: #FF0055, #9900FF, #00FFCC, #FFFF00
+Neon Rainbow: #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3
+Rave Light: #00FFFF, #FF00FF, #39FF14, #FFFF00
+Toxic Glow: #39FF14, #00FFFF, #FF007F, #FFEA00
+Ultra Neon: #FF0055, #00FFCC, #7B00FF, #FFFF00
+
+================================================================================
+PASTEL THEMES
+================================================================================
+
+Soft Pinks & Roses
+Blush Elegance: #FFD1DC, #FFB7C5, #FF8DA1, #FF6B8B
+Rosewater Dream: #FADADD, #F4C2C2, #E8A3A3, #D98282
+Strawberry Milk: #FFF0F5, #FFD1DC, #FFB6C1, #FF9EB5
+Peony Whisper: #FCE4EC, #F8BBD0, #F48FB1, #F06292
+Cherry Blossom: #FFF1F2, #FFE4E6, #FECDD3, #FDA4AF
+Vintage Rose: #E5C1CD, #D4A5B8, #C2889E, #B06B84
+Cotton Candy Pink: #FFDFDF, #FFC4C4, #FF9999, #FF7A7A
+Bubblegum Pastel: #FFE5EC, #FFC2D1, #FF9FB7, #FF7D9C
+Flamingo Feather: #FEE1E8, #FCC2D7, #FAA3C6, #F884B4
+Ruby Mist: #FCE8E6, #F9D1CE, #F5A8A3, #F08078
+
+Dreamy Lavenders & Purples
+Lavender Mist: #E6E6FA, #D8BFD8, #DDA0DD, #BA55D3
+Lilac Echo: #F3E5F5, #E1BEE7, #CE93D8, #BA68C8
+Amethyst Haze: #EDE7F6, #D1C4E9, #B39DDB, #9575CD
+Wisteria Glow: #E8DAEF, #D7BDE2, #C39BD3, #AF7AC5
+Orchid Whisper: #F5EEF8, #EBDEF0, #D7BDE2, #C39BD3
+Periwinkle Dream: #CCCCFF, #B5B9FF, #9FA6FF, #8892FF
+Plum Pastel: #F4ECF7, #D7BDE2, #BB8FCE, #A569BD
+Thistle Soft: #D8BFD8, #C8A2C8, #B885B8, #A868A8
+Mauve Magic: #E3D7E8, #D0BADA, #BD9CCB, #AA7EBD
+Violet Breeze: #EAE6F8, #D5CCF2, #BFB2EB, #AA98E5
+
+Serene Blues & Sky
+Skyward Bound: #E0F7FA, #B2EBF2, #80DEEA, #4DD0E1
+Baby Blue Eyes: #E3F2FD, #BBDEFB, #90CAF9, #64B5F6
+Glacier Breeze: #E8F4F8, #D1E9F0, #B0DDE8, #8FD1E0
+Cornflower Soft: #D6EAF8, #AED6F1, #85C1E9, #5DADE2
+Ice Blue: #F0F8FF, #E0F0FF, #C0E0FF, #A0D0FF
+Powder Blue: #B0E0E6, #93CAD0, #76B4BA, #599EA4
+Arctic Whisper: #E4F1FE, #CBE4FD, #B2D6FC, #99C9FB
+Twilight Blue: #D4E6F1, #A9CCE3, #7FB3D5, #5499C7
+Zen Blue: #EBF5FB, #D4EFDF, #A9CCE3, #85929E
+Oceanic Calm: #EAF2F8, #D4E6F1, #A9CCE3, #7FB3D5
+
+Mint & Fresh Greens
+Minty Fresh: #E8F5E9, #C8E6C9, #A5D6A7, #81C784
+Sage Harmony: #F1F8E9, #DCEDC8, #C5E1A5, #AED581
+Eucalyptus Calm: #E0F2F1, #B2DFDB, #80CBC4, #4DB6AC
+Seafoam Glow: #E0F2F1, #C8E6C9, #A7D7C5, #86C8AE
+Pistachio Cream: #F4F6F0, #E3EBD9, #D2E0C2, #C1D5AB
+Tea Green: #D0F0C0, #B4E8A3, #98E086, #7CD86A
+Aloe Vera: #E8F8F5, #D1F2EB, #A3E4D7, #76D7C4
+Olive Pastel: #F9FBE7, #F0F4C3, #E6EE9C, #DCE775
+Forest Whisper: #EAFAF1, #D4EFDF, #A9DFBF, #7DCEA0
+Clover Soft: #E9F7EF, #D4EFDF, #ABEBC6, #82E0AA
+
+Sunshine Yellows & Ambers
+Lemon Chiffon: #FFFACD, #FFF8B5, #FFF59D, #FFF176
+Buttercup Soft: #FFFDE7, #FFF9C4, #FFF59D, #FFF176
+Honey Glow: #FEF9E7, #FCF3CF, #F9E79F, #F4D03F
+Banana Milk: #FFF9E6, #FFF3CC, #FFE699, #FFDA66
+Morning Sun: #FFF5E6, #FFEAD1, #FFDFB3, #FFD480
+Peach Sorbet: #FFE5B4, #FFDAB9, #FFC085, #FFA751
+Apricot Jam: #FFEDD8, #FFDCB8, #FFCB98, #FFB979
+Daffodil Dream: #FFFDEB, #FFFAD1, #FFF7B8, #FFF49E
+Creamy Yellow: #FCF3CF, #FDEBD0, #FAD7A0, #F5CBA7
+Warm Vanilla: #FEFEE2, #FEFDC4, #FEFCA6, #FEFB87
+
+Warm Peaches & Corals
+Peach Puff: #FFDAB9, #FFCBA4, #FFBC8F, #FFAD7A
+Coral Reef: #FFECE6, #FFD9CE, #FFC5B5, #FFB29D
+Melon Glow: #FFD1B3, #FFBE99, #FFAB80, #FF9866
+Sunset Pastel: #FFE5D9, #FFCBC1, #FFB1A8, #FF9790
+Papaya Whip: #FFEFD5, #FFE4B5, #FFD39B, #FFC280
+Salmon Soft: #FFD8D2, #FFC3BB, #FFAEA4, #FF998D
+Tangerine Dream: #FFEBD6, #FFD6AD, #FFC285, #FFAD5C
+Cantaloupe: #FFE6CC, #FFD1A3, #FFBC7A, #FFA752
+Flamingo Coral: #FFD1CD, #FFB8B3, #FF9F98, #FF857E
+Terracotta Pastel: #FADBD8, #F5B7B1, #ED9D95, #E58379
+
+Cozy Neutrals, Beiges & Earth Tones
+Warm Sand: #F9EBEA, #F6DDCC, #FAD7A0, #FDEBD0
+Oatmeal Cream: #F7F5F0, #EFECE4, #E6E2D8, #DCD5CB
+Cashmere Beige: #F3EFEA, #E6DFD5, #D9CFC0, #CCBFAB
+Muted Taupe: #EFECE9, #E2DDD9, #D5CEC9, #C8BFC0
+French Linen: #EAE6E1, #DCD5CD, #CEC4B9, #C0B3A5
+Soft Mushroom: #E8E4E1, #D8D1CE, #C9BFBB, #B9ADA8
+Almond Milk: #FAF6F0, #F4ECE1, #EDE3D2, #E7D9C3
+Warm Greige: #EBE8E5, #DCD7D2, #CDC6BF, #BEB5AC
+Desert Dust: #F5EBE0, #E3D5CA, #D5BDAF, #C6AC8F
+Barely Brown: #F5F3F2, #EBE7E5, #E0DBD9, #D6CFCF
+
+Teals, Aquas & Cyans
+Aqua Whisper: #E0F7FA, #B2EBF2, #80DEEA, #4DD0E1
+Teal Breeze: #E0F2F1, #B2DFDB, #80CBC4, #4DB6AC
+Cyan Mist: #E8F8F5, #D1F2EB, #A3E4D7, #76D7C4
+Turquoise Glow: #D1F2EB, #A2D9CE, #73C6B6, #45B39D
+Glacier Aqua: #E6F2F2, #CCE6E6, #B3D9D9, #99CCCC
+Sea Glass: #D9EBE8, #B3D7D2, #8CC4BC, #66B0A6
+Robin Egg Blue: #DFF8EB, #BCEFDC, #9AE5CD, #77DCBE
+Caribbean Pastel: #E0FFFF, #C1FFFF, #A3FFFF, #85FFFF
+Pale Teal: #E8F6F3, #D0ECE7, #A2D9CE, #73C6B6
+Nordic Blue-Green: #E4F0EC, #C8E1D8, #ACD2C4, #8FC3B1
+
+Multicolor & Rainbow Pastel Themes
+Pastel Rainbow: #FFD1DC, #FFF9C4, #C8E6C9, #B3E5FC, #E1BEE7
+Unicorn Dream: #F8BBD0, #E1BEE7, #C5CAE9, #B2DFDB, #FFF9C4
+Mermaid Lagoon: #B2EBF2, #B2DFDB, #C8E6C9, #FFF9C4, #FFE0B2
+Sherbet Medley: #FFCBC1, #FFE5B4, #FFF9C4, #C8E6C9, #D1C4E9
+Spring Carnival: #FCE4EC, #F3E5F5, #E8F5E9, #FFFDE7, #E0F7FA
+Pastel Fiesta: #FFD1DC, #FFE0B2, #FFF9C4, #C8E6C9, #B2EBF2
+Bubblegum & Mint: #FFD1DC, #E0F2F1, #FFF0F5, #E8F5E9
+Sunset to Sky: #FFD1DC, #FFE5B4, #FFF9C4, #E1BEE7, #B3E5FC
+Pastel Galaxy: #E1BEE7, #D1C4E9, #C5CAE9, #BBDEFB, #B2EBF2
+Confetti Pastel: #FFCDD2, #FFE082, #C5E1A5, #80DEEA, #CE93D8
+
+Earthy Botanicals & Warm Spices
+Matcha Latte: #F1F8E9, #DCEDC8, #C5E1A5, #AED581, #9CCC65
+Terracotta Sunset: #FADBD8, #F5B7B1, #ED9D95, #E58379, #D98880
+Warm Ochre Pastel: #FEF9E7, #FCF3CF, #F9E79F, #F7DC6F, #F4D03F
+Cinnamon Rose: #F5B7B1, #F2D7D5, #EBDEF0, #D7BDE2
+Saffron Cream: #FEF9E7, #FCF3CF, #FAD7A0, #F5CBA7
+Dusty Olive: #E8E8D0, #D5D5B8, #C2C29F, #AFA86B
+Earthy Terracotta: #FADBD8, #EDBB99, #F9E79F, #D4EFDF, #D7BDE2
+Spiced Honey: #FEF9E7, #FCF3CF, #FDEBD0, #FAD7A0
+Clay & Sand: #F9F3EE, #F2E4D8, #EBD5C2, #E4C7AC
+Mossy Stone: #E8EDE7, #D1DCBE, #BACB95, #A3BA6C
+
+================================================================================
+SKIN THEMES
+================================================================================
+
+Porcelain & Fair Undertones
+Porcelain Ivory: #FDFBF7, #F9F4EE, #F4ECE1, #ECE4D7
+Fair Rose: #FCECE4, #F8E2D5, #F4D5C5, #EFC8B6
+Pale Alabaster: #FAF6F0, #F3ECE1, #ECE2D2, #E4D8C3
+Cool Fair: #F7F1EC, #EFE5DD, #E7D8CD, #DFCBC0
+Warm Porcelain: #FAF3EC, #F4E7DA, #EEDBCA, #E7CFB9
+Fair Neutral: #F5EFEB, #EBE3DE, #E1D7D0, #D8CBC3
+Creamy Fair: #FCF9F5, #F7F2EC, #F2EAE1, #EDE3D6
+Translucent Pale: #FEFDFC, #FAF7F4, #F5F1EC, #F0EAE3
+Milky Fair: #FAF6F2, #F3EDE7, #ECE4DC, #E5DBD2
+Delicate Fair: #FBF7F4, #F4EDE8, #EDE3DC, #E6D9D0
+
+Light & Beige Undertones
+Classic Light: #F3E5D8, #E8D4C0, #DDC4A9, #D2B491
+Warm Beige: #F2E4D0, #E5D3B8, #D8C2A0, #CBB188
+Cool Light: #EFE2D6, #E2D1C1, #D5C0AC, #C8B097
+Neutral Light: #EEDCCE, #DFCCA9, #D0BC9F, #C2AC95
+Golden Light: #F5E6CC, #EBD5AD, #E0C48F, #D6B370
+Soft Sand: #EFE0CC, #E2CFB4, #D5BF9D, #C8AE85
+Honey Light: #EDDCB9, #E0CC9F, #D4BC85, #C7AC6C
+Beige Oasis: #F1E2CD, #E5D2B8, #D8C2A3, #CCB28E
+Light Cashmere: #EFE0CB, #E2CDAF, #D5BA93, #C8A778
+Subtle Wheat: #F2E4D2, #E6D4B9, #E0C8A2, #D8B78B
+
+Olive & Mediterranean Undertones
+Classic Olive: #D4B996, #C5A47C, #B68F63, #A77A4A
+Warm Olive: #D7BC99, #C8A87D, #B99462, #AA8046
+Cool Olive: #CDB393, #BE9D73, #AF8854, #A07234
+Golden Olive: #E0C39E, #D2AC7B, #C59559, #B77F36
+Medium Olive: #C9A983, #B8936A, #B0855A, #A3744D
+Deep Olive: #B5936C, #A17C53, #8D653A, #794E21
+Sun-Kissed Olive: #D2B28B, #C29F73, #B18C5B, #A17943
+Earthy Olive: #C3A37F, #B18F67, #9F7B4F, #8D6737
+Amber Olive: #D9BB96, #C7A67B, #B59160, #A37C45
+Textured Olive: #C7A680, #B49168, #A27C51, #90673A
+
+Tan & Sun-Drenched Tones
+Golden Tan: #DEB887, #D2A679, #C6956A, #B9835B
+Warm Honey Tan: #E3C196, #D4AF7B, #C69D60, #B78B45
+Deep Sun Tan: #D1A376, #C08F5F, #AF7B49, #9E6732
+Bronze Tan: #C89D6C, #B58753, #A2713A, #8F5B21
+Caramel Glow: #C69A6E, #B48658, #A37243, #915E2D
+Toasted Tan: #BD9165, #AA7D50, #98693B, #855526
+Amber Tan: #C99E73, #B78A5C, #A47646, #926330
+Rich Sun-Kissed: #B88B5D, #A57748, #926333, #804F1E
+Terracotta Tan: #C4966B, #B28153, #9F6C3B, #8D5724
+Bronze Radiance: #BA8B5C, #A67645, #93612F, #7F4C18
+
+Rich Caramel & Golden Browns
+Classic Caramel: #A67C52, #94693F, #82562B, #704318
+Golden Caramel: #B38659, #A07243, #8D5E2D, #7A4A17
+Warm Toffee: #9C7249, #895F35, #764C22, #64390E
+Rich Butterscotch: #A87D54, #946940, #81552C, #6D4118
+Honey Brown: #B0855B, #9C7145, #885D2F, #744919
+Amber Brown: #A2764C, #8F6236, #7B4E21, #683A0B
+Deep Caramel: #8E633B, #7B5028, #673D15, #542A02
+Glossy Caramel: #A57B50, #92663B, #7F5127, #6C3D12
+Smooth Toffee: #997047, #855C33, #72481F, #5E340B
+Velvet Caramel: #A1764D, #8E6237, #7A4E21, #673A0B
+
+Deep Almond & Warm Chestnut Tones
+Almond Brown: #8C6239, #794F26, #663C13, #532900
+Warm Chestnut: #7E532B, #6B4018, #582D05, #451A00
+Rich Chestnut: #8A5E35, #774B22, #64380F, #512500
+Deep Almond: #794F26, #663C13, #532900, #401600
+Golden Chestnut: #92673E, #7F542B, #6C4118, #592E05
+Smooth Almond: #845931, #71461E, #5E330B, #4B2000
+Mahogany Chestnut: #754B24, #623811, #4F2500, #3C1200
+Deep Chestnut: #6D431D, #5A300A, #471D00, #340A00
+Roasted Almond: #7A5028, #673D15, #542A02, #411700
+Earthy Chestnut: #825830, #6F451D, #5C320A, #491F00
+
+Dark Cocoa & Rich Mahogany
+Classic Cocoa: #59361E, #46250F, #331500, #200500
+Rich Mahogany: #4D2D18, #3A1C0A, #270C00, #140000
+Deep Cocoa: #422310, #2F1302, #1C0300, #090000
+Dark Chocolate: #3D200E, #2A1000, #170000, #040000
+Warm Mahogany: #52301A, #3F1D0A, #2C0A00, #190000
+Smooth Cocoa: #4A2814, #371806, #240800, #110000
+Deep Mahogany: #3E1E0D, #2B0E00, #180000, #050000
+Midnight Cocoa: #33180A, #200800, #0D0000, #000000
+Espresso Skin: #2E1508, #1B0500, #080000, #000000
+Rich Espresso: #361A0C, #230A00, #100000, #000000
+
+Vibrant Undertones & Espresso
+Subtle Red Undertone: #8E543A, #7B4127, #682E14, #551B01
+Golden Red Undertone: #965B3E, #83482B, #703518, #5D2205
+Cool Red Undertone: #854B31, #72381E, #5F250B, #4C1200
+Deep Red Undertone: #7A4228, #672F15, #541C02, #410900
+Vibrant Red Undertone: #9E6142, #8B4E2F, #783B1C, #652809
+Rich Red Undertone: #894E31, #763B1E, #63280B, #501500
+Warm Dark Espresso: #381E12, #250D03, #120000, #000000
+Deep Dark Espresso: #30170D, #1D0700, #0A0000, #000000
+Glossy Dark Espresso: #402316, #2D1309, #1A0000, #070000
+Smooth Dark Espresso: #351C10, #220C01, #0F0000, #000000
+
+Cool & Neutral Undertone Varied
+Cool Porcelain: #F5EAE6, #ECD9D2, #E2C8BF, #D8B7AC
+Cool Fair Neutral: #EFE0D9, #E2CEC5, #D5BCB1, #C8AA9D
+Cool Medium: #C5A79B, #B29386, #9F7F72, #8C6B5E
+Cool Tan: #A8867B, #957267, #825E53, #6F4A3F
+Cool Deep: #6B4E44, #583B31, #45281E, #32150B
+Neutral Soft Beige: #EBDDD0, #DFCDBF, #D3BDB5, #C7AD9E
+Neutral Soft Medium: #BA9D8F, #A68A7C, #927769, #7E6456
+Neutral Soft Tan: #8E7364, #7A5F50, #664B3C, #523728
+Neutral Soft Deep: #5B4234, #472F21, #331C0E, #1F0900
+Neutral Rich Deep: #483327, #352014, #220D01, #0F0000
+
+Specialty & Illustrative Skin Tones
+Fantasy Pale: #FDF9F6, #F5ECE5, #EDDFD4, #E5D3C3
+Fantasy Elf: #EEDCCE, #DFCCA9, #D0BC9F, #C2AC95
+Fantasy Orc/Olive: #B5C99A, #9AB37B, #7F9C5C, #64853D
+Fantasy Bronze: #CD853F, #BC752F, #AB651F, #9A550F
+Fantasy Copper: #D27D46, #C16D36, #B05D26, #9F4D16
+Fantasy Golden: #F0DC82, #DFCB71, #CEBA60, #BDA94F
+Fantasy Dark Elf: #3B444B, #2C353D, #1D262F, #0E1721
+Fantasy Shadow: #2F353B, #20262C, #11171D, #02080E
+Fantasy Warm Tan: #D2906C, #C17F5B, #B06E4A, #9F5D39
+Fantasy Deep Dusk: #4A3B4C, #392A3B, #28192A, #170819
+
+================================================================================
+TOP 1,000 COLOR THEMES & PALETTES
+================================================================================
+
+MODERN & MINIMALIST
 Pure Nordic: #FFFFFF, #F5F5F7, #D2D2D7, #86868B, #1D1D1F
 Warm Alabaster: #FAF8F5, #EFECE6, #D8D2C5, #9E9589, #3A3530
 Slate & Stone: #F4F6F8, #DCE1E7, #9AA5B1, #52606D, #1F2933
 Soft Concrete: #EDEDED, #D6D6D6, #A3A3A3, #666666, #2B2B2B
+Oatmeal & Clay: #F7F3EE, #E6DDD0, #C7B7A3, #8C7A6B, #4A3F35
+Crisp Linen: #FCFAF8, #F0EBE1, #D5CEC2, #8E877E, #2E2B28
+Architectural Gray: #F2F2F2, #CCCCCC, #999999, #4D4D4D, #1A1A1A
+Pebble & Sand: #F5F2EB, #E2DCD0, #BDB5A6, #7A7367, #33302B
+Mist & Charcoal: #F0F4F5, #D3DCE0, #95A5AC, #4F5D63, #1E2426
+Ivory Tower: #FFFFF0, #F5F5DC, #E0DFC8, #9C9B88, #3D3C33
+Minimalist Blush: #FDF8F7, #F5E6E3, #E0C3BE, #9E7B75, #42302D
+Zen Garden: #F4F5F0, #DCE0D5, #A7B09B, #636B58, #272B22
+Frosted Glass: #F7FAFC, #E2E8F0, #CBD5E0, #718096, #2D3748
+Paper & Ink: #FAF9F6, #EAE6DF, #BDB7AE, #5C5852, #141312
 Quiet Luxury: #F6F4F0, #E3DDD3, #C2B6A3, #7D705D, #2C261E
+Scandi Birch: #F9F7F2, #EBE5D8, #D1C6B2, #8A7E6B, #383229
+Monochrome Dust: #F8F8F8, #E0E0E0, #B0B0B0, #707070, #202020
+Chalk & Charcoal: #FAFAFA, #E5E5E5, #A3A3A3, #525252, #171717
+Desert Minimal: #F9F5F0, #EADFD2, #D1BFA9, #8F7A62, #3D3226
+Cool Quartz: #F5F7FA, #E4E7EB, #CBD2D9, #616E7C, #1F2933
+Warm Taupe: #F6F3F0, #E5DDD5, #C7B9AC, #827366, #362F29
+Clean Canvas: #FFFFFF, #F4F4F5, #E4E4E7, #71717A, #18181B
+Soft Sage Minimal: #F4F7F5, #E1E8E3, #BAC7BE, #6E7D73, #262E29
+Bone & Espresso: #F7F4EF, #E6DFD3, #C4B8A5, #6E5D4F, #2B211A
+Silver Lining: #F8F9FA, #E9ECEF, #CED4DA, #6C757D, #212529
+Muted Clay: #F7F2F0, #E8DBD5, #CCB5AB, #8A6E63, #3B2D28
+Glacier White: #F2F7F9, #DCE8ED, #B0C7D1, #5E7885, #1D282E
+Raw Silk: #FAF7F2, #EDE6D8, #D4C8B4, #8C7F6A, #363026
+Urban Loft: #F3F3F3, #D9D9D9, #A6A6A6, #595959, #1F1F1F
+Nordic Pine: #F3F5F4, #DCE2DF, #B0BDB7, #5F6E67, #222925
+Limestone: #F6F5F0, #E5E3D8, #C7C3B2, #7D7968, #302E26
+Whisper Gray: #F7F7F8, #E6E6E9, #C4C4CC, #737380, #232329
+Warm Putty: #F5F2EE, #E3DCD3, #C4B9AC, #7D7265, #332E28
+Minimalist Navy: #F4F6F9, #DCE2EC, #9AA8C2, #475878, #162033
+Vanilla Bean: #FCF9F2, #F2EBD9, #D9CCB0, #8F8164, #383123
+Ash & Ember: #F5F4F4, #E0DCDC, #B5ADAD, #6E6363, #292222
+Cloud Nine: #F9FBFD, #EBF1F6, #CEDCE8, #758A9E, #222B33
+Travertine: #F7F4EE, #E8E1D3, #CEC2AC, #877A63, #363025
+Minimalist Olive: #F5F6F2, #E2E5D8, #BFC4AD, #72785E, #2B2E22
+Porcelain: #FAFAFA, #EFEFEF, #D4D4D4, #737373, #262626
+Sandstone Minimal: #F8F4EE, #EBE1D3, #D1C0A8, #8C7960, #3B3125
+Steel & Snow: #F6F8FA, #E1E6EB, #B8C2CC, #5C6873, #1D2226
+Pale Terracotta: #FAF5F2, #EFE2DC, #D9BFB4, #947467, #3D2D27
+Whisper Blue: #F5F8FA, #E3ECF2, #BDD0DE, #688091, #212B33
+Linen Closet: #F9F8F6, #ECE9E2, #D1CCC0, #858075, #33312C
+Graphite Minimal: #F2F2F3, #DCDCE0, #AEAEB5, #5C5C63, #1C1C1F
+Soft Mocha: #F7F4F2, #E8DFDA, #C9B9B0, #826F65, #362C27
+Arctic Breeze: #F4F9FA, #DDF0F2, #B0D5D9, #5A848A, #1B2B2E
+Rice Paper: #FBF9F5, #EFECE4, #D6D0C2, #8C8577, #36332C
+Charcoal Sketch: #F5F5F5, #E0E0E0, #9E9E9E, #424242, #121212
+Greige Harmony: #F6F5F3, #E6E3DE, #C9C4BC, #807A72, #33302C
+Pale Mauve Minimal: #F9F6F7, #EDE3E6, #D4C1C7, #8C737B, #382B30
+Driftwood Minimal: #F7F5F2, #E6E1DA, #C7BEB2, #7D7468, #332E28
+Morning Fog: #F4F6F7, #E1E6E8, #BFC8CC, #6C777C, #23282B
+Cream & Copper: #FAF7F2, #EDE3D5, #D4BC9E, #96724D, #3D2B19
+Minimalist Ochre: #FAF7F0, #EFE7D3, #D6C69E, #8F7D50, #3B321D
+Silver Mist: #F7F8F9, #E6E9EC, #C5CCD3, #6E7780, #222629
+Chalkboard: #F5F5F5, #DCDCDC, #A8A8A8, #545454, #1A1A1A
+Soft Pistachio: #F6F8F4, #E5EBE0, #C4D1B8, #738266, #293023
+Alabaster Rose: #FAF6F6, #EFE4E4, #D9C3C3, #917575, #3B2C2C
+Basalt & Snow: #F7F8F8, #E2E5E5, #B5BCBC, #5E6666, #1E2222
+Warm Cashmere: #F8F5F1, #EAE2D7, #CFC1AE, #877763, #383026
+Pale Periwinkle: #F6F7FA, #E4E7F2, #C2C8E0, #6D7594, #242836
+Minimalist Teal: #F4F8F8, #DFECEC, #B5D1D1, #5E8080, #1E2B2B
+Birch Bark: #F9F8F6, #EBE8E1, #CFCAC0, #857F74, #33302B
+Concrete Jungle: #F2F3F2, #DCDEDC, #B2B5B2, #636663, #212221
+Soft Lavender Minimal: #F8F6FA, #EAE4F0, #CFC3DB, #7E6E8F, #2E2636
+Dune Grass: #F7F7F2, #E6E6DC, #C4C4B2, #7A7A63, #2E2E24
+Pale Coral Minimal: #FAF5F4, #EFE1DE, #D9BCB6, #916E67, #3B2926
+Cloud & Slate: #F5F7F8, #E2E7EA, #BCC6CC, #66737A, #21272B
+Creamy Oat: #FAF7F2, #EDE6DA, #D4C8B4, #8C7F6A, #363026
+Minimalist Bronze: #F8F5F0, #EAE2D5, #CFC2AD, #87765D, #382F22
+Frost & Pine: #F3F6F5, #DCE5E2, #B0C4BD, #5B756C, #1F2B27
+Soft Peach Minimal: #FAF6F3, #EFE3DA, #D9C2B2, #917460, #3B2D23
+Pale Mint Minimal: #F4F9F7, #DDF0EA, #B0D9CC, #5A8778, #1B2E28
+Warm Slate: #F5F6F7, #E2E5E8, #BCC2C7, #687078, #222629
+Ivory & Walnut: #FAF7F2, #ECE4D8, #D1C3AF, #87755E, #362C20
+Soft Lilac Minimal: #F8F6FA, #EAE3F0, #CFC2DB, #7E6C8F, #2E2636
+Pebble Gray: #F6F6F6, #E4E4E4, #C2C2C2, #737373, #262626
+Desert Sand Minimal: #F9F6F0, #ECE4D5, #D4C5AA, #8C7B5E, #383022
+Cool Mist: #F4F8FA, #E1EEF2, #B8D4DE, #5E7E8A, #1E2B30
+Soft Rose Minimal: #FAF5F6, #EFE1E4, #D9BCC2, #916E75, #3B292D
+Nordic Stone: #F6F7F6, #E3E6E3, #BFC4BF, #6E756E, #262926
+Pale Amber Minimal: #FAF7F0, #EFE7D3, #D6C69E, #8F7D50, #3B321D
+Warm Linen: #F9F7F3, #ECE8DF, #D1C9BA, #857D6E, #33302A
+Soft Aqua Minimal: #F4F9F9, #DDF0F0, #B0D9D9, #5A8787, #1B2E2E
+Chalk & Stone: #F7F7F5, #E6E6E1, #C4C4BC, #7A7A70, #2E2E29
+Minimalist Plum: #F8F5F9, #ECE2EE, #D4BDD9, #85688C, #332536
+Pale Gold Minimal: #FAF8F0, #EFE9D3, #D6CA9E, #8F8150, #3B341D
+Soft Moss Minimal: #F5F7F4, #E3E8E0, #BFC9B8, #6F7A66, #272E22
+Warm Bisque: #FAF5F0, #EFE2D5, #D9C0A8, #917357, #3B2C1E
+Cool Graphite: #F5F6F7, #E2E4E6, #BCC0C4, #686E73, #222526
+Soft Berry Minimal: #FAF5F7, #EFE1E6, #D9BCC6, #916E7A, #3B2930
+Nordic Mist: #F4F7F8, #E1E9EC, #B8CBD1, #5E7780, #1E282B
+Pale Terracotta Minimal: #FAF5F2, #EFE2DC, #D9BFB4, #947467, #3D2D27
+Warm Cream: #FCF9F2, #F2EBD9, #D9CCB0, #8F8164, #383123
+Soft Teal Minimal: #F4F8F8, #DFECEC, #B5D1D1, #5E8080, #1E2B2B
+Minimalist Ash: #F6F6F6, #E5E5E5, #C4C4C4, #757575, #262626
+Pale Periwinkle Minimal: #F6F7FA, #E4E7F2, #C2C8E0, #6D7594, #242836
+Warm Oat: #F8F5F0, #EAE2D5, #CFC2AD, #87765D, #382F22
+Soft Sage & Stone: #F5F7F5, #E2E7E2, #BCC7BC, #687568, #222922
+Minimalist Sand: #F9F6F0, #ECE4D5, #D4C5AA, #8C7B5E, #383022
 
-[Cyberpunk & Sci-Fi]
-Neon Tokyo: #0B0C10, #1F2833, #FF007F, #00F0FF, #7B2CBF
-Blade Runner: #0D1117, #161B22, #FF5500, #00B4D8, #E0E1DD
-Cyber Grid: #05050A, #121224, #00FF9F, #FF0055, #7000FF
-Synthwave Sunset: #1A0B2E, #3B185F, #A12568, #FEC260, #00F5D4
-Matrix Code: #020A04, #06210D, #0F5223, #00FF41, #A8FFBE
+NATURE & EARTHY
+Deep Forest: #1B4332, #2D6A4F, #40916C, #74C69D, #D8F3DC
+Terracotta & Sage: #E07A5F, #F2CC8F, #81B29A, #3D405B, #F4F1DE
+Autumn Harvest: #D95D39, #F18805, #8C1C13, #586F2C, #3D2B1F
+Desert Canyon: #C84B31, #ECDBBA, #2D4263, #191919, #8E5A3C
+Moss & Stone: #3A5A40, #588157, #A3B18A, #DAD7CD, #344E41
+Golden Savanna: #DDA15E, #BC6C25, #FEFAE0, #283618, #606C38
+Alpine Meadow: #2B580C, #639A00, #A4C639, #EBF5DF, #1D3557
+Canyon Clay: #9E2A2B, #E09F3E, #FFF3B0, #335C67, #540B0E
+Pine & Granite: #1E3F20, #4A7856, #8FA998, #D5DFE5, #2C3531
+Sunlit Meadow: #8AC926, #FFCA3A, #1982C4, #6A4C93, #F1FAEE
+Redwood Grove: #5A2E2E, #8D4A4A, #3E6B48, #A8C69F, #F4EFE6
+Sienna & Sky: #B56576, #E56B6F, #EAAC8B, #6D597A, #355070
+Earth & Ember: #582F0E, #7F4F24, #936639, #A68A64, #B6AD90
+Wildflower Field: #F72585, #7209B7, #4CC9F0, #4361EE, #FEE440
+Cedar & Moss: #4F3122, #7A4E37, #3B5249, #77968B, #E2E8E4
+Dune & Oasis: #E6CCB2, #DDB892, #B08968, #7F5539, #2B5B6C
+Emerald Canopy: #081C15, #1B4332, #2D6A4F, #52B788, #B7E4C7
+Ochre & Olive: #C68B2C, #8C7A2B, #556B2F, #2E3B1E, #F2E8CF
+Mesa Sunset: #BC4749, #F28482, #F6BD60, #84A59D, #264653
+Tundra & Lichen: #4A5759, #748CAB, #B0C4B1, #DEDBD2, #2B2D42
+Bark & Fern: #3D2B1F, #6B4423, #4F772D, #90A955, #ECF39E
+Clay & Juniper: #A44A3F, #F19C79, #CBDFBD, #566957, #242F26
+Golden Wheat: #E9C46A, #F4A261, #E76F51, #2A9D8F, #264653
+Shadowed Woods: #1A2421, #2C3E35, #4E6E58, #8FA893, #D8E2DC
+Rust & Sage: #9A3412, #EA580C, #4D7C0F, #84CC16, #ECFCCB
+Fossil & Fern: #5C5346, #8C8275, #6A7F64, #A3B899, #E6ECE2
+Amber & Pine: #D97706, #F59E0B, #065F46, #10B981, #ECFDF5
+Peat & Heather: #2A1E17, #593E2E, #8C5E78, #B88BA4, #EBD8E2
+Silt & Reed: #6B5B45, #9E8B6E, #7A9175, #B5C7A9, #EDF2E8
+Volcanic Soil: #1C1917, #44403C, #78716C, #B91C1C, #EA580C
+Boreal Forest: #0F291E, #1E4D3B, #3B7A57, #7FB069, #D8F3DC
+Cinnamon & Sage: #8B4513, #CD853F, #556B2F, #8FBC8F, #F5F5DC
+Granite & Moss: #374151, #6B7280, #4D7C0F, #A3E635, #F7FEE7
+Sandstone & Sky: #D2B48C, #F4A460, #4682B4, #87CEEB, #F0F8FF
+Maple & Birch: #B91C1C, #D97706, #F59E0B, #FEF3C7, #451A03
+Cactus & Sand: #2F5233, #4E8752, #94C973, #E9D8A6, #CA6702
+Loam & Clover: #463222, #73533A, #4A7C59, #88B04B, #E8F1E4
+Sulfur & Basalt: #18181B, #3F3F46, #EAB308, #FACC15, #FEF9C3
+Prairie Grass: #65A30D, #A3E635, #D9F99D, #A16207, #FEF08A
+Copper & Lichen: #B87333, #D97706, #65A30D, #A3E635, #ECFCCB
+Mudstone & Olive: #4A4036, #786A5B, #5C6B3C, #8E9E63, #E8EDE0
+Birch & Fern: #E5E0D8, #C2B8A3, #3F6212, #65A30D, #ECFCCB
+Earth & Turquoise: #5C4033, #8B5A2B, #0D9488, #2DD4BF, #CCFBF1
+Ochre & Canyon: #B45309, #D97706, #991B1B, #DC2626, #FEF2F2
+Pine & Snow: #14532D, #166534, #4ADE80, #F8FAFC, #CBD5E1
+Savanna Sunset: #C2410C, #EA580C, #F59E0B, #FDE047, #451A03
+Slate & Fern: #334155, #64748B, #15803D, #4ADE80, #DCFCE7
+Walnut & Moss: #3E2723, #5D4037, #33691E, #689F38, #DCEDC8
+Sand & Juniper: #D7CCC8, #A1887F, #2E7D32, #66BB6A, #E8F5E9
+Basalt & Gold: #212121, #424242, #FFA000, #FFC107, #FFF8E1
+Canyon & Sage: #8D6E63, #BCAAA4, #388E3C, #81C784, #E8F5E9
+Peat & Amber: #3E2723, #6D4C41, #FF8F00, #FFB300, #FFF8E1
+Forest Floor: #1B262C, #243B2E, #3A5A40, #6A994E, #A7C957
+Dune & Sage: #E6CCB2, #B08968, #588157, #A3B18A, #DAD7CD
+Sienna & Pine: #9E2A2B, #540B0E, #2D6A4F, #40916C, #D8F3DC
+Earth & Gold: #4A3525, #8C6239, #D4AF37, #F3E5AB, #FAF6F0
+Moss & Clay: #344E41, #588157, #A44A3F, #E07A5F, #F4F1DE
+Timber & Leaf: #5C4033, #8B5A2B, #2E7D32, #81C784, #E8F5E9
+Canyon Dust: #D4A373, #FAEDCD, #CCD5AE, #E9EDC9, #BC6C25
+Glacier & Rock: #37474F, #546E7A, #90A4AE, #CFD8DC, #ECEFF1
+Autumn Birch: #D97706, #FBBF24, #FEF3C7, #78350F, #451A03
+Wild Sage: #3F6212, #4D7C0F, #84CC16, #BEF264, #F7FEE7
+Red Clay & Sky: #991B1B, #DC2626, #0284C7, #38BDF8, #E0F2FE
+Bark & Lichen: #3F3B36, #736B60, #65A30D, #A3E635, #ECFCCB
+Desert Bloom: #9D174D, #EC4899, #F59E0B, #10B981, #FEF3C7
+Ochre & Slate: #B45309, #F59E0B, #475569, #94A3B8, #F1F5F9
+Pine & Amber: #064E3B, #047857, #D97706, #FBBF24, #FFFBEB
+Tundra Moss: #4B5320, #6B8E23, #9ACD32, #D3D3D3, #F5F5F5
+Canyon & Ochre: #9A3412, #C2410C, #D97706, #FBBF24, #FEF3C7
+Forest Mist: #1E293B, #334155, #15803D, #86EFAC, #F0FDF4
+Earth & Copper: #451A03, #78350F, #B45309, #D97706, #FDE68A
+Savanna Grass: #65A30D, #84CC16, #D97706, #F59E0B, #FEF9C3
+Granite & Pine: #1F2937, #4B5563, #065F46, #34D399, #ECFDF5
+Clay & Sage: #7C2D12, #EA580C, #3F6212, #A3E635, #F7FEE7
+Sandstone & Rust: #D6D3D1, #A8A29E, #9A3412, #EA580C, #FFF7ED
+Meadow & Sky: #16A34A, #4ADE80, #0284C7, #7DD3FC, #F0F9FF
+Dark Peat & Gold: #1C1917, #292524, #CA8A04, #EAB308, #FEFCE8
+Alpine Rock: #475569, #64748B, #94A3B8, #CBD5E1, #F8FAFC
+Cedar & Ember: #431407, #7C2D12, #DC2626, #F97316, #FFEDD5
+Moss & Birch: #365314, #4D7C0F, #E7E5E4, #D6D3D1, #FAFAF9
+Canyon Sunset: #831843, #DB2777, #F97316, #FACC15, #FEF9C3
+Earth & Pine: #292524, #57534E, #14532D, #22C55E, #DCFCE7
+Ochre & Moss: #A16207, #CA8A04, #3F6212, #65A30D, #F7FEE7
+Shadow & Fern: #111827, #1F2937, #059669, #6EE7B7, #ECFDF5
+Desert & Sky: #D97706, #FBBF24, #0369A1, #38BDF8, #E0F2FE
+Bark & Gold: #27272A, #52525B, #EAB308, #FDE047, #FEFCE8
+Wilderness: #14532D, #15803D, #854D0E, #CA8A04, #FEF9C3
+Clay & Pine: #7F1D1D, #B91C1C, #14532D, #22C55E, #F0FDF4
+Silt & Stone: #57534E, #78716C, #A8A29E, #D6D3D1, #F5F5F4
+Meadow & Gold: #15803D, #22C55E, #EAB308, #FACC15, #FEFCE8
+Dark Woods: #090D16, #1E293B, #14532D, #166534, #4ADE80
+Sand & Clay: #F5F5DC, #DEB887, #D2691E, #A0522D, #8B4513
 
-[Luxury & Jewel Tones]
-Royal Velvet: #1A0B2E, #3B0D54, #6B1D8C, #D4AF37, #F8F5EE
-Emerald Palace: #04291E, #0A4D38, #137A5A, #D4AF37, #F7F5F0
-Sapphire Night: #071330, #0E2761, #1B459E, #C0C0C0, #F4F6F9
-Ruby & Gold: #2B050B, #5E0B18, #9E1429, #E5B84B, #FAF6F0
-Obsidian & Brass: #0D0D0D, #242424, #404040, #B59449, #F2EFE9
+OCEANIC & COASTAL
+Deep Abyss: #03045E, #023E8A, #0077B6, #0096C7, #90E0EF
+Coral Lagoon: #FF6B6B, #FF8E72, #FFD166, #06D6A0, #118AB2
+Seafoam & Sand: #E0FBFC, #98C1D9, #3D5A80, #293241, #EE6C4D
+Tropical Reef: #00A896, #02C39A, #F0F3BD, #05668D, #FF7F51
+Nordic Fjord: #1B263B, #415A77, #778DA9, #E0E1DD, #0D1B2A
+Pacific Mist: #264653, #2A9D8F, #E9C46A, #F4A261, #E76F51
+Pelagic Blue: #001219, #005F73, #0A9396, #94D2BD, #E9D8A6
+Sandy Cove: #F4F1DE, #E07A5F, #3D405B, #81B29A, #F2CC8F
+Glacier Bay: #CAF0F8, #ADE8F4, #48CAE4, #0096C7, #023E8A
+Sunlit Shore: #FFD166, #06D6A0, #118AB2, #073B4C, #EF476F
+Kelp Forest: #132A13, #254E2A, #4F772D, #0077B6, #90E0EF
+Tidal Pool: #006466, #065A60, #144552, #212F45, #4D194D
+Sailor's Stripe: #003049, #D62828, #F77F00, #FCBF49, #EAE2B7
+Lagoon Breeze: #48CAE4, #90E0EF, #ADE8F4, #CAF0F8, #0077B6
+Driftwood & Tide: #D5BDAF, #E3D5CA, #F5EBE0, #A2D2FF, #BDE0FE
+Midnight Tide: #03071E, #023E8A, #0077B6, #48CAE4, #CAF0F8
+Harbor Fog: #CBD5E1, #94A3B8, #64748B, #334155, #0F172A
+Atoll Sunset: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Sunken Ship: #2B2D42, #8D99AE, #EDF2F4, #2A9D8F, #264653
+Cerulean Bay: #0284C7, #38BDF8, #7DD3FC, #BAE6FD, #F0F9FF
+Saltwater & Sun: #FDE047, #FACC15, #0EA5E9, #0284C7, #0369A1
+Whale Song: #0F172A, #1E3A8A, #1D4ED8, #60A5FA, #DBEAFE
+Sea Glass: #A7F3D0, #6EE7B7, #34D399, #059669, #064E3B
+Lighthouse Beam: #FEF08A, #FDE047, #334155, #1E293B, #0F172A
+Wave Crest: #FFFFFF, #E0F2FE, #7DD3FC, #0284C7, #0C4A6E
+Pelican & Pier: #78716C, #A8A29E, #E7E5E4, #0284C7, #F97316
+Benthic Zone: #020617, #0F172A, #1E293B, #0369A1, #38BDF8
+Turquoise Cove: #2DD4BF, #14B8A6, #0D9488, #0F766E, #115E59
+Coastal Dune: #FEF3C7, #FDE68A, #D97706, #0284C7, #0369A1
+Mariner's Compass: #1E293B, #DC2626, #F8FAFC, #0284C7, #F59E0B
+Submerged Reef: #064E3B, #047857, #0D9488, #F43F5E, #FDA4AF
+Arctic Ocean: #F8FAFC, #E2E8F0, #94A3B8, #0284C7, #0369A1
+Siren's Song: #164E63, #0E7490, #06B6D4, #67E8F9, #ECFEFF
+Boardwalk: #D97706, #F59E0B, #DC2626, #2563EB, #F8FAFC
+Abyssal Glow: #020617, #172554, #1D4ED8, #22D3EE, #A5F3FC
+Salt Marsh: #4D7C0F, #65A30D, #0284C7, #38BDF8, #F0F9FF
+Pelagic Drift: #082F49, #075985, #0284C7, #38BDF8, #BAE6FD
+Coral & Kelp: #FB7185, #F43F5E, #15803D, #22C55E, #DCFCE7
+Nautical Navy: #0A192F, #112240, #233554, #64FFDA, #CCD6F6
+Tidepool Gem: #0F766E, #14B8A6, #F59E0B, #EF4444, #F8FAFC
+Manta Ray: #1E293B, #334155, #64748B, #E2E8F0, #38BDF8
+Estuary Mist: #CBD5E1, #94A3B8, #475569, #0D9488, #5EEAD4
+Sunny Archipelago: #38BDF8, #FACC15, #4ADE80, #FB923C, #F8FAFC
+Diving Bell: #CA8A04, #EAB308, #1E293B, #0F172A, #38BDF8
+Seaweed & Foam: #14532D, #166534, #86EFAC, #F0FDF4, #BAE6FD
+Gulf Stream: #1D4ED8, #2563EB, #3B82F6, #93C5FD, #EFF6FF
+Cove Shadow: #083344, #164E63, #155E75, #0891B2, #22D3EE
+Sandbar & Surf: #FDE68A, #F59E0B, #06B6D4, #67E8F9, #ECFEFF
+Polar Sea: #0F172A, #1E293B, #475569, #94A3B8, #F1F5F9
+Lagoon Sunset: #F43F5E, #FB923C, #FACC15, #0284C7, #082F49
+Kelp & Current: #3F6212, #65A30D, #0369A1, #0EA5E9, #7DD3FC
+Oceanic Trench: #020617, #090D16, #1E3A8A, #2563EB, #60A5FA
+Coastal Breeze: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0284C7
+Seafarer's Gold: #78350F, #B45309, #F59E0B, #FDE047, #0F172A
+Reef Sanctuary: #0D9488, #14B8A6, #2DD4BF, #F43F5E, #FBBF24
+Bering Sea: #1E293B, #334155, #475569, #94A3B8, #E2E8F0
+Tropical Lagoon: #06B6D4, #22D3EE, #67E8F9, #FACC15, #FB923C
+Deep Blue: #000080, #0000CD, #0000FF, #1E90FF, #87CEFA
+Salt & Tide: #F8FAFC, #E2E8F0, #0EA5E9, #0284C7, #1E293B
+Whirlpool: #083344, #155E75, #0E7490, #06B6D4, #A5F3FC
+Harbor Lights: #0F172A, #1E293B, #EF4444, #22C55E, #FACC15
+Sea Turtle: #14532D, #166534, #78350F, #B45309, #0284C7
+Pelagic Night: #020617, #0F172A, #172554, #1E40AF, #3B82F6
+Sun & Sea: #FACC15, #F59E0B, #0284C7, #0EA5E9, #38BDF8
+Fjord Cliff: #1E293B, #334155, #64748B, #0284C7, #7DD3FC
+Aqua Marine: #7FFFD4, #66CDAA, #48D1CC, #40E0D0, #20B2AA
+Cove Water: #0E7490, #06B6D4, #22D3EE, #67E8F9, #CFFAFE
+Maritime Red: #991B1B, #DC2626, #F8FAFC, #1E293B, #475569
+Sunken Treasure: #451A03, #78350F, #D97706, #FBBF24, #065F46
+Glacier Melt: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0369A1
+Tidal Wave: #0C4A6E, #0369A1, #0284C7, #0EA5E9, #38BDF8
+Island Breeze: #F0FDF4, #DCFCE7, #86EFAC, #38BDF8, #FDE047
+Deep Ocean: #000814, #001D3D, #003566, #FFC300, #FFD60A
+Coastline: #FDE68A, #D97706, #0284C7, #0369A1, #0C4A6E
+Sea Spray: #F8FAFC, #E0F2FE, #BAE6FD, #7DD3FC, #0EA5E9
+Pelagic Gold: #0F172A, #1E293B, #D97706, #F59E0B, #FDE047
+Coral Atoll: #E11D48, #FB7185, #0D9488, #2DD4BF, #FEF3C7
+Nautical Stripe: #1E3A8A, #FFFFFF, #DC2626, #1E293B, #94A3B8
+Tide & Sand: #0284C7, #38BDF8, #E0F2FE, #FDE68A, #D97706
+Marine Biologist: #064E3B, #0D9488, #0284C7, #38BDF8, #F8FAFC
+Submerged Cave: #020617, #083344, #164E63, #0E7490, #22D3EE
+Coastal Fog: #F1F5F9, #E2E8F0, #CBD5E1, #94A3B8, #64748B
+Sunlit Reef: #FACC15, #FB923C, #F43F5E, #2DD4BF, #0EA5E9
+Deep Fjord: #090D16, #1E293B, #334155, #475569, #94A3B8
+Aqua Glow: #CFFAFE, #A5F3FC, #67E8F9, #22D3EE, #06B6D4
+Harbor Mist: #E2E8F0, #CBD5E1, #94A3B8, #64748B, #475569
+Pelagic Sky: #0284C7, #0EA5E9, #38BDF8, #7DD3FC, #BAE6FD
+Coral & Sand: #FB7185, #FDA4AF, #FFE4E6, #FEF3C7, #FDE68A
+Nordic Sea: #0F172A, #1E293B, #334155, #0284C7, #38BDF8
+Tidal Marsh: #3F6212, #4D7C0F, #65A30D, #0284C7, #38BDF8
+Oceanic Mist: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0EA5E9
 
-[Retro & Vintage]
-1970s Groovy: #5C2C16, #A64B2A, #D97E38, #E8B84B, #F2E3C6
-1950s Diner: #1D3557, #457B9D, #A8DADC, #E63946, #F1FAEE
-1980s Arcade: #1A1423, #3D314A, #FF2A6D, #05D9E8, #F9C80E
+PASTEL & SOFT
+Cotton Candy: #FFB5E8, #B28DFF, #DCD3FF, #AFF8DB, #85E3FF
+Peach Sorbet: #FFC9DE, #FF96AD, #FFC4A3, #FFE5B4, #FFF5BA
+Lavender Mist: #E2F0CB, #B5EAD7, #C7CEEA, #FFDAC1, #FF9AA2
+Mint Macaron: #D4F0F0, #8FCACA, #CCE2CB, #FFFFB5, #FFCCB6
+Strawberry Milk: #FFE5EC, #FFC2D1, #FB6F92, #FF8FAB, #FFB3C6
+Buttercream: #FFF1D0, #F7D9C4, #FAEDCD, #E9EDC9, #CCD5AE
+Baby Bluebell: #CAF0F8, #ADE8F4, #90E0EF, #48CAE4, #00B4D8
+Pistachio Cream: #D8E2DC, #ECE4DB, #FFE5D9, #FEC89A, #F8EDEB
+Lilac Dream: #F3E5F5, #E1BEE7, #CE93D8, #BA68C8, #AB47BC
+Honeydew: #E8F5E9, #C8E6C9, #A5D6A7, #81C784, #66BB6A
+Apricot Glow: #FFF3E0, #FFE0B2, #FFCC80, #FFB74D, #FFA726
+Periwinkle Sky: #E8EAF6, #C5CAE9, #9FA8DA, #7986CB, #5C6BC0
+Rose Quartz: #FCE4EC, #F8BBD0, #F48FB1, #F06292, #EC407A
+Lemon Meringue: #FFFDE7, #FFF9C4, #FFF59D, #FFF176, #FFEE58
+Powder Puff: #F3E8FF, #E9D5FF, #D8B4FE, #C084FC, #A855F7
+Seafoam Pastel: #F0FDFA, #CCFBF1, #99F6E4, #5EEAD4, #2DD4BF
+Vanilla Frost: #FAF5FF, #F3E8FF, #FCE7F3, #FDF2F8, #FFF1F2
+Sky Pastel: #F0F9FF, #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8
+Blush Petal: #FFF1F2, #FFE4E6, #FECDD3, #FDA4AF, #FB7185
+Sage Pastel: #F7FEE7, #ECFCCB, #D9F99D, #BEF264, #A3E635
+Mango Sorbet: #FFF7ED, #FFEDD5, #FED7AA, #FDBA74, #FB923C
+Cloud Pastel: #F8FAFC, #F1F5F9, #E2E8F0, #CBD5E1, #94A3B8
+Tangerine Cream: #FFFBEB, #FEF3C7, #FDE68A, #FCD34D, #FBBF24
+Iris Whisper: #EEF2FF, #E0E7FF, #C7D2FE, #A5B4FC, #818CF8
+Minty Cloud: #ECFDF5, #D1FAE5, #A7F3D0, #6EE7B7, #34D399
+Coral Blush: #FEF2F2, #FEE2E2, #FECACA, #FCA5A5, #F87171
+Mauve Mist: #FDF4FF, #FAE8FF, #F5D0FE, #F0ABFC, #E879F9
+Soft Marigold: #FEFCE8, #FEF9C3, #FEF08A, #FDE047, #FACC15
+Ice Cream Sundae: #FCE7F3, #FBCFE8, #F9A8D4, #F472B6, #EC4899
+Breezy Mint: #CCFBF1, #99F6E4, #5EEAD4, #2DD4BF, #14B8A6
+Daffodil Soft: #FEF9C3, #FEF08A, #FDE047, #FACC15, #EAB308
+Fairy Floss: #F5D0FE, #F0ABFC, #E879F9, #D946EF, #C026D3
+Powder Bluebell: #BAE6FD, #7DD3FC, #38BDF8, #0EA5E9, #0284C7
+Warm Marshmallow: #FFF1F2, #FFE4E6, #FECDD3, #FEF3C7, #FDE68A
+Pastel Meadow: #DCFCE7, #BBF7D0, #86EFAC, #4ADE80, #22C55E
+Bubblegum Soft: #FBCFE8, #F9A8D4, #F472B6, #EC4899, #DB2777
+Soft Lavender: #E9D5FF, #D8B4FE, #C084FC, #A855F7, #9333EA
+Creamy Peach: #FED7AA, #FDBA74, #FB923C, #F97316, #EA580C
+Baby Mint: #A7F3D0, #6EE7B7, #34D399, #10B981, #059669
+Cotton Cloud: #F1F5F9, #E2E8F0, #CBD5E1, #BAE6FD, #E0F2FE
+Pastel Sunrise: #FDE68A, #FED7AA, #FECDD3, #E9D5FF, #BAE6FD
+Soft Peony: #FFE4E6, #FECDD3, #FDA4AF, #FB7185, #F43F5E
+Sweet Vanilla: #FEF3C7, #FDE68A, #FCD34D, #FBBF24, #F59E0B
+Mint & Berry: #A7F3D0, #6EE7B7, #FBCFE8, #F9A8D4, #F472B6
+Pale Violet: #DDD6FE, #C4B5FD, #A78BFA, #8B5CF6, #7C3AED
+Soft Apricot: #FFEDD5, #FED7AA, #FDBA74, #FB923C, #F97316
+Sky & Cloud: #E0F2FE, #BAE6FD, #7DD3FC, #F8FAFC, #E2E8F0
+Pastel Citrus: #FEF08A, #FDE047, #BBF7D0, #86EFAC, #FED7AA
+Rosewater: #FFE4E6, #FECDD3, #FDA4AF, #F43F5E, #E11D48
+Soft Pistachio: #ECFCCB, #D9F99D, #BEF264, #A3E635, #84CC16
+Dreamy Sky: #BAE6FD, #7DD3FC, #38BDF8, #C7D2FE, #A5B4FC
+Pastel Berry: #F9A8D4, #F472B6, #E879F9, #C084FC, #A855F7
+Warm Custard: #FEF9C3, #FEF08A, #FDE68A, #FED7AA, #FFEDD5
+Soft Eucalyptus: #D1FAE5, #A7F3D0, #6EE7B7, #34D399, #10B981
+Lilac Breeze: #F3E8FF, #E9D5FF, #D8B4FE, #C084FC, #A855F7
+Pastel Peach: #FFEDD5, #FED7AA, #FDBA74, #FECDD3, #FFE4E6
+Baby Sky: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0EA5E9
+Soft Honey: #FEF3C7, #FDE68A, #FCD34D, #FBBF24, #D97706
+Pastel Mint: #D1FAE5, #A7F3D0, #6EE7B7, #34D399, #10B981
+Rosebud: #FECDD3, #FDA4AF, #FB7185, #F43F5E, #E11D48
+Soft Periwinkle: #E0E7FF, #C7D2FE, #A5B4FC, #818CF8, #6366F1
+Pastel Lemon: #FEF9C3, #FEF08A, #FDE047, #FACC15, #EAB308
+Creamy Mint: #ECFDF5, #D1FAE5, #A7F3D0, #6EE7B7, #34D399
+Soft Coral: #FEE2E2, #FECACA, #FCA5A5, #F87171, #EF4444
+Pastel Lilac: #F5D0FE, #F0ABFC, #E879F9, #D946EF, #C026D3
+Warm Butter: #FEF08A, #FDE047, #FACC15, #EAB308, #CA8A04
+Soft Seafoam: #CCFBF1, #99F6E4, #5EEAD4, #2DD4BF, #14B8A6
+Pastel Blush: #FFF1F2, #FFE4E6, #FECDD3, #FDA4AF, #FB7185
+Baby Lavender: #EDE9FE, #DDD6FE, #C4B5FD, #A78BFA, #8B5CF6
+Soft Sundae: #FCE7F3, #FBCFE8, #F9A8D4, #FDE68A, #A7F3D0
+Pastel Sky: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0284C7
+Warm Almond: #F5F5DC, #FAEBD7, #FFE4C4, #FFDEAD, #F5DEB3
+Soft Sage: #DCFCE7, #BBF7D0, #86EFAC, #4ADE80, #22C55E
+Pastel Rose: #FFE4E6, #FECDD3, #FDA4AF, #FB7185, #F43F5E
+Creamy Sky: #F0F9FF, #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8
+Soft Mango: #FFEDD5, #FED7AA, #FDBA74, #FB923C, #F97316
+Pastel Iris: #E0E7FF, #C7D2FE, #A5B4FC, #818CF8, #6366F1
+Warm Cream Puff: #FFFBEB, #FEF3C7, #FDE68A, #FFE4E6, #FFF1F2
+Soft Turquoise: #CCFBF1, #99F6E4, #5EEAD4, #2DD4BF, #14B8A6
+Pastel Orchid: #F5D0FE, #F0ABFC, #E879F9, #D946EF, #C026D3
+Baby Peach: #FFEDD5, #FED7AA, #FDBA74, #FB923C, #F97316
+Soft Dew: #ECFDF5, #D1FAE5, #A7F3D0, #BAE6FD, #E0F2FE
+Pastel Buttercup: #FEF9C3, #FEF08A, #FDE047, #FACC15, #EAB308
+Warm Rose: #FECDD3, #FDA4AF, #FB7185, #F43F5E, #E11D48
+Soft Cloud: #F8FAFC, #F1F5F9, #E2E8F0, #CBD5E1, #94A3B8
+Pastel Meadow Soft: #DCFCE7, #BBF7D0, #86EFAC, #4ADE80, #22C55E
+Creamy Lavender: #F3E8FF, #E9D5FF, #D8B4FE, #C084FC, #A855F7
+Soft Sunrise: #FEF3C7, #FED7AA, #FECDD3, #E0F2FE, #F8FAFC
+Pastel Coral: #FEE2E2, #FECACA, #FCA5A5, #F87171, #EF4444
+Warm Mint: #D1FAE5, #A7F3D0, #6EE7B7, #34D399, #10B981
+Soft Berry: #FBCFE8, #F9A8D4, #F472B6, #EC4899, #DB2777
+Pastel Frost: #F0F9FF, #E0F2FE, #BAE6FD, #E9D5FF, #F3E8FF
+Warm Peach: #FED7AA, #FDBA74, #FB923C, #F97316, #EA580C
+Soft Peony Pink: #FFE4E6, #FECDD3, #FDA4AF, #FB7185, #F43F5E
+Pastel Vanilla: #FFFBEB, #FEF3C7, #FDE68A, #FCD34D, #FBBF24
+Creamy Rose: #FFF1F2, #FFE4E6, #FECDD3, #FDA4AF, #FB7185
+Soft Sky: #E0F2FE, #BAE6FD, #7DD3FC, #38BDF8, #0EA5E9
+Pastel Honey: #FEF3C7, #FDE68A, #FCD34D, #FBBF24, #F59E0B
+Warm Lavender: #E9D5FF, #D8B4FE, #C084FC, #A855F7, #9333EA
+Soft Macaron: #FECDD3, #FEF08A, #BBF7D0, #BAE6FD, #E9D5FF
+
+DARK & MOODY
+Midnight Velvet: #0D1B2A, #1B263B, #415A77, #778DA9, #E0E1DD
+Obsidian Rose: #1A0B12, #3B1325, #7A1C4B, #C92A65, #FF758F
+Shadowed Pine: #081C15, #1B4332, #2D6A4F, #40916C, #52B788
+Noir Detective: #10002B, #240046, #3C096C, #5A189A, #7B2CBF
+Gothic Cathedral: #141115, #29222A, #4A3F4B, #7D6B7D, #A390A3
+Volcanic Ash: #16161A, #242629, #72757E, #FFFFFE, #7F5AF0
+Abyssal Ink: #03071E, #370617, #6A040F, #9D0208, #D00000
+Dark Espresso: #1C110A, #362216, #543726, #7A523B, #A67558
+Stormy Slate: #0F172A, #1E293B, #334155, #475569, #64748B
+Crimson Shadow: #2B050B, #590D22, #800F2F, #A4133C, #C9184A
+Deep Indigo: #090D16, #111827, #1E1B4B, #312E81, #4338CA
+Charcoal & Rust: #18181B, #27272A, #451A03, #7C2D12, #EA580C
+Bramble & Night: #0D130F, #1A261E, #2C3E32, #435E4C, #62856E
+Twilight Void: #09050D, #190E24, #2E1B42, #4A2C6B, #6E449C
+Iron & Blood: #141414, #262626, #450A0A, #7F1D1D, #DC2626
+Midnight Teal: #041C21, #08333D, #0E5261, #15758A, #1E9BB5
+Smoked Plum: #170B17, #2E152E, #4D244D, #733873, #9E529E
+Dusk & Ember: #1A120E, #33241C, #593D2E, #8C5E43, #C4835C
+Deep Cypress: #0B1712, #172E24, #264D3C, #38735A, #4D9E7B
+Obsidian Gold: #0F0E0A, #242117, #423C29, #695E3E, #9C8B59
+Shadowed Navy: #050A14, #0C182E, #162B52, #224380, #3160B8
+Dark Burgundy: #1A050A, #360A14, #5C1123, #8A1934, #BD2448
+Graphite & Moss: #141714, #252B25, #384238, #4E5E4E, #6B826B
+Nocturne: #0A0A0F, #171724, #28283D, #3E3E5E, #5B5B8A
+Burnt Umber Dark: #170F0A, #2E1E14, #4D3222, #734A33, #9E6747
+Deep Ocean Dark: #050F1A, #0A1E33, #113359, #1A4D85, #246BB8
+Dark Violet: #12081C, #241038, #3D1B5E, #5A288C, #7D38C2
+Charcoal & Gold: #121210, #242420, #3D3C34, #63604E, #948F73
+Shadowed Teal: #081414, #102929, #1B4545, #296969, #3B9494
+Midnight Crimson: #140407, #2E0810, #520E1D, #80162D, #B82041
+Dark Slate: #0D1117, #161B22, #21262D, #30363D, #484F58
+Obsidian Bronze: #14100C, #292018, #473729, #6E5540, #9E7A5B
+Nightfall: #070912, #0F1326, #1A2142, #283366, #3A4A94
+Deep Olive Dark: #10140A, #202914, #364522, #4E6332, #6C8A46
+Dark Magenta: #1A0514, #360A29, #5C1147, #8A196A, #BD2494
+Smoked Slate: #111315, #222629, #363C42, #4E5761, #6B7887
+Midnight Amber: #171005, #2E200A, #4D3511, #734F1A, #9E6D24
+Shadowed Indigo: #080A1A, #101436, #1B225C, #29338A, #3B49C2
+Deep Charcoal: #0D0D0D, #1A1A1A, #2B2B2B, #404040, #595959
+Dark Emerald: #05140E, #0A291C, #114730, #196E4B, #249E6C
+Midnight Plum: #120714, #240E29, #3D1747, #5A2269, #7D2F94
+Smoked Bronze: #17120D, #2E241A, #4D3C2C, #735A42, #9E7B5B
+Deep Sapphire: #050B1A, #0A1636, #11265C, #19398A, #2452BD
+Dark Moss: #0D140A, #1A2914, #2C4522, #426934, #5E944B
+Midnight Rose: #1A060C, #360C18, #5C1429, #8A1E3E, #BD2A56
+Smoked Charcoal: #121212, #242424, #383838, #525252, #707070
+Deep Cobalt: #060E1F, #0C1C3E, #142F66, #1E4799, #2B64D6
+Dark Sienna: #1A0C06, #36180C, #5C2914, #8A3E1E, #BD552A
+Midnight Jade: #051712, #0A2E24, #114D3C, #19735A, #249E7C
+Smoked Violet: #120B17, #24162E, #3D254D, #5A3773, #7D4D9E
+Deep Umber: #140E0A, #291C14, #473122, #6E4C35, #9E6D4C
+Midnight Blue: #050917, #0A122E, #111E4D, #192E73, #24429E
+Dark Crimson: #1A0406, #36080C, #5C0E15, #8A1520, #BD1C2C
+Smoked Olive: #12140D, #24291A, #3B422A, #56613E, #778756
+Midnight Bronze: #17110A, #2E2214, #4D3922, #735633, #9E7647
+Deep Teal: #051414, #0A2929, #114747, #196E6E, #249E9E
+Dark Indigo: #0B081A, #161036, #251B5C, #37288A, #4D38BD
+Smoked Ash: #141416, #28282C, #3F3F46, #5A5A63, #787885
+Midnight Gold: #171405, #2E280A, #4D4311, #73641A, #9E8924
+Deep Plum: #140614, #290C29, #471447, #6E1F6E, #9E2C9E
+Dark Slate Blue: #0B121A, #162436, #253C5C, #37598A, #4D7BBD
+Smoked Rust: #1A0B06, #36160C, #5C2614, #8A391E, #BD4E2A
+Midnight Emerald: #04170E, #082E1C, #0E4D30, #157348, #1E9E64
+Deep Maroon: #1A0508, #360A10, #5C111C, #8A192A, #BD243B
+Smoked Indigo: #0E0B1A, #1C1636, #2F255C, #46378A, #624DBD
+Midnight Slate: #0D1014, #1A2029, #2B3542, #404E61, #596C87
+Deep Bronze: #17120A, #2E2414, #4D3C22, #735A33, #9E7B47
+Dark Violet Blue: #0D081F, #1A103E, #2C1B66, #422899, #5C38D6
+Smoked Mahogany: #1A0908, #361210, #5C1F1B, #8A2F29, #BD4037
+Midnight Olive: #111408, #222910, #38421B, #526129, #71873B
+Deep Charcoal Blue: #0B0E14, #161C29, #252F42, #374661, #4D6287
+Dark Amber: #1A1105, #36220A, #5C3A11, #8A571A, #BD7824
+Smoked Plum Dark: #140914, #291229, #471F47, #6E2F6E, #9E449E
+Midnight Rust: #1A0805, #36100A, #5C1B11, #8A291A, #BD3B24
+Deep Slate: #0E1217, #1C242E, #2F3C4D, #465A73, #627E9E
+Dark Forest: #08140C, #102918, #1B4528, #29693E, #3B9458
+Smoked Teal: #0B1414, #162929, #254545, #376969, #4D9494
+Midnight Crimson Dark: #170406, #2E080C, #4D0E15, #731520, #9E1C2C
+Deep Indigo Dark: #09081A, #121036, #1E1B5C, #2D288A, #3F38BD
+Smoked Gold: #171408, #2E2810, #4D431B, #736429, #9E893B
+Midnight Violet: #12061A, #240C36, #3D145C, #5A1E8A, #7D29BD
+
+CYBERPUNK & NEON
+Neon Tokyo: #FF007F, #7A04EB, #120458, #00F5D4, #FEE440
+Cyber Grid: #05D9E8, #FF2A6D, #01012B, #D1F7FF, #2A0845
+Laser Synth: #F72585, #7209B7, #3A0CA3, #4361EE, #4CC9F0
+Toxic Lime: #CCFF00, #9EF01A, #70E000, #38B000, #008000
+Plasma Violet: #B5179E, #7209B7, #560BAD, #480CA8, #3F37C9
+Voltage Cyan: #00FFFF, #00E5FF, #00B8D4, #0091EA, #00B0FF
+Hyper Magenta: #FF00FF, #EA00D9, #D500F9, #AA00FF, #6200EA
+Solar Flare Neon: #FF5400, #FF6D00, #FF8500, #FF9E00, #FFB600
+Acid Green: #39FF14, #66FF00, #99FF00, #CCFF00, #FFFF00
+Cyberpunk Rose: #FF2A85, #FF5C9D, #FF8EB5, #FFC0CD, #FFF0F3
+Neon Horizon: #FF0055, #FF5500, #FFAA00, #FFFF00, #00FFAA
+Digital Pulse: #00F0FF, #00A8FF, #0055FF, #5500FF, #AA00FF
+Synthwave Grid: #FF007F, #FF00AA, #FF00D4, #FF00FF, #CC00FF
+Reactor Core: #00FF66, #00FF99, #00FFCC, #00FFFF, #00CCFF
+Neon Alley: #FF1493, #FF69B4, #DB7093, #C71585, #8B008B
+Holo Teal: #00F5D4, #00BBF9, #9B5DE5, #F15BB5, #FEE440
+Cybernetic Blue: #00B4D8, #0096C7, #0077B6, #023E8A, #03045E
+Neon Tangerine: #FF6B00, #FF7B00, #FF8800, #FF9500, #FFA200
+Electric Orchid: #E040FB, #D500F9, #AA00FF, #7C4DFF, #651FFF
+Laser Lime: #76FF03, #64DD17, #AEEA00, #C6FF00, #EEFF41
+Cyber Crimson: #FF1744, #F50057, #D50000, #FF5252, #FF8A80
+Neon Sapphire: #2979FF, #2962FF, #448AFF, #82B1FF, #00B0FF
+Vaporwave Sky: #FF71CE, #01CDFE, #05FFA1, #B967FF, #FFFB96
+Dark Circuit: #0F172A, #22D3EE, #E879F9, #4ADE80, #FACC15
+Neon Flame: #FF3D00, #FF6E40, #FF9E80, #DD2C00, #FF9100
+Cyber Mint: #1DE9B6, #00BFA5, #64FFDA, #A7FFEB, #00E5FF
+Neon Lilac: #EA80FC, #E040FB, #D500F9, #AA00FF, #B388FF
+Synthwave Sun: #FF5E7E, #FF8E72, #FFB469, #FFE066, #8A4FFF
+Laser Cyan: #18FFFF, #00E5FF, #00B8D4, #84FFFF, #00B0FF
+Cyber Gold: #FFD600, #FFAB00, #FFEA00, #FFFF00, #FFF59D
+Neon Berry: #F50057, #FF4081, #FF80AB, #C51162, #FF1744
+Electric Sky: #40C4FF, #00B0FF, #0091EA, #80D8FF, #00E5FF
+Cyber Plum: #AA00FF, #D500F9, #E040FB, #EA80FC, #7C4DFF
+Neon Chartreuse: #C6FF00, #AEEA00, #76FF03, #64DD17, #EEFF41
+Laser Coral: #FF5252, #FF1744, #FF8A80, #FF6E40, #FF3D00
+Cyber Aqua: #00E5FF, #18FFFF, #84FFFF, #00B8D4, #00E676
+Neon Violet: #7C4DFF, #651FFF, #6200EA, #B388FF, #D500F9
+Synthwave Night: #120458, #2A0845, #FF2A6D, #05D9E8, #D1F7FF
+Laser Amber: #FFAB00, #FFD600, #FF9100, #FF6D00, #FFEA00
+Cyber Rose: #FF4081, #F50057, #FF80AB, #FF1744, #C51162
+Neon Jade: #00E676, #00C853, #69F0AE, #B9F6CA, #1DE9B6
+Cyber Lilac: #D500F9, #AA00FF, #E040FB, #EA80FC, #651FFF
+Neon Sunset: #FF3D00, #FF9100, #FFD600, #F50057, #D500F9
+Laser Blue: #2962FF, #2979FF, #448AFF, #82B1FF, #00B0FF
+Cyber Lime: #64DD17, #76FF03, #AEEA00, #C6FF00, #00E676
+Neon Fuchsia: #FF00FF, #F50057, #D500F9, #FF4081, #EA80FC
+Cyber Teal: #00BFA5, #1DE9B6, #64FFDA, #00E5FF, #00B8D4
+Neon Orchid: #E040FB, #EA80FC, #D500F9, #AA00FF, #FF80AB
+Laser Gold: #FFEA00, #FFD600, #FFAB00, #FFFF00, #FF9100
+Cyber Pink: #FF80AB, #FF4081, #F50057, #FF1744, #EA80FC
+Neon Mint: #69F0AE, #00E676, #B9F6CA, #1DE9B6, #00BFA5
+Cyber Indigo: #651FFF, #7C4DFF, #6200EA, #2962FF, #AA00FF
+Neon Peach: #FF9E80, #FF6E40, #FF3D00, #FF8A80, #FF9100
+Laser Violet: #AA00FF, #7C4DFF, #651FFF, #D500F9, #E040FB
+Cyber Sky: #80D8FF, #40C4FF, #00B0FF, #00E5FF, #18FFFF
+Neon Crimson: #FF1744, #D50000, #FF5252, #F50057, #FF8A80
+Cyber Chartreuse: #AEEA00, #C6FF00, #76FF03, #EEFF41, #64DD17
+Neon Magenta Dark: #C51162, #AA00FF, #6200EA, #F50057, #D500F9
+Laser Aqua: #84FFFF, #18FFFF, #00E5FF, #64FFDA, #1DE9B6
+Cyber Tangerine: #FF9100, #FF6D00, #FF3D00, #FFAB00, #FF6E40
+Neon Lavender: #B388FF, #EA80FC, #E040FB, #7C4DFF, #82B1FF
+Cyber Flame: #FF6D00, #FF3D00, #DD2C00, #FFAB00, #FF1744
+Neon Seafoam: #1DE9B6, #64FFDA, #00E676, #69F0AE, #A7FFEB
+Cyber Orchid: #EA80FC, #E040FB, #D500F9, #AA00FF, #7C4DFF
+Neon Lime: #76FF03, #C6FF00, #AEEA00, #64DD17, #00E676
+Laser Pink: #FF4081, #FF80AB, #F50057, #FF1744, #E040FB
+Cyber Blue: #00B0FF, #40C4FF, #0091EA, #2979FF, #80D8FF
+Neon Gold: #FFD600, #FFEA00, #FFAB00, #FFFF00, #FBC02D
+Cyber Berry: #FF1744, #F50057, #C51162, #FF4081, #D500F9
+Neon Sky: #00E5FF, #40C4FF, #80D8FF, #18FFFF, #00B0FF
+Cyber Violet: #6200EA, #651FFF, #7C4DFF, #AA00FF, #2962FF
+Neon Coral: #FF8A80, #FF5252, #FF6E40, #FF1744, #FF9E80
+Laser Mint: #A7FFEB, #64FFDA, #1DE9B6, #69F0AE, #00E676
+Cyber Magenta: #D500F9, #AA00FF, #FF00FF, #E040FB, #F50057
+Neon Amber: #FF9100, #FFAB00, #FFD600, #FF6D00, #FFEA00
+Cyber Frost: #18FFFF, #84FFFF, #80D8FF, #B388FF, #EA80FC
+Neon Plum: #AA00FF, #D500F9, #7C4DFF, #E040FB, #651FFF
+Cyber Sunset: #FF1744, #FF9100, #FFD600, #D500F9, #00E5FF
+Neon Turquoise: #00B8D4, #00E5FF, #1DE9B6, #00BFA5, #18FFFF
+
+RETRO & VINTAGE
+1970s Groovy: #D95D39, #F18805, #8C1C13, #586F2C, #3D2B1F
+1980s Arcade: #FF007F, #00F0FF, #FEE440, #7A04EB, #120458
+1950s Diner: #E63946, #F1FAEE, #A8DADC, #457B9D, #1D3557
+1990s Grunge: #5C4742, #8D5B4C, #C4A381, #3A5A40, #222222
 Mid-Century Modern: #264653, #2A9D8F, #E9C46A, #F4A261, #E76F51
-Art Deco Poster: #141E30, #243B55, #D97724, #F2B84B, #F5EFE6
+Art Deco Gold: #1A1A1A, #D4AF37, #AA8220, #F5E6CC, #2C3E50
+Disco Fever: #F72585, #7209B7, #4361EE, #4CC9F0, #FEE440
+Vintage Postcard: #E07A5F, #F2CC8F, #81B29A, #3D405B, #F4F1DE
+Retro Diner: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+1960s Psychedelic: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Old Hollywood: #800000, #D4AF37, #1A1A1A, #F5F5DC, #4A0E0E
+Faded Polaroid: #D5BDAF, #E3D5CA, #F5EBE0, #A3B18A, #588157
+Retro Cassette: #E63946, #F77F00, #FCBF49, #2A9D8F, #264653
+Vintage Newspaper: #F4F1EA, #E6E2D8, #B5B0A6, #5C5852, #262421
+1970s Mustard: #E09F3E, #9E2A2B, #540B0E, #335C67, #FFF3B0
+Retro Ski Lodge: #D62828, #F77F00, #FCBF49, #003049, #EAE2B7
+Vintage Botanical: #588157, #A3B18A, #DAD7CD, #344E41, #A44A3F
+1980s Miami: #FF71CE, #01CDFE, #05FFA1, #B967FF, #FFFB96
+Retro Arcade 2: #FF2A6D, #05D9E8, #D1F7FF, #01012B, #FEE440
+Vintage Map: #EFE6D5, #D8C3A5, #8E7970, #4A4E69, #22223B
+1960s Mod: #F72585, #4CC9F0, #FEE440, #111111, #FFFFFF
+Retro Bowling: #E63946, #457B9D, #F1FAEE, #1D3557, #F4A261
+Vintage Cinema: #2B2D42, #8D99AE, #EDF2F4, #EF233C, #D90429
+1970s Avocado: #556B2F, #8FBC8F, #D2B48C, #A0522D, #3B2F2F
+Retro Diner 2: #F4A261, #E76F51, #2A9D8F, #264653, #E9C46A
+Vintage Library: #5C4033, #8B5A2B, #C19A6B, #E5DEC9, #2E1B0E
+1980s Neon: #FF00FF, #00FFFF, #FFFF00, #FF007F, #7A04EB
+Retro Surf: #00A896, #02C39A, #F0F3BD, #FF7F51, #05668D
+Vintage Stamp: #A44A3F, #F19C79, #CBDFBD, #566957, #242F26
+1970s Earth: #BC6C25, #DDA15E, #FEFAE0, #606C38, #283618
+Retro Camper: #E76F51, #F4A261, #E9C46A, #2A9D8F, #264653
+Vintage Apothecary: #3A5A40, #588157, #A3B18A, #DAD7CD, #582F0E
+1990s Windbreaker: #FF007F, #00F0FF, #7A04EB, #FEE440, #120458
+Retro Soda: #D62828, #F77F00, #FCBF49, #EAE2B7, #003049
+Vintage Tea Room: #F5EBE0, #E3D5CA, #D5BDAF, #A3B18A, #588157
+1960s Space Age: #E63946, #F1FAEE, #A8DADC, #457B9D, #1D3557
+Retro Vinyl: #1A1A1A, #E63946, #F4A261, #E9C46A, #F1FAEE
+Vintage Ledger: #F4F1DE, #E07A5F, #3D405B, #81B29A, #F2CC8F
+1970s Rust: #9E2A2B, #E09F3E, #FFF3B0, #335C67, #540B0E
+Retro Roller Rink: #FF71CE, #01CDFE, #05FFA1, #B967FF, #FFFB96
+Vintage Herb: #344E41, #3A5A40, #588157, #A3B18A, #DAD7CD
+1980s Grid: #01012B, #05D9E8, #FF2A6D, #D1F7FF, #7A04EB
+Retro Picnic: #E63946, #F1FAEE, #1D3557, #A8DADC, #457B9D
+Vintage Post: #8E5A3C, #C84B31, #ECDBBA, #2D4263, #191919
+1970s Suede: #7F4F24, #936639, #A68A64, #B6AD90, #582F0E
+Retro Jukebox: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+Vintage Travel: #264653, #2A9D8F, #E9C46A, #F4A261, #E76F51
+1990s Sitcom: #3A86FF, #FF006E, #FFBE0B, #FB5607, #8338EC
+Retro Motel: #00A896, #02C39A, #F0F3BD, #05668D, #FF7F51
+Vintage Atlas: #D8C3A5, #8E7970, #4A4E69, #22223B, #EFE6D5
+1970s Burnt Orange: #D95D39, #F18805, #8C1C13, #3D2B1F, #586F2C
+Retro Drive-In: #E63946, #F1FAEE, #A8DADC, #457B9D, #1D3557
+Vintage Almanac: #582F0E, #7F4F24, #936639, #A68A64, #B6AD90
+1980s Synth: #F72585, #7209B7, #3A0CA3, #4361EE, #4CC9F0
+Retro Diner 3: #F1FAEE, #A8DADC, #457B9D, #1D3557, #E63946
+Vintage Botanical 2: #DAD7CD, #A3B18A, #588157, #3A5A40, #344E41
+1960s Beatnik: #1A1A1A, #FFFFFF, #808080, #D4AF37, #800000
+Retro Toaster: #E76F51, #F4A261, #E9C46A, #264653, #2A9D8F
+Vintage Manuscript: #FAF9F6, #EAE6DF, #BDB7AE, #5C5852, #141312
+1970s Harvest: #F18805, #D95D39, #8C1C13, #586F2C, #3D2B1F
+Retro Boombox: #FF007F, #00F0FF, #FEE440, #120458, #7A04EB
+Vintage Parchment: #F5EBE0, #E3D5CA, #D5BDAF, #B08968, #7F5539
+1980s Laser: #FF2A6D, #05D9E8, #D1F7FF, #7A04EB, #01012B
+Retro Caf\u00e9: #3D2B1F, #7F4F24, #A68A64, #EAE0D5, #C6AC8F
+Vintage Herbarium: #254E2A, #4F772D, #90A955, #ECF39E, #132A13
+1990s Denim: #1D3557, #457B9D, #A8DADC, #F1FAEE, #E63946
+Retro Arcade 3: #7209B7, #F72585, #4361EE, #4CC9F0, #3A0CA3
+Vintage Clockwork: #4A3B32, #8E5A3C, #D4AF37, #E5E5E5, #212529
+1970s Palm Springs: #FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C
+Retro Cinema: #D90429, #EF233C, #EDF2F4, #8D99AE, #2B2D42
+Vintage Spice: #9E2A2B, #E09F3E, #FFF3B0, #540B0E, #335C67
+1980s Rave: #FF00FF, #00FFFF, #FFFF00, #FF007F, #00FF00
+Retro Sunburst: #F18805, #D95D39, #8C1C13, #FFD166, #EF476F
+Vintage Herbarium 2: #4F772D, #90A955, #ECF39E, #254E2A, #132A13
+1960s Riviera: #00A896, #02C39A, #F0F3BD, #FF7F51, #05668D
+Retro Diner 4: #1D3557, #457B9D, #A8DADC, #E63946, #F1FAEE
+Vintage Ledger 2: #E6DDD0, #C7B7A3, #8C7A6B, #4A3F35, #F7F3EE
+1970s Woodgrain: #582F0E, #7F4F24, #936639, #A68A64, #B6AD90
+Retro Neon 2: #FF2A6D, #05D9E8, #FEE440, #7A04EB, #01012B
 
-[Dark & Moody]
-Gothic Cathedral: #0A090C, #1C1921, #383242, #6E1E2A, #A89F91
-Midnight Forest: #070F0A, #12261A, #1F402C, #366649, #739982
-Obsidian & Blood: #080505, #1C0D0D, #451414, #7A1C1C, #B85C5C
-Storm Cloud: #0D1014, #1E242B, #36414D, #58687A, #8C9BA8
-Noir Detective: #0A0A0B, #1A1B1E, #2E3036, #4D5159, #8C919E
-`;
+LUXURY & JEWEL TONES
+Royal Velvet: #240046, #3C096C, #5A189A, #7B2CBF, #9D4EDD
+Emerald Palace: #004B23, #006400, #007200, #008000, #38B000
+Sapphire Night: #03045E, #023E8A, #0077B6, #0096C7, #00B4D8
+Ruby & Gold: #590D22, #800F2F, #A4133C, #C9184A, #FFD700
+Amethyst Crown: #3A0CA3, #480CA8, #560BAD, #7209B7, #B5179E
+Topaz & Amber: #FF6D00, #FF7900, #FF8500, #FF9100, #FF9E00
+Jade Dynasty: #064E3B, #065F46, #047857, #059669, #10B981
+Garnet Wine: #4A0E0E, #6E1414, #911B1B, #B52222, #D92B2B
+Onyx & Pearl: #111111, #222222, #444444, #EEEEEE, #FFFFFF
+Citrine Sun: #D97706, #F59E0B, #FBBF24, #FCD34D, #FDE68A
+Imperial Plum: #4A154B, #611F69, #7C2D84, #9A3CA3, #B84DC2
+Turquoise Gem: #0F766E, #0D9488, #14B8A6, #2DD4BF, #5EEAD4
+Burgundy Silk: #3D0814, #5C0C1E, #7D1128, #9E1633, #C21B3E
+Aquamarine Ice: #164E63, #155E75, #0E7490, #0891B2, #06B6D4
+Champagne Gold: #78350F, #92400E, #B45309, #D97706, #F59E0B
+Malachite Green: #14532D, #166534, #15803D, #16A34A, #22C55E
+Cobalt Jewel: #1E3A8A, #1E40AF, #1D4ED8, #2563EB, #3B82F6
+Rose Quartz Jewel: #831843, #9D174D, #BE185D, #DB2777, #EC4899
+Obsidian & Gold: #0F172A, #1E293B, #334155, #EAB308, #FACC15
+Peridot Spark: #365314, #3F6212, #4D7C0F, #65A30D, #84CC16
+Crimson Velvet: #450A0A, #7F1D1D, #991B1B, #B91C1C, #DC2626
+Indigo Royale: #1E1B4B, #312E81, #3730A3, #4338CA, #4F46E5
+Amber Glow: #451A03, #78350F, #92400E, #B45309, #D97706
+Emerald Silk: #022C22, #064E3B, #065F46, #047857, #059669
+Sapphire Velvet: #172554, #1E3A8A, #1E40AF, #1D4ED8, #2563EB
+Plum & Gold: #3B0764, #581C87, #6B21A8, #7E22CE, #EAB308
+Teal Jewel: #134E4A, #115E59, #0F766E, #0D9488, #14B8A6
+Ruby Slipper: #4C0519, #881337, #9F1239, #BE123C, #E11D48
+Diamond & Slate: #0F172A, #334155, #64748B, #CBD5E1, #F8FAFC
+Gold Leaf: #422006, #713F12, #854D0E, #A16207, #CA8A04
+Violet Crown: #2E1065, #4C1D95, #5B21B6, #6D28D9, #7C3AED
+Jade & Ivory: #064E3B, #10B981, #A7F3D0, #F8FAFC, #FEF3C7
+Maroon Velvet: #450A0A, #7F1D1D, #991B1B, #DC2626, #F87171
+Ceylon Sapphire: #0C4A6E, #0369A1, #0284C7, #0EA5E9, #38BDF8
+Chartreuse Gem: #1A2E05, #365314, #3F6212, #4D7C0F, #65A30D
+Magenta Silk: #500724, #831843, #9D174D, #BE185D, #DB2777
+Bronze & Jade: #451A03, #78350F, #065F46, #047857, #10B981
+Royal Amethyst: #3B0764, #581C87, #6B21A8, #7E22CE, #9333EA
+Turquoise & Gold: #115E59, #0F766E, #0D9488, #D97706, #FBBF24
+Scarlet Jewel: #450A0A, #991B1B, #DC2626, #EF4444, #F87171
+Midnight Topaz: #082F49, #075985, #0369A1, #0284C7, #0EA5E9
+Olive Jewel: #1A2E05, #365314, #4D7C0F, #65A30D, #84CC16
+Wine & Gold: #4C0519, #881337, #BE123C, #D97706, #FBBF24
+Ultramarine Gem: #1E1B4B, #312E81, #4338CA, #4F46E5, #6366F1
+Copper & Emerald: #7C2D12, #9A3412, #065F46, #047857, #10B981
+Orchid Jewel: #4A044E, #701A75, #86198F, #A21CAF, #C026D3
+Citrine & Onyx: #18181B, #27272A, #D97706, #F59E0B, #FBBF24
+Mint & Gold: #064E3B, #059669, #34D399, #D97706, #FBBF24
+Cobalt & Silver: #1E3A8A, #2563EB, #60A5FA, #CBD5E1, #F8FAFC
+Rosewood & Gold: #450A0A, #7F1D1D, #B45309, #D97706, #F59E0B
+Beryl Green: #022C22, #064E3B, #047857, #059669, #34D399
+Plum Silk: #3B0764, #581C87, #7E22CE, #9333EA, #A855F7
+Saffron & Ruby: #991B1B, #DC2626, #D97706, #F59E0B, #FBBF24
+Indigo & Gold: #1E1B4B, #3730A3, #4F46E5, #CA8A04, #EAB308
+Jadeite: #065F46, #047857, #059669, #10B981, #6EE7B7
+Crimson & Gold: #7F1D1D, #B91C1C, #DC2626, #CA8A04, #EAB308
+Sapphire & Pearl: #1E3A8A, #1D4ED8, #3B82F6, #E2E8F0, #FFFFFF
+Amber & Velvet: #4C0519, #881337, #92400E, #B45309, #D97706
+Emerald & Gold: #064E3B, #047857, #10B981, #CA8A04, #EAB308
+Violet Silk: #2E1065, #4C1D95, #6D28D9, #7C3AED, #8B5CF6
+Garnet & Bronze: #450A0A, #7F1D1D, #78350F, #92400E, #B45309
+Turquoise Silk: #134E4A, #0F766E, #14B8A6, #2DD4BF, #99F6E4
+Ruby & Velvet: #4C0519, #881337, #9F1239, #BE123C, #E11D48
+Gold & Obsidian: #09090B, #18181B, #CA8A04, #EAB308, #FACC15
+Topaz & Teal: #0F766E, #0D9488, #D97706, #F59E0B, #FBBF24
+Plum & Rose: #581C87, #7E22CE, #9D174D, #DB2777, #F472B6
+Cobalt & Gold: #172554, #1E3A8A, #1D4ED8, #D97706, #FBBF24
+Jade & Slate: #064E3B, #047857, #334155, #64748B, #94A3B8
+Crimson Silk: #450A0A, #7F1D1D, #991B1B, #DC2626, #EF4444
+Amber & Indigo: #1E1B4B, #312E81, #B45309, #D97706, #F59E0B
+Emerald & Ivory: #064E3B, #047857, #10B981, #F8FAFC, #FEF3C7
+Sapphire & Gold: #1E3A8A, #2563EB, #3B82F6, #CA8A04, #EAB308
+Amethyst & Silver: #3B0764, #6B21A8, #9333EA, #CBD5E1, #F8FAFC
+Ruby & Ivory: #881337, #BE123C, #E11D48, #FFF1F2, #FFFFFF
+Gold & Burgundy: #4C0519, #881337, #A16207, #CA8A04, #EAB308
+Teal & Gold: #0F766E, #0D9488, #14B8A6, #D97706, #FBBF24
+Plum & Silver: #3B0764, #6B21A8, #9333EA, #E2E8F0, #F8FAFC
+Cobalt & Ivory: #1E3A8A, #1D4ED8, #2563EB, #F8FAFC, #EFF6FF
+Jade & Gold: #064E3B, #059669, #34D399, #CA8A04, #EAB308
+
+VIBRANT & PLAYFUL
+ Carnival Pop: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Tropical Punch: #FF006E, #FB5607, #FFBE0B, #8338EC, #3A86FF
+Citrus Splash: #FF9F1C, #FFBF69, #CBF3F0, #2EC4B6, #E71D36
+Berry Blast: #D90429, #EF233C, #8D99AE, #2B2D42, #EDF2F4
+Confetti Party: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Bubblegum Pop: #FF70A6, #FF9770, #FFD670, #E9FF70, #70D6FF
+Rainbow Sherbet: #FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C
+Sunny Fiesta: #F94144, #F3722C, #F8961E, #F9C74F, #90BE6D
+Electric Pop: #FF0055, #FF5500, #FFAA00, #00FFAA, #0055FF
+Pi\u00f1ata Party: #FF006E, #FB5607, #FFBE0B, #8338EC, #3A86FF
+Summer Splash: #00BBF9, #00F5D4, #FEE440, #F15BB5, #9B5DE5
+Gumball Machine: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+Mango Tango: #FF5400, #FF6D00, #FF8500, #FF9E00, #FFB600
+Kiwi Lime: #80ED99, #57CC99, #38A3A5, #22577A, #C7F9CC
+Lollipop Swirl: #FF70A6, #FF9770, #FFD670, #70D6FF, #A0C4FF
+Pop Art: #F94144, #F3722C, #F9C74F, #43AA8B, #277DA1
+Samba Beat: #009B3A, #FEDF00, #002776, #FF7F50, #FFFFFF
+Jellybean: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Clownfish: #FF5400, #FF7B00, #FF9500, #FFFFFF, #111111
+Tiki Torch: #E63946, #F4A261, #E9C46A, #2A9D8F, #264653
+Sorbet Twist: #FF9F1C, #FFBF69, #CBF3F0, #2EC4B6, #FF595E
+ Circus Tent: #D62828, #F77F00, #FCBF49, #EAE2B7, #003049
+Popsicle: #FF006E, #3A86FF, #FFBE0B, #06D6A0, #FB5607
+ carnival Lights: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Banana Split: #FFE66D, #FF6B6B, #4ECDC4, #1A535C, #F7FFF7
+Disco Ball: #F72585, #7209B7, #4361EE, #4CC9F0, #FEE440
+Tangerine Pop: #FF6D00, #FF8500, #FF9E00, #FFB600, #FFC900
+ Watermelon Sugar: #FF4D6D, #FF758F, #FF8FA3, #80ED99, #57CC99
+Balloon Fiesta: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Lemonade Stand: #FFE66D, #FF6B6B, #4ECDC4, #2EC4B6, #FFFFFF
+Mardi Gras: #7209B7, #4CC9F0, #FEE440, #F72585, #3A0CA3
+Sunny Carnival: #F94144, #F3722C, #F8961E, #F9C74F, #43AA8B
+Raspberry Fizz: #FF006E, #FB5607, #FFBE0B, #8338EC, #3A86FF
+Coconut Lime: #80ED99, #57CC99, #C7F9CC, #FFFFFF, #22577A
+Fireworks: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Peach Punch: #FF9770, #FF70A6, #FFD670, #E9FF70, #70D6FF
+ carnival Pop 2: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+Blueberry Swirl: #3A86FF, #8338EC, #FF006E, #FFBE0B, #FFFFFF
+Tropical Breeze: #00BBF9, #00F5D4, #FEE440, #F15BB5, #9B5DE5
+Candy Cane: #D90429, #EF233C, #FFFFFF, #EDF2F4, #2B2D42
+Sunny Splash: #FF9F1C, #FFBF69, #CBF3F0, #2EC4B6, #FFBF00
+ carnival Fun: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Cherry Bomb: #D90429, #EF233C, #FF758F, #1A1A1A, #FFFFFF
+Limeade: #80ED99, #57CC99, #38A3A5, #C7F9CC, #FEE440
+ carnival Ride: #F94144, #F3722C, #F8961E, #F9C74F, #90BE6D
+Grape Soda: #7209B7, #3A0CA3, #4361EE, #4CC9F0, #F72585
+Sunny Day: #FFD166, #06D6A0, #118AB2, #EF476F, #073B4C
+ carnival Cheer: #FF70A6, #FF9770, #FFD670, #E9FF70, #70D6FF
+Orange Crush: #FF5400, #FF6D00, #FF8500, #FF9E00, #FFB600
+Minty Pop: #80ED99, #57CC99, #38A3A5, #22577A, #00F5D4
+ carnival Glow: #F72585, #7209B7, #4361EE, #4CC9F0, #FEE440
+Strawberry Pop: #FF006E, #FF758F, #FFB3C6, #FB6F92, #FFE5EC
+Sunny Fiesta 2: #F94144, #F3722C, #F8961E, #F9C74F, #277DA1
+ carnival Party: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Pineapple Punch: #FFD166, #06D6A0, #118AB2, #EF476F, #F4A261
+ carnival Joy: #FF70A6, #FF9770, #FFD670, #70D6FF, #A0C4FF
+Lemon Fizz: #FEE440, #00F5D4, #00BBF9, #F15BB5, #9B5DE5
+ carnival Vibe: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+Apple Cider: #D95D39, #F18805, #8C1C13, #586F2C, #FFD166
+ carnival Spark: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Honeydew Pop: #80ED99, #57CC99, #38A3A5, #C7F9CC, #06D6A0
+ carnival Blast: #FF006E, #FB5607, #FFBE0B, #8338EC, #3A86FF
+Sunny Swirl: #FF9F1C, #FFBF69, #CBF3F0, #2EC4B6, #E71D36
+ carnival Beats: #F72585, #7209B7, #4361EE, #4CC9F0, #FEE440
+Peach Fizz: #FF9770, #FF70A6, #FFD670, #E9FF70, #70D6FF
+ carnival Fun 2: #F94144, #F3722C, #F8961E, #F9C74F, #90BE6D
+Berry Swirl: #D90429, #EF233C, #8D99AE, #2B2D42, #FF006E
+Sunny Pop: #FFD166, #06D6A0, #118AB2, #EF476F, #073B4C
+ carnival Magic: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+Citrus Fizz: #FF9F1C, #FFBF69, #CBF3F0, #2EC4B6, #FEE440
+ carnival Dance: #FF006E, #FB5607, #FFBE0B, #8338EC, #3A86FF
+Mango Fizz: #FF5400, #FF6D00, #FF8500, #FF9E00, #FFD166
+ carnival Star: #EF476F, #FFD166, #06D6A0, #118AB2, #073B4C
+Lime Fizz: #80ED99, #57CC99, #38A3A5, #22577A, #8AC926
+ carnival Glow 2: #F72585, #7209B7, #4361EE, #4CC9F0, #FEE440
+Cherry Fizz: #D90429, #EF233C, #FF758F, #FFD166, #06D6A0
+Sunny Fun: #F94144, #F3722C, #F8961E, #F9C74F, #43AA8B
+ carnival Pop 3: #FF70A6, #FF9770, #FFD670, #E9FF70, #70D6FF
+
+CORPORATE, UI & EDITORIAL
+Executive Navy: #0F172A, #1E293B, #334155, #3B82F6, #F8FAFC
+Editorial Serif: #18181B, #3F3F46, #71717A, #D4D4D8, #FAFAFA
+SaaS Modern: #111827, #374151, #6366F1, #10B981, #F9FAFB
+Financial Trust: #064E3B, #065F46, #047857, #D97706, #F8FAFC
+Tech Startup: #09090B, #18181B, #8B5CF6, #EC4899, #FAFAFA
+Medical Calm: #0F766E, #14B8A6, #CCFBF1, #334155, #F8FAFC
+Legal Authority: #1E293B, #334155, #475569, #B45309, #F1F5F9
+Magazine Gloss: #111111, #E11D48, #F43F5E, #FFE4E6, #FFFFFF
+Enterprise Slate: #0F172A, #1E293B, #0EA5E9, #38BDF8, #F1F5F9
+Creative Agency: #18181B, #F97316, #FACC15, #22C55E, #FAFAFA
+Banking & Wealth: #022C22, #064E3B, #047857, #CA8A04, #FEFCE8
+Clean Dashboard: #F8FAFC, #F1F5F9, #E2E8F0, #2563EB, #0F172A
+Editorial Print: #1C1917, #44403C, #78716C, #DC2626, #FAFAF9
+Consulting Pro: #1E3A8A, #1D4ED8, #3B82F6, #64748B, #F8FAFC
+Health & Wellness: #065F46, #10B981, #A7F3D0, #0284C7, #F0F9FF
+Architecture Firm: #18181B, #27272A, #52525B, #A1A1AA, #F4F4F5
+Law & Order: #0F172A, #1E293B, #991B1B, #B91C1C, #F8FAFC
+Modern Blog: #171717, #404040, #737373, #2563EB, #FAFAFA
+FinTech Core: #090D16, #1E293B, #10B981, #34D399, #F8FAFC
+Design System: #0F172A, #334155, #6366F1, #818CF8, #F8FAFC
+Real Estate Pro: #1E293B, #334155, #D97706, #F59E0B, #F8FAFC
+Newsroom: #111111, #333333, #DC2626, #E5E5E5, #FFFFFF
+Cloud Infra: #0F172A, #1E293B, #0284C7, #38BDF8, #E0F2FE
+Marketing Suite: #18181B, #9333EA, #C084FC, #F59E0B, #FAFAFA
+Corporate Blue: #0C4A6E, #0369A1, #0284C7, #0EA5E9, #F0F9FF
+Editorial Vogue: #09090B, #27272A, #D4AF37, #F4F4F5, #FFFFFF
+Productivity App: #111827, #1F2937, #4F46E5, #6366F1, #F9FAFB
+Energy Sector: #064E3B, #059669, #F59E0B, #FBBF24, #F8FAFC
+Logistics Pro: #0F172A, #1E293B, #EA580C, #F97316, #F8FAFC
+Academic Journal: #1E293B, #475569, #94A3B8, #1D4ED8, #F8FAFC
+Fintech Neon: #09090B, #18181B, #00F5D4, #00BBF9, #F8FAFC
+Brand Identity: #18181B, #27272A, #E11D48, #FB7185, #FAFAFA
+Data Analytics: #0F172A, #1E293B, #3B82F6, #10B981, #F59E0B
+Media Network: #111111, #262626, #EF4444, #3B82F6, #FFFFFF
+Venture Capital: #09090B, #18181B, #3F3F46, #10B981, #FAFAFA
+UI Kit Pro: #0F172A, #1E293B, #475569, #6366F1, #F8FAFC
+Editorial Minimal: #18181B, #52525B, #A1A1AA, #E4E4E7, #FAFAFA
+Insurance Trust: #0C4A6E, #0369A1, #0284C7, #64748B, #F8FAFC
+Retail Brand: #18181B, #27272A, #EC4899, #F472B6, #FAFAFA
+Cyber Security: #020617, #0F172A, #1E293B, #10B981, #38BDF8
+Publishing House: #1C1917, #44403C, #78716C, #B45309, #FAFAF9
+Workspace UI: #0F172A, #1E293B, #334155, #0EA5E9, #F8FAFC
+Wealth Management: #064E3B, #065F46, #047857, #D4AF37, #F8FAFC
+Editorial Chic: #111111, #333333, #777777, #CCCCCC, #FFFFFF
+Developer Portal: #09090B, #18181B, #27272A, #3B82F6, #FAFAFA
+Telecom Pro: #1E1B4B, #312E81, #4338CA, #06B6D4, #F8FAFC
+Editorial Digest: #18181B, #3F3F46, #71717A, #E11D48, #FAFAFA
+SaaS Enterprise: #0F172A, #1E293B, #334155, #2563EB, #F8FAFC
+BioTech Lab: #042F2E, #115E59, #0D9488, #2DD4BF, #F0FDFA
+Creative Studio: #18181B, #27272A, #F43F5E, #FACC15, #FAFAFA
+Corporate Slate: #0F172A, #334155, #64748B, #94A3B8, #F8FAFC
+Editorial Luxe: #111111, #222222, #D4AF37, #F5E6CC, #FFFFFF
+Cloud Platform: #09090B, #18181B, #0284C7, #38BDF8, #FAFAFA
+Design Agency: #18181B, #3F3F46, #8B5CF6, #A78BFA, #FAFAFA
+FinTech Trust: #064E3B, #047857, #10B981, #64748B, #F8FAFC
+UI Framework: #0F172A, #1E293B, #334155, #3B82F6, #60A5FA
+Editorial Style: #1C1917, #292524, #57534E, #A8A29E, #FAFAF9
+Sports Brand: #111111, #1F2937, #EF4444, #F97316, #FFFFFF
+EdTech Modern: #1E1B4B, #3730A3, #4F46E5, #10B981, #F8FAFC
+Corporate Gold: #0F172A, #1E293B, #334155, #D97706, #FBBF24
+Editorial Weekly: #18181B, #27272A, #52525B, #EF4444, #FAFAFA
+SaaS Analytics: #09090B, #18181B, #6366F1, #14B8A6, #FAFAFA
+Eco Brand: #064E3B, #047857, #10B981, #34D399, #ECFDF5
+Luxury Brand: #09090B, #18181B, #27272A, #D4AF37, #FAFAFA
+Tech Media: #111111, #1E293B, #0EA5E9, #38BDF8, #FFFFFF
+Corporate Trust: #0C4A6E, #0369A1, #0284C7, #334155, #F8FAFC
+Editorial Press: #1C1917, #44403C, #78716C, #A8A29E, #FAFAF9
+Product Launch: #09090B, #18181B, #F97316, #FB923C, #FAFAFA
+FinTech Global: #0F172A, #1E293B, #0284C7, #10B981, #F8FAFC
+UI System: #111827, #1F2937, #374151, #3B82F6, #F9FAFB
+Editorial Classic: #18181B, #3F3F46, #71717A, #A1A1AA, #FAFAFA
+Brand Studio: #09090B, #18181B, #EC4899, #8B5CF6, #FAFAFA
+Corporate Navy: #0F172A, #1E293B, #1D4ED8, #3B82F6, #F8FAFC
+Editorial Zine: #111111, #FACC15, #EF4444, #3B82F6, #FFFFFF
+SaaS Hub: #0F172A, #1E293B, #334155, #8B5CF6, #F8FAFC
+Wellness Brand: #064E3B, #0D9488, #99F6E4, #F0FDFA, #FFFFFF
+Executive Suite: #09090B, #18181B, #27272A, #CA8A04, #FAFAFA
+Editorial Modern: #18181B, #27272A, #52525B, #71717A, #FAFAFA`;
 
 const MASTER_THEMES = {};
 (function parseMasterThemes() {
-  let currentCat = null;
-  RAW_THEMES_TEXT.split(/\r?\n/).forEach(rawLine => {
+  function ensureCat(catName) {
+    if (!MASTER_THEMES[catName]) MASTER_THEMES[catName] = {};
+    return MASTER_THEMES[catName];
+  }
+
+  MASTER_THEMES['Pastels'] = {};
+  Object.keys(PASTEL_SPECS).forEach(label => {
+    MASTER_THEMES['Pastels'][label] = generatePastelList(label);
+  });
+
+  MASTER_THEMES['Skin Tones'] = {};
+  Object.keys(SKIN_PROFILES).forEach(label => {
+    MASTER_THEMES['Skin Tones'][label] = generateSkinList(label);
+  });
+
+  const MAJOR_SECTIONS = new Set([
+    'SEASONAL THEMES',
+    'NATURAL & BIOLOGICAL SOURCES',
+    'MATERIAL-INSPIRED THEMES',
+    'PAINTING MEDIUMS',
+    'ATMOSPHERIC & LIGHTING THEMES',
+    'CULINARY & BOTANICAL INFUSIONS',
+    'GEMSTONES, COSMOS & RETRO ERAS',
+    'ARCHITECTURE & DIGITAL INTERFACES',
+    'METAL THEMES',
+    'NATURE THEMES',
+    'NEON THEMES',
+    'PASTEL THEMES',
+    'SKIN THEMES',
+    'TOP 1,000 COLOR THEMES & PALETTES'
+  ]);
+
+  let majorSection = null;
+  let subGroup = null;
+
+  RAW_MASTER_THEMES_TXT.split(/\r?\n/).forEach(rawLine => {
     const line = rawLine.trim();
-    if (!line) return;
-    const catMatch = /^\[(.+)\]$/.exec(line);
-    if (catMatch) {
-      currentCat = catMatch[1].trim();
-      if (!MASTER_THEMES[currentCat]) MASTER_THEMES[currentCat] = {};
+    if (!line || /^=+$/.test(line) || line === 'COLOR THEME REFERENCE LIST') return;
+
+    if (MAJOR_SECTIONS.has(line)) {
+      majorSection = line;
+      subGroup = null;
       return;
     }
-    if (!currentCat) return;
+
     const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) return;
-    const themeName = line.slice(0, colonIdx).trim();
-    const hexes = (line.slice(colonIdx + 1).match(/#[0-9a-fA-F]{6}\b/g) || []).map(h => h.toUpperCase());
-    if (themeName && hexes.length) {
-      MASTER_THEMES[currentCat][themeName] = hexes;
+    if (colonIdx !== -1) {
+      const left = line.slice(0, colonIdx).trim();
+      const right = line.slice(colonIdx + 1).trim();
+      if (/^description$/i.test(left)) return;
+
+      const hexes = (right.match(/#[0-9a-fA-F]{6}\b/g) || []).map(h => h.toUpperCase());
+      if (hexes.length) {
+        const targetCat = subGroup || majorSection || 'General Themes';
+        const bucket = ensureCat(targetCat);
+        const key = bucket[left] ? left + ' (' + (majorSection || 'Theme') + ')' : left;
+        bucket[key] = hexes;
+      }
+      return;
+    }
+
+    if (majorSection === 'TOP 1,000 COLOR THEMES & PALETTES') {
+      subGroup = line;
+    } else if (
+      majorSection === 'METAL THEMES' ||
+      majorSection === 'NATURE THEMES' ||
+      majorSection === 'NEON THEMES' ||
+      majorSection === 'PASTEL THEMES' ||
+      majorSection === 'SKIN THEMES'
+    ) {
+      subGroup = line;
+    } else {
+      subGroup = line;
     }
   });
 })();
@@ -2621,9 +4637,9 @@ function renderMasterThemeChips() {
   const temp = Number($('themeTempSlide').value) || 0;
   $('themeTempVal').textContent = formatTempLabel(temp, 'Original');
 
-  const hexes = MASTER_THEMES[cat]?.[key] || [];
-  currentThemeSwatches = hexes.map(h => {
-    const sw = fromHex(h);
+  const items = MASTER_THEMES[cat]?.[key] || [];
+  currentThemeSwatches = items.map(item => {
+    const sw = typeof item === 'string' ? fromHex(item) : { ...item };
     return sw ? applyTemperatureShift(sw, temp) : null;
   }).filter(Boolean);
 
@@ -2640,7 +4656,6 @@ $('loadThemeBtn').addEventListener('click', () => {
   addToEmpty(currentThemeSwatches, true, key.toUpperCase().slice(0, 40));
 });
 
-/* ARCHIVE / LIBRARY */
 function saveLibrary() {
   try { localStorage.setItem('swatchstudio.lib', JSON.stringify(library)); } catch {}
   renderLibrary();
@@ -2725,7 +4740,6 @@ $('saveLib').addEventListener('click', () => {
 });
 $('folderFilter').addEventListener('change', renderLibrary);
 
-/* ACCESSIBILITY AUDIT */
 $('runAuditBtn').addEventListener('click', () => {
   const active = swatches.map((sw, idx) => sw ? { idx, sw, rgb: swRgb(sw), hex: toHex(sw) } : null).filter(Boolean);
   const mode = $('auditMode').value;
@@ -2764,14 +4778,13 @@ $('runAuditBtn').addEventListener('click', () => {
   });
 
   if (conflicts.length === 0) {
-    report.innerHTML = '<span style="color:var(--ok)">\u2713 Audit Passed: All ' + active.length + ' swatches remain distinctly identifiable under ' + mode.toUpperCase() + ' vision!</span>';
+    report.innerHTML = '<span style="color:var(--ok)">\u2713 Audit Passed: All swatches remain distinctly identifiable under ' + mode.toUpperCase() + ' vision!</span>';
   } else {
-    report.innerHTML = '<strong style="color:var(--danger)">\u26a0\ufe0f Found ' + conflicts.length + ' Accessibility Conflict(s):</strong><br>' + conflicts.join('<br>');
+    report.innerHTML = '<strong style="color:var(--danger)">\u26a0\ufe0f Accessibility Conflict(s) Detected:</strong><br>' + conflicts.join('<br>');
   }
   toast('A11y Audit Complete');
 });
 
-/* EXPORT & FILE I/O */
 function generateExportString() {
   const active = swatches.filter(Boolean);
   const fmt = $('txtFmt').value;
@@ -2941,7 +4954,7 @@ $('cardBtn').addEventListener('click', () => {
 
   g.fillStyle = '#9CA3AF';
   g.font = '18px sans-serif';
-  g.fillText('SWATCH STUDIO // ' + active.length + ' VECTORS', 50, 110);
+  g.fillText('SWATCH STUDIO', 50, 110);
 
   const gap = 20;
   const cardW = (c.width - 100 - gap * (cols - 1)) / cols;
@@ -2979,17 +4992,6 @@ $('shareUrlBtn').addEventListener('click', () => {
 $('undoBtn').addEventListener('click', undo);
 $('redoBtn').addEventListener('click', redo);
 
-$('viewPcBtn').addEventListener('click', () => {
-  document.body.classList.remove('phone-view');
-  $('viewPcBtn').setAttribute('aria-pressed', 'true');
-  $('viewPhoneBtn').setAttribute('aria-pressed', 'false');
-});
-$('viewPhoneBtn').addEventListener('click', () => {
-  document.body.classList.add('phone-view');
-  $('viewPhoneBtn').setAttribute('aria-pressed', 'true');
-  $('viewPcBtn').setAttribute('aria-pressed', 'false');
-});
-
 $('cbSim').addEventListener('change', e => {
   document.body.classList.remove('sim-protan', 'sim-deutan', 'sim-tritan', 'sim-achroma');
   if (e.target.value !== 'none') document.body.classList.add('sim-' + e.target.value);
@@ -3000,8 +5002,7 @@ function init() {
   setThemeByIndex(3, false);
   buildHarmonyWheel();
   buildPins();
-  renderPastels();
-  renderSkins();
+  initHueMatrixTab();
   populateThemeCategories();
   renderGradStops();
   updateGradientPreview();
