@@ -280,6 +280,50 @@ input[type="range"].temp-range {
   gap: 4px;
 }
 
+/* Palette Harmony & Balance Analyzer */
+.analyzer-box {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dist-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--slot-empty);
+}
+.dist-bar i {
+  flex: 1;
+  transition: background .25s ease;
+}
+.analyzer-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 10px;
+  font-size: 11px;
+}
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.metric-val {
+  font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 .bench { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 @media(max-width: 1200px) { .bench { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } .col-image { grid-column: 1 / -1; } }
 @media(max-width: 780px) { .bench { grid-template-columns: 1fr; } }
@@ -339,7 +383,7 @@ input[type="range"].temp-range {
 .slot.ins-before::before { left: -6px; }
 .slot.ins-after::before { right: -6px; }
 
-.grid-meta { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.grid-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 
 .chip-pair { display: flex; flex-direction: column; gap: 8px; }
 .chip {
@@ -349,8 +393,8 @@ input[type="range"].temp-range {
 }
 .chip:hover { border-color: var(--accent); }
 .chip span { font: 700 11px/1 var(--font-mono); background: var(--surface); color: var(--ink); padding: 5px 9px; border-radius: 6px; border: 1px solid var(--line); }
-.pins-row { display: flex; gap: 8px; align-items: stretch; }
-.pins { flex: 1; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
+.pins-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pins { flex: 1; min-width: 180px; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
 .pin { height: 28px; padding: 0; border-radius: 6px; border: 1px solid var(--line); touch-action: none; cursor: pointer; background: var(--slot-empty); transition: transform .15s; }
 .pin:hover { transform: scale(1.1); border-color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
 .pin.empty { background: transparent; border-style: dashed; }
@@ -367,7 +411,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 textarea { min-height: 64px; resize: vertical; }
 input[type="color"] { width: 44px; height: 36px; border: 1px solid var(--line); border-radius: 8px; padding: 3px; background: var(--panel2); cursor: pointer; }
 
-.slider { display: grid; grid-template-columns: 1.5em minmax(0, 1fr) 3.6em; gap: 10px; align-items: center; font: 700 11px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.slider { display: grid; grid-template-columns: 1.8em minmax(0, 1fr) 3.8em; gap: 10px; align-items: center; font: 700 11px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
 input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel2); }
 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.4); cursor: pointer; }
 input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.4); cursor: pointer; }
@@ -534,10 +578,65 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
 .libitem .bar { display: flex; height: 24px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
 .libitem .bar i { flex: 1; }
 
+/* Keyboard Shortcuts Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 200;
+}
+.modal-backdrop[hidden] { display: none; }
+.modal-card {
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media(max-width: 540px) { .shortcut-grid { grid-template-columns: 1fr; } }
+.shortcut-row {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+}
+.kbd-pill {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
 .toast {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom));
   background: var(--surface); border: 1px solid var(--line); color: var(--ink); padding: 12px 22px; border-radius: 10px; font-weight: 700; font-size: 12px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); z-index: 100; max-width: 90vw; text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); z-index: 220; max-width: 90vw; text-align: center;
   letter-spacing: 0.02em; animation: toastIn .25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .toast[hidden] { display: none; }
@@ -552,7 +651,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Chromatik</h1>
-        <p>Palette Lab &amp; Procreate Command Engine [Press SPACE to Randomize]</p>
+        <p>Palette Lab &amp; Procreate Command Engine [Press SPACE to Randomize &middot; ? for Keys]</p>
       </div>
     </div>
     <div class="row">
@@ -596,6 +695,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
       </div>
     </div>
     <div class="row">
+      <button id="shortcutsBtn" type="button" class="btn small" title="Keyboard Shortcuts (?)">&#9000; Keys (?)</button>
       <button id="undoBtn" type="button" class="btn small" disabled title="Undo (Ctrl+Z)">&#8616; Undo</button>
       <button id="redoBtn" type="button" class="btn small" disabled title="Redo (Ctrl+Y)">&#8618; Redo</button>
       <button id="shareUrlBtn" type="button" class="btn small" title="Copy Shareable URL">&#128279; Share</button>
@@ -638,8 +738,15 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
           </div>
         </div>
         <div class="palette-name-wrap">
-          <input id="paletteName" class="palette-name-input" type="text" maxlength="50" value="" placeholder="">
+          <input id="paletteName" class="palette-name-input" type="text" maxlength="50" value="" placeholder="Enter palette title...">
           <button type="button" id="randomizeNameBtn" class="btn small" title="Generate Random Theme Name">&#10024; Persona</button>
+        </div>
+
+        <!-- Smart Palette Actions -->
+        <div class="row" style="gap:6px">
+          <button type="button" id="invertUnlockedBtn" class="btn small grow" title="Invert RGB of unlocked swatches">&#9681; Invert</button>
+          <button type="button" id="harmonizePaletteBtn" class="btn small grow" title="Cohese unlocked swatches toward active harmony">Harmonize</button>
+          <button type="button" id="fillEmptyHarmonyBtn" class="btn small grow primary" title="Fill empty slots from active harmony">+ Fill Empty</button>
         </div>
 
         <div class="grid-wrap">
@@ -652,6 +759,20 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
             <button id="sortBtn" type="button" class="btn small">Sort Hue</button>
             <button id="lockBtn" type="button" class="btn small">Lock</button>
             <button id="clearBtn" type="button" class="btn small danger">Clear</button>
+          </div>
+        </div>
+
+        <!-- Live Palette Harmony & Balance Analyzer -->
+        <div class="analyzer-box previewable" aria-label="Palette Harmony and Balance Analyzer">
+          <div class="row" style="justify-content:space-between;gap:6px">
+            <span class="label" style="font-size:10px">Harmony &amp; Balance Analyzer</span>
+            <span id="balanceVerdict" class="muted" style="font-size:10px;font-weight:800">IDLE</span>
+          </div>
+          <div id="paletteDistBar" class="dist-bar" title="Active palette color distribution"></div>
+          <div class="analyzer-metrics">
+            <div class="metric-item"><span class="muted">Avg Sat / Brt</span><span id="statSatBrt" class="metric-val">-- / --</span></div>
+            <div class="metric-item"><span class="muted">Warm / Cool</span><span id="statWarmCool" class="metric-val">-- / --</span></div>
+            <div class="metric-item" style="grid-column:1 / -1"><span class="muted">Lowest Contrast Pair</span><span id="statLowContrast" class="metric-val">--</span></div>
           </div>
         </div>
 
@@ -680,7 +801,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
         <div id="multiFormatReadout" class="muted" style="font-size:11px;background:var(--panel2);padding:8px 10px;border:1px solid var(--line);border-radius:8px;word-break:break-all;">
           Select a swatch to inspect HEX &middot; RGB &middot; HSL &middot; CMYK &middot; OKLCH
         </div>
-        <textarea id="pasteBox" spellcheck="false" placeholder="#E63946, #F77F00, #FCBF49..."></textarea>
+        <textarea id="pasteBox" spellcheck="false" placeholder="#3B82F6, #8B5CF6, #06B6D4..."></textarea>
         <div class="row">
           <select id="txtFmt" class="grow">
             <option value="hex">HEX List</option>
@@ -748,7 +869,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
         <hr style="border:0;border-top:1px solid var(--line);margin:4px 0">
 
         <div class="row">
-          <input id="picker" type="color" aria-label="Color Picker" value="#000000">
+          <input id="picker" type="color" aria-label="Color Picker" value="#3b82f6">
           <input id="hex" type="text" maxlength="7" spellcheck="false" class="grow" aria-label="HEX code" placeholder="#HEX">
           <button id="slotClearBtn" type="button" class="btn small danger">Purge</button>
         </div>
@@ -829,9 +950,9 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
 
           <span class="label" style="font-size:10px">Send Gradient Stops to Palette Editor</span>
           <div class="send-grid-3">
-            <button type="button" class="btn small primary" data-grad-send="10">Send</button>
-            <button type="button" class="btn small primary" data-grad-send="20">Send</button>
-            <button type="button" class="btn small primary" data-grad-send="30">Send</button>
+            <button type="button" class="btn small primary" data-grad-send="10">Send 10</button>
+            <button type="button" class="btn small primary" data-grad-send="20">Send 20</button>
+            <button type="button" class="btn small primary" data-grad-send="30">Send 30</button>
           </div>
 
           <div class="row" style="justify-content:space-between">
@@ -846,7 +967,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
           <div class="row" style="gap:8px">
             <div id="rampBasePreview" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--slot-empty)"></div>
             <div class="grow" style="display:flex;flex-direction:column;gap:2px">
-              <input type="text" id="rampManualRgb" value="" spellcheck="false" placeholder="R, G, B">
+              <input type="text" id="rampManualRgb" value="" spellcheck="false" placeholder="R, G, B (e.g. 59, 130, 246)">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px">
@@ -994,6 +1115,27 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
   </div>
 </div>
 
+<!-- Keyboard Shortcuts Modal -->
+<div id="shortcutsModal" class="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+  <div class="modal-card">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="shortcutsTitle">Keyboard Shortcuts &amp; Command Keys</h2>
+      <button type="button" id="closeShortcutsBtn" class="btn small">Close [Esc]</button>
+    </div>
+    <p class="muted" style="font-size:11px">Speed up palette exploration and slot navigation without leaving the keyboard.</p>
+    <div class="shortcut-grid">
+      <div class="shortcut-row"><span>Randomize Unlocked</span><span class="kbd-pill">SPACE</span></div>
+      <div class="shortcut-row"><span>Shortcuts Cheat Sheet</span><span class="kbd-pill">?</span></div>
+      <div class="shortcut-row"><span>Undo Last Action</span><span class="kbd-pill">Ctrl / &#8984; + Z</span></div>
+      <div class="shortcut-row"><span>Redo Action</span><span class="kbd-pill">Ctrl / &#8984; + Y</span></div>
+      <div class="shortcut-row"><span>Redo (Alt)</span><span class="kbd-pill">Ctrl / &#8984; + Shift + Z</span></div>
+      <div class="shortcut-row"><span>Jump to Slots 1–9</span><span class="kbd-pill">1 – 9</span></div>
+      <div class="shortcut-row"><span>Close Modal / Clear Multi</span><span class="kbd-pill">ESC</span></div>
+      <div class="shortcut-row"><span>Range Multi-Select</span><span class="kbd-pill">Shift + Click</span></div>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast" hidden></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1017,6 +1159,12 @@ const TRENDING_CURATED_PALETTES = [
   { name: 'FIERY_OCEAN', hexes: ['#660708', '#D90429', '#FAF3DD', '#003049', '#669BBC'] },
   { name: 'ROSE_PETAL', hexes: ['#780000', '#E63946', '#F48C06', '#FF9EBB', '#CAF0F8'] },
   { name: 'OCEAN_SERENITY', hexes: ['#03045E', '#0077B6', '#00B4D8', '#90E0EF', '#CAF0F8'] }
+];
+
+const DEFAULT_GRADIENT_STOPS = [
+  { color: '#3B82F6', pos: 0 },
+  { color: '#8B5CF6', pos: 50 },
+  { color: '#06B6D4', pos: 100 }
 ];
 
 function addToEmpty(newSwatches, replaceAll = false, newName = null) {
@@ -1380,6 +1528,21 @@ function initThemeScroller() {
   $('themeNextBtn').addEventListener('click', () => setThemeByIndex(activeThemeIdx + 1));
 }
 
+/* Keyboard Shortcuts Modal & Global Keybindings */
+function openShortcutsModal() {
+  $('shortcutsModal').hidden = false;
+  $('closeShortcutsBtn').focus();
+}
+function closeShortcutsModal() {
+  $('shortcutsModal').hidden = true;
+}
+
+$('shortcutsBtn').addEventListener('click', openShortcutsModal);
+$('closeShortcutsBtn').addEventListener('click', closeShortcutsModal);
+$('shortcutsModal').addEventListener('click', e => {
+  if (e.target === $('shortcutsModal')) closeShortcutsModal();
+});
+
 /* Quick 5-Swatch Bar & Trending Strip */
 function renderQuickFiveBar() {
   const bar = $('quickPaletteBar');
@@ -1512,6 +1675,81 @@ $('quickAmethystBtn').addEventListener('click', () => {
 });
 $('quickRandomBtn').addEventListener('click', randomizeUnlocked);
 
+/* Palette Harmony & Balance Analyzer */
+function renderHarmonyAnalyzer() {
+  const bar = $('paletteDistBar');
+  const verdictEl = $('balanceVerdict');
+  const satBrtEl = $('statSatBrt');
+  const warmCoolEl = $('statWarmCool');
+  const lowContrastEl = $('statLowContrast');
+  if (!bar) return;
+
+  const active = swatches
+    .map((sw, idx) => sw ? { idx, sw, hex: toHex(sw), rgb: swRgb(sw) } : null)
+    .filter(Boolean);
+
+  bar.innerHTML = '';
+  if (!active.length) {
+    verdictEl.textContent = 'IDLE';
+    verdictEl.style.color = 'var(--muted)';
+    satBrtEl.textContent = '-- / --';
+    warmCoolEl.textContent = '-- / --';
+    lowContrastEl.textContent = '--';
+    return;
+  }
+
+  active.forEach(item => {
+    const seg = document.createElement('i');
+    seg.style.background = item.hex;
+    seg.title = 'Slot ' + (item.idx + 1) + ': ' + item.hex;
+    bar.appendChild(seg);
+  });
+
+  const avgSat = Math.round((active.reduce((acc, x) => acc + x.sw.saturation, 0) / active.length) * 100);
+  const avgBrt = Math.round((active.reduce((acc, x) => acc + x.sw.brightness, 0) / active.length) * 100);
+  satBrtEl.textContent = avgSat + '% / ' + avgBrt + '%';
+
+  let warmCount = 0, coolCount = 0;
+  active.forEach(x => {
+    if (x.sw.saturation < 0.1) return;
+    const deg = x.sw.hue * 360;
+    if (deg < 75 || deg >= 315) warmCount++;
+    else coolCount++;
+  });
+  warmCoolEl.textContent = warmCount + 'W / ' + coolCount + 'C';
+
+  if (active.length >= 2) {
+    let minRatio = Infinity;
+    let pairText = '';
+    for (let i = 0; i < active.length; i++) {
+      for (let j = i + 1; j < active.length; j++) {
+        const r = getContrastRatio(active[i].rgb, active[j].rgb);
+        if (r < minRatio) {
+          minRatio = r;
+          pairText = '#' + (active[i].idx + 1) + ' & #' + (active[j].idx + 1) + ' (' + r.toFixed(2) + ':1)';
+        }
+      }
+    }
+    lowContrastEl.textContent = pairText;
+  } else {
+    lowContrastEl.textContent = 'Need 2+ swatches';
+  }
+
+  if (avgSat < 18 && avgBrt > 25 && avgBrt < 80) {
+    verdictEl.textContent = 'MUTED / NEUTRAL';
+    verdictEl.style.color = 'var(--muted)';
+  } else if (avgSat > 82 && avgBrt > 80) {
+    verdictEl.textContent = 'HIGH ENERGY / VIVID';
+    verdictEl.style.color = 'var(--accent)';
+  } else if (avgBrt < 25) {
+    verdictEl.textContent = 'DEEP NOCTURNAL';
+    verdictEl.style.color = 'var(--ok)';
+  } else {
+    verdictEl.textContent = 'BALANCED';
+    verdictEl.style.color = 'var(--ok)';
+  }
+}
+
 const grid = $('grid');
 for (let i = 0; i < SLOTS; i++) {
   const b = document.createElement('button');
@@ -1587,6 +1825,7 @@ function render() {
   $('applyGlobalBtn').disabled = !swatches.some(Boolean);
   scheduleCommit();
   renderQuickFiveBar();
+  renderHarmonyAnalyzer();
   renderEditor();
   updateTextExport();
 }
@@ -1623,8 +1862,99 @@ function randomizeUnlocked() {
   toast('Unlocked Vectors Randomized');
 }
 
+/* Smart Palette Actions: Invert, Harmonize, Fill Empty */
+$('invertUnlockedBtn').addEventListener('click', () => {
+  if (!swatches.some(Boolean)) return toast('No active swatches to invert');
+  commitNow();
+  let changed = 0;
+  swatches = swatches.map(sw => {
+    if (!sw || sw._locked) return sw;
+    changed++;
+    const [r, g, b] = swRgb(sw);
+    return { ...fromRgb([255 - r, 255 - g, 255 - b]), _locked: false };
+  });
+  if (!changed) return toast('All active slots are locked');
+  render(); commitNow();
+  toast('Inverted ' + changed + ' Unlocked Swatch(es)');
+});
+
+$('harmonizePaletteBtn').addEventListener('click', () => {
+  const anchorSw = labColor() || swatches[selected] || swatches.find(Boolean);
+  if (!anchorSw) return toast('Select or create a reference swatch first');
+  const hObj = HARMONIES.find(h => h.id === activeHarmony) || HARMONIES[0];
+  const targetHuesDeg = hObj.id === 'mono'
+    ? [anchorSw.hue * 360]
+    : hObj.offsets.map(deg => (((anchorSw.hue * 360 + deg) % 360 + 360) % 360));
+
+  commitNow();
+  let changed = 0;
+  swatches = swatches.map((sw, idx) => {
+    if (!sw || sw._locked) return sw;
+    changed++;
+    const targetDeg = targetHuesDeg[idx % targetHuesDeg.length];
+    const blendedSat = clamp(sw.saturation * 0.65 + anchorSw.saturation * 0.35, 0.08, 1);
+    return {
+      hue: targetDeg / 360,
+      saturation: blendedSat,
+      brightness: sw.brightness,
+      alpha: 1,
+      colorSpace: 0
+    };
+  });
+  if (!changed) return toast('All active slots are locked');
+  render(); commitNow();
+  toast('Harmonized ' + changed + ' Swatch(es) (' + hObj.label + ')');
+});
+
+$('fillEmptyHarmonyBtn').addEventListener('click', () => {
+  const emptyCount = swatches.filter((s, i) => !s && !isLocked(i)).length;
+  if (!emptyCount) return toast('Palette grid has no open empty slots');
+  const anchorSw = labColor() || swatches[selected] || swatches.find(Boolean) || {
+    hue: Math.random(), saturation: 0.72, brightness: 0.88, alpha: 1, colorSpace: 0
+  };
+  const hObj = HARMONIES.find(h => h.id === activeHarmony) || HARMONIES[0];
+  const baseHarm = getHarmonySwatches(anchorSw, hObj);
+  const additions = [];
+  for (let i = 0; i < emptyCount; i++) {
+    const src = baseHarm[i % baseHarm.length];
+    const toneShift = ((i % 5) - 2) * 0.07;
+    additions.push({
+      hue: src.hue,
+      saturation: clamp(src.saturation + ((i % 3) - 1) * 0.06, 0.1, 1),
+      brightness: clamp(src.brightness + toneShift, 0.15, 0.98),
+      alpha: 1,
+      colorSpace: 0
+    });
+  }
+  addToEmpty(additions, false);
+  toast('Filled ' + additions.length + ' Empty Slot(s) from ' + hObj.label);
+});
+
 document.addEventListener('keydown', e => {
-  if (e.code === 'Space' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+  if (e.key === 'Escape') {
+    if (!$('shortcutsModal').hidden) {
+      closeShortcutsModal();
+      return;
+    }
+    if (multi.size > 0) {
+      multi = new Set();
+      render();
+      toast('Multi-selection cleared');
+    }
+    return;
+  }
+
+  const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+  if (isTyping) return;
+
+  if (e.key === '?') {
+    e.preventDefault();
+    if ($('shortcutsModal').hidden) openShortcutsModal();
+    else closeShortcutsModal();
+    return;
+  }
+
+  if (e.code === 'Space') {
     e.preventDefault();
     randomizeUnlocked();
   } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
@@ -1633,6 +1963,14 @@ document.addEventListener('keydown', e => {
   } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
     e.preventDefault();
     redo();
+  } else if (!e.ctrlKey && !e.metaKey && !e.altKey && /^[1-9]$/.test(e.key)) {
+    const slotIdx = Number(e.key) - 1;
+    selected = slotIdx;
+    anchor = slotIdx;
+    multi = new Set();
+    if (swatches[slotIdx]) setDraft({ ...swatches[slotIdx] });
+    render();
+    toast('Jumped to Slot ' + e.key);
   }
 });
 
@@ -1663,6 +2001,7 @@ function previewGlobalShift() {
     el.style.background = swatches[i] ? toHex(swatches[i]) : '';
   });
   renderQuickFiveBar();
+  renderHarmonyAnalyzer();
   updateTextExport();
 }
 
@@ -2661,7 +3000,7 @@ $('fillImgBtn').addEventListener('click', () => {
   addToEmpty(picked.map(p => ({ ...p.hsb, alpha: 1, colorSpace: 0 })), true, 'VISION_EXTRACT');
 });
 
-let gradStops = [];
+let gradStops = DEFAULT_GRADIENT_STOPS.map(s => ({ ...s }));
 let rampList = [];
 
 function buildGradientCss() {
@@ -3819,603 +4158,480 @@ Morning Sun: #FFF5E6, #FFEAD1, #FFDFB3, #FFD480
 Peach Sorbet: #FFE5B4, #FFDAB9, #FFC085, #FFA751
 Apricot Jam: #FFEDD8, #FFDCB8, #FFCB98, #FFB979
 Daffodil Dream: #FFFDEB, #FFFAD1, #FFF7B8, #FFF49E
-Creamy Yellow: #FCF3CF, #FDEBD0, #FAD7A0, #F5CBA7
-Warm Vanilla: #FEFEE2, #FEFDC4, #FEFCA6, #FEFB87
+Creamy Yellow: #FCF3CF, #F9E79F, #F7DC6F, #F4D03F
+Sunlit Sand: #FDF2E9, #FAE5D3, #F5CBA7, #EDBB99
 
 Warm Peaches & Corals
-Peach Puff: #FFDAB9, #FFCBA4, #FFBC8F, #FFAD7A
-Coral Reef: #FFECE6, #FFD9CE, #FFC5B5, #FFB29D
-Melon Glow: #FFD1B3, #FFBE99, #FFAB80, #FF9866
-Sunset Pastel: #FFE5D9, #FFCBC1, #FFB1A8, #FF9790
-Papaya Whip: #FFEFD5, #FFE4B5, #FFD39B, #FFC280
-Salmon Soft: #FFD8D2, #FFC3BB, #FFAEA4, #FF998D
-Tangerine Dream: #FFEBD6, #FFD6AD, #FFC285, #FFAD5C
-Cantaloupe: #FFE6CC, #FFD1A3, #FFBC7A, #FFA752
-Flamingo Coral: #FFD1CD, #FFB8B3, #FF9F98, #FF857E
-Terracotta Pastel: #FADBD8, #F5B7B1, #ED9D95, #E58379
+Peach Fuzz: #FFBE98, #FFA67E, #FF8D64, #FF754A
+Coral Mist: #FDECEA, #FAD7D2, #F7C2BA, #F4ACA2
+Apricot Breeze: #FDEBD0, #FAD7A0, #F8C471, #F5B041
+Melon Sorbet: #FCE4D6, #F8CBAD, #F4B084, #F0955A
+Terracotta Soft: #F5CBA7, #EB984E, #E67E22, #D35400
+Salmon Pastel: #FA8072, #FB9A8F, #FCB4AC, #FDCFCA
+Cantaloupe Glow: #FFE4C4, #FFD2A1, #FFC07E, #FFAE5B
+Papaya Cream: #FFF0E5, #FFE0CC, #FFD1B3, #FFC299
+Sunset Coral: #F8B195, #F67280, #C06C84, #6C5B7B
+Warm Peach: #FFE5B4, #FFCC99, #FFB380, #FF9966
 
-Cozy Neutrals, Beiges & Earth Tones
-Warm Sand: #F9EBEA, #F6DDCC, #FAD7A0, #FDEBD0
-Oatmeal Cream: #F7F5F0, #EFECE4, #E6E2D8, #DCD5CB
-Cashmere Beige: #F3EFEA, #E6DFD5, #D9CFC0, #CCBFAB
-Muted Taupe: #EFECE9, #E2DDD9, #D5CEC9, #C8BFC0
-French Linen: #EAE6E1, #DCD5CD, #CEC4B9, #C0B3A5
-Soft Mushroom: #E8E4E1, #D8D1CE, #C9BFBB, #B9ADA8
-Almond Milk: #FAF6F0, #F4ECE1, #EDE3D2, #E7D9C3
-Warm Greige: #EBE8E5, #DCD7D2, #CDC6BF, #BEB5AC
-Desert Dust: #F5EBE0, #E3D5CA, #D5BDAF, #C6AC8F
-Barely Brown: #F5F3F2, #EBE7E5, #E0DBD9, #D6CFCF
+Cozy Neutrals & Earth Tones
+Oatmeal Latte: #F5F5DC, #E6E2D3, #D7CEB2, #C8BA91
+Almond Milk: #FAF0E6, #EFE4D8, #E4D8CA, #D9CCBC
+Linen Cloud: #FAF0CA, #F2E8CF, #EAE0D5, #E2D8C8
+Sandstone Soft: #F4EFE6, #E9E0D0, #DED1BA, #D3C2A4
+Warm Ivory: #FFFFF0, #F8F8E7, #F0F0DC, #E8E8D0
+Beige Harmony: #F5F5DC, #E8E4C9, #DBD3B6, #CEC2A3
+Cappuccino Foam: #EFEBE9, #D7CCC8, #BCAAA4, #A1887F
+Caramel Drizzle: #F3E5AB, #E6D28E, #D9BF71, #CCAC54
+Toasted Marshmallow: #FFF8DC, #F5EED6, #EBE4C0, #E1DAAA
+Earth Whisper: #EAE0D5, #C6AC8F, #A9927D, #8A7968
 
 Teals, Aquas & Cyans
-Aqua Whisper: #E0F7FA, #B2EBF2, #80DEEA, #4DD0E1
-Teal Breeze: #E0F2F1, #B2DFDB, #80CBC4, #4DB6AC
-Cyan Mist: #E8F8F5, #D1F2EB, #A3E4D7, #76D7C4
-Turquoise Glow: #D1F2EB, #A2D9CE, #73C6B6, #45B39D
-Glacier Aqua: #E6F2F2, #CCE6E6, #B3D9D9, #99CCCC
-Sea Glass: #D9EBE8, #B3D7D2, #8CC4BC, #66B0A6
-Robin Egg Blue: #DFF8EB, #BCEFDC, #9AE5CD, #77DCBE
-Caribbean Pastel: #E0FFFF, #C1FFFF, #A3FFFF, #85FFFF
-Pale Teal: #E8F6F3, #D0ECE7, #A2D9CE, #73C6B6
-Nordic Blue-Green: #E4F0EC, #C8E1D8, #ACD2C4, #8FC3B1
+Aqua Dream: #E0FFFF, #C4F7F7, #A8EFEF, #8CE7E7
+Turquoise Mist: #AFEEEE, #94E2E2, #79D6D6, #5ECACA
+Sea Glass: #A8DADC, #8FC9CC, #76B8BC, #5DA7AC
+Frosty Cyan: #E0F7FA, #B2EBF2, #80DEEA, #4DD0E1
+Lagoon Pastel: #D4F1F4, #75E6DA, #189AB4, #05445E
+Poolside Breeze: #B2EBF2, #80DEEA, #4DD0E1, #26C6DA
+Ice Mint: #E0F2F1, #B2DFDB, #80CBC4, #4DB6AC
+Glacial Aqua: #E0FFFF, #D0F8F8, #C0F0F0, #B0E8E8
+Spa Calm: #E8F8F5, #D1F2EB, #A3E4D7, #76D7C4
+Sky Lagoon: #EBF5FB, #D6EAF8, #AED6F1, #85C1E9
 
-Multicolor & Rainbow Pastel Themes
-Pastel Rainbow: #FFD1DC, #FFF9C4, #C8E6C9, #B3E5FC, #E1BEE7
-Unicorn Dream: #F8BBD0, #E1BEE7, #C5CAE9, #B2DFDB, #FFF9C4
-Mermaid Lagoon: #B2EBF2, #B2DFDB, #C8E6C9, #FFF9C4, #FFE0B2
-Sherbet Medley: #FFCBC1, #FFE5B4, #FFF9C4, #C8E6C9, #D1C4E9
-Spring Carnival: #FCE4EC, #F3E5F5, #E8F5E9, #FFFDE7, #E0F7FA
-Pastel Fiesta: #FFD1DC, #FFE0B2, #FFF9C4, #C8E6C9, #B2EBF2
-Bubblegum & Mint: #FFD1DC, #E0F2F1, #FFF0F5, #E8F5E9
-Sunset to Sky: #FFD1DC, #FFE5B4, #FFF9C4, #E1BEE7, #B3E5FC
-Pastel Galaxy: #E1BEE7, #D1C4E9, #C5CAE9, #BBDEFB, #B2EBF2
-Confetti Pastel: #FFCDD2, #FFE082, #C5E1A5, #80DEEA, #CE93D8
+Multicolor Rainbow Matrix
+Pastel Rainbow: #FFB3BA, #FFDFBA, #FFFFBA, #BAFFC9, #BAE1FF, #E2BAFF
+Cotton Candy Sky: #FFCCFF, #CCFFFF, #FFFFCC, #CCFFCC, #FFCCCC, #E6CCFF
+Spring Meadow: #F0FFF0, #FFF0F5, #F0F8FF, #FFFFF0, #FFF5EE, #F5FFFA
+Macaron Box: #F8BBD0, #E1BEE7, #BBDEFB, #C8E6C9, #FFF9C4, #FFE0B2
+Unicorn Dream: #E0BBE4, #957DAD, #D291BC, #FEC8D8, #FFDFD3, #A2E1DB
+Sherbet Swirl: #FFD1DC, #FFECB3, #DCEDC8, #B3E5FC, #E1BEE7, #FFCCBC
+Candy Shop: #FF9AA2, #FFB7B2, #FFDAC1, #E2F0CB, #B5EAD7, #C7CEEA
+Watercolor Wash: #F3E5F5, #E8EAF6, #E0F2F1, #F1F8E9, #FFFDE7, #FBE9E7
+Boho Pastel: #E6CCB2, #DDB892, #B08968, #9C6644, #7F5539, #EDE0D4
+Dreamscape: #D8BFD8, #B0E0E6, #FFDAB9, #98FB98, #FFFACD, #FFC0CB
 
-Earthy Botanicals & Warm Spices
-Matcha Latte: #F1F8E9, #DCEDC8, #C5E1A5, #AED581, #9CCC65
-Terracotta Sunset: #FADBD8, #F5B7B1, #ED9D95, #E58379, #D98880
-Warm Ochre Pastel: #FEF9E7, #FCF3CF, #F9E79F, #F7DC6F, #F4D03F
-Cinnamon Rose: #F5B7B1, #F2D7D5, #EBDEF0, #D7BDE2
-Saffron Cream: #FEF9E7, #FCF3CF, #FAD7A0, #F5CBA7
-Dusty Olive: #E8E8D0, #D5D5B8, #C2C29F, #AFA86B
-Earthy Terracotta: #FADBD8, #EDBB99, #F9E79F, #D4EFDF, #D7BDE2
-Spiced Honey: #FEF9E7, #FCF3CF, #FDEBD0, #FAD7A0
-Clay & Sand: #F9F3EE, #F2E4D8, #EBD5C2, #E4C7AC
-Mossy Stone: #E8EDE7, #D1DCBE, #BACB95, #A3BA6C
-
-================================================================================
-SKIN THEMES
-================================================================================
-
-Porcelain & Fair Undertones
-Porcelain Ivory: #FDFBF7, #F9F4EE, #F4ECE1, #ECE4D7
-Fair Rose: #FCECE4, #F8E2D5, #F4D5C5, #EFC8B6
-Pale Alabaster: #FAF6F0, #F3ECE1, #ECE2D2, #E4D8C3
-Cool Fair: #F7F1EC, #EFE5DD, #E7D8CD, #DFCBC0
-Warm Porcelain: #FAF3EC, #F4E7DA, #EEDBCA, #E7CFB9
-Fair Neutral: #F5EFEB, #EBE3DE, #E1D7D0, #D8CBC3
-Creamy Fair: #FCF9F5, #F7F2EC, #F2EAE1, #EDE3D6
-Translucent Pale: #FEFDFC, #FAF7F4, #F5F1EC, #F0EAE3
-Milky Fair: #FAF6F2, #F3EDE7, #ECE4DC, #E5DBD2
-Delicate Fair: #FBF7F4, #F4EDE8, #EDE3DC, #E6D9D0
-
-Light & Beige Undertones
-Classic Light: #F3E5D8, #E8D4C0, #DDC4A9, #D2B491
-Warm Beige: #F2E4D0, #E5D3B8, #D8C2A0, #CBB188
-Cool Light: #EFE2D6, #E2D1C1, #D5C0AC, #C8B097
-Neutral Light: #EEDCCE, #DFCCA9, #D0BC9F, #C2AC95
-Golden Light: #F5E6CC, #EBD5AD, #E0C48F, #D6B370
-Soft Sand: #EFE0CC, #E2CFB4, #D5BF9D, #C8AE85
-Honey Light: #EDDCB9, #E0CC9F, #D4BC85, #C7AC6C
-Beige Oasis: #F1E2CD, #E5D2B8, #D8C2A3, #CCB28E
-Light Cashmere: #EFE0CB, #E2CDAF, #D5BA93, #C8A778
-Subtle Wheat: #F2E4D2, #E6D4B9, #E0C8A2, #D8B78B
-
-Olive & Mediterranean Undertones
-Classic Olive: #D4B996, #C5A47C, #B68F63, #A77A4A
-Warm Olive: #D7BC99, #C8A87D, #B99462, #AA8046
-Cool Olive: #CDB393, #BE9D73, #AF8854, #A07234
-Golden Olive: #E0C39E, #D2AC7B, #C59559, #B77F36
-Medium Olive: #C9A983, #B8936A, #B0855A, #A3744D
-Deep Olive: #B5936C, #A17C53, #8D653A, #794E21
-Sun-Kissed Olive: #D2B28B, #C29F73, #B18C5B, #A17943
-Earthy Olive: #C3A37F, #B18F67, #9F7B4F, #8D6737
-Amber Olive: #D9BB96, #C7A67B, #B59160, #A37C45
-Textured Olive: #C7A680, #B49168, #A27C51, #90673A
-
-Tan & Sun-Drenched Tones
-Golden Tan: #DEB887, #D2A679, #C6956A, #B9835B
-Warm Honey Tan: #E3C196, #D4AF7B, #C69D60, #B78B45
-Deep Sun Tan: #D1A376, #C08F5F, #AF7B49, #9E6732
-Bronze Tan: #C89D6C, #B58753, #A2713A, #8F5B21
-Caramel Glow: #C69A6E, #B48658, #A37243, #915E2D
-Toasted Tan: #BD9165, #AA7D50, #98693B, #855526
-Amber Tan: #C99E73, #B78A5C, #A47646, #926330
-Rich Sun-Kissed: #B88B5D, #A57748, #926333, #804F1E
-Terracotta Tan: #C4966B, #B28153, #9F6C3B, #8D5724
-Bronze Radiance: #BA8B5C, #A67645, #93612F, #7F4C18
-
-Rich Caramel & Golden Browns
-Classic Caramel: #A67C52, #94693F, #82562B, #704318
-Golden Caramel: #B38659, #A07243, #8D5E2D, #7A4A17
-Warm Toffee: #9C7249, #895F35, #764C22, #64390E
-Rich Butterscotch: #A87D54, #946940, #81552C, #6D4118
-Honey Brown: #B0855B, #9C7145, #885D2F, #744919
-Amber Brown: #A2764C, #8F6236, #7B4E21, #683A0B
-Deep Caramel: #8E633B, #7B5028, #673D15, #542A02
-Glossy Caramel: #A57B50, #92663B, #7F5127, #6C3D12
-Smooth Toffee: #997047, #855C33, #72481F, #5E340B
-Velvet Caramel: #A1764D, #8E6237, #7A4E21, #673A0B
-
-Deep Almond & Warm Chestnut Tones
-Almond Brown: #8C6239, #794F26, #663C13, #532900
-Warm Chestnut: #7E532B, #6B4018, #582D05, #451A00
-Rich Chestnut: #8A5E35, #774B22, #64380F, #512500
-Deep Almond: #794F26, #663C13, #532900, #401600
-Golden Chestnut: #92673E, #7F542B, #6C4118, #592E05
-Smooth Almond: #845931, #71461E, #5E330B, #4B2000
-Mahogany Chestnut: #754B24, #623811, #4F2500, #3C1200
-Deep Chestnut: #6D431D, #5A300A, #471D00, #340A00
-Roasted Almond: #7A5028, #673D15, #542A02, #411700
-Earthy Chestnut: #825830, #6F451D, #5C320A, #491F00
-
-Dark Cocoa & Rich Mahogany
-Classic Cocoa: #59361E, #46250F, #331500, #200500
-Rich Mahogany: #4D2D18, #3A1C0A, #270C00, #140000
-Deep Cocoa: #422310, #2F1302, #1C0300, #090000
-Dark Chocolate: #3D200E, #2A1000, #170000, #040000
-Warm Mahogany: #52301A, #3F1D0A, #2C0A00, #190000
-Smooth Cocoa: #4A2814, #371806, #240800, #110000
-Deep Mahogany: #3E1E0D, #2B0E00, #180000, #050000
-Midnight Cocoa: #33180A, #200800, #0D0000, #000000
-Espresso Skin: #2E1508, #1B0500, #080000, #000000
-Rich Espresso: #361A0C, #230A00, #100000, #000000
-
-Vibrant Undertones & Espresso
-Subtle Red Undertone: #8B3A3A, #A05252, #B56B6B, #CA8484
-Warm Golden Undertone: #B8860B, #DAA520, #FFD700, #F0E68C
-Cool Rosy Undertone: #C08081, #D4A5A5, #E8C5C5, #FCE4EC
-Deep Rich Ebony: #1C100B, #2E1B12, #40271B, #523425
-Warm Amber Complexion: #C68642, #D99B52, #ECB062, #FFC572
-Golden Honey Complexion: #E0AC69, #E8BE82, #F0D09B, #F8E2B4
-Rich Mocha Tone: #5C4033, #704F40, #845E4D, #986D5A
-Warm Bronze Tone: #804A00, #995B00, #B36C00, #CC7D00
-Soft Peach Undertone: #FFDAB9, #FFE5CC, #FFF0E0, #FFF8F0
-Deep Espresso Undertone: #24120A, #361C10, #482716, #5A321C
+Earthy Botanicals & Spices
+Matcha Latte: #E8F5E9, #C8E6C9, #A5D6A7, #81C784
+Chai Spice: #F5E6CC, #E6CCB2, #DDB892, #B08968
+Cinnamon Dust: #F3E5AB, #E6C29F, #D99F78, #CC7C52
+Sagebrush Soft: #E2E8E2, #C4D1C4, #A6BAA6, #88A388
+Honeycomb Pastel: #FFF8E1, #FFECB3, #FFE082, #FFD54F
+Lavender Tea: #F3E5F5, #E1BEE7, #CE93D8, #BA68C8
+Ginger Root: #FAF0E6, #F0D9B5, #E6C280, #DCA84C
+Rosehip Soft: #FCE4EC, #F8BBD0, #F48FB1, #F06292
+Cardamom Cream: #F4F1DE, #E5E0C5, #D6CFAC, #C7BE93
+Olive Branch: #F0F4C3, #E6EE9C, #DCE775, #D4E157
 `;
 
-function parseMasterThemes(rawText) {
-  const catalog = {};
-  let currentSection = 'General';
-  let currentSub = '';
-  let currentDesc = '';
-  let currentItems = [];
+const MASTER_THEMES = [];
+function parseMasterThemesText(rawText) {
+  const lines = rawText.split(/\r?\n/);
+  let currentCategory = 'General Themes';
+  let currentTitle = null;
+  let currentHexes = [];
 
-  const flushSub = () => {
-    if (!currentSub || !currentItems.length) return;
-    if (!catalog[currentSection]) catalog[currentSection] = [];
-    const hexes = [];
-    const parts = [];
-    currentItems.forEach(it => {
-      it.hexes.forEach(h => { if (!hexes.includes(h)) hexes.push(h); });
-      parts.push(it.label + ' (' + it.hexes.join(', ') + ')');
-    });
-    catalog[currentSection].push({
-      name: currentSub,
-      desc: currentDesc,
-      hexes,
-      summary: parts.join(' \u00B7 ')
-    });
-    currentSub = '';
-    currentDesc = '';
-    currentItems = [];
+  const flush = () => {
+    if (currentTitle && currentHexes.length) {
+      MASTER_THEMES.push({
+        category: currentCategory,
+        title: currentTitle,
+        hexes: [...currentHexes]
+      });
+    }
+    currentTitle = null;
+    currentHexes = [];
   };
 
-  const lines = rawText.split(/\r?\n/);
   for (const rawLine of lines) {
     const line = rawLine.trim();
-    if (!line || /^=+$/.test(line)) continue;
+    if (!line || /^=+$/.test(line) || line === 'COLOR THEME REFERENCE LIST') continue;
 
-    if (/^[A-Z0-9 &(),/+-]+$/.test(line) && line.length >= 4 && !line.includes(':')) {
-      flushSub();
-      currentSection = line.split(' ').map(w => w.length <= 2 ? w : (w[0] + w.slice(1).toLowerCase())).join(' ');
-      if (line === 'METAL THEMES') currentSection = 'Metal Themes';
-      if (line === 'NATURE THEMES') currentSection = 'Nature Themes';
-      if (line === 'NEON THEMES') currentSection = 'Neon Themes';
-      if (line === 'PASTEL THEMES') currentSection = 'Pastel Themes';
-      if (line === 'SKIN THEMES') currentSection = 'Skin Themes';
+    if (/^[A-Z0-9 &,'\-/]+$/.test(line) && line.length >= 4 && !line.includes(':')) {
+      flush();
+      currentCategory = line.replace(/\s+THEMES$/, '').trim();
       continue;
     }
 
     const hexMatches = line.match(/#[0-9A-Fa-f]{6}\b/g);
-    if (hexMatches && hexMatches.length) {
-      const colonIdx = line.indexOf(':');
-      const label = colonIdx > -1 ? line.slice(0, colonIdx).trim() : 'Swatch';
-      currentItems.push({ label, hexes: hexMatches.map(h => h.toUpperCase()) });
-    } else if (/^Description:/i.test(line)) {
-      currentDesc = line.replace(/^Description:\s*/i, '').trim();
-    } else if (!line.includes(':')) {
-      flushSub();
-      currentSub = line;
+    const colonIdx = line.indexOf(':');
+    const beforeColon = colonIdx !== -1 ? line.slice(0, colonIdx).trim() : '';
+
+    if (hexMatches && hexMatches.length && beforeColon.toLowerCase() !== 'description') {
+      flush();
+      currentTitle = beforeColon || 'Theme';
+      currentHexes = hexMatches.map(h => h.toUpperCase());
+      flush();
+      continue;
+    }
+
+    if (!hexMatches && !line.toLowerCase().startsWith('description:')) {
+      flush();
+      const parenIdx = line.indexOf('(');
+      currentTitle = (parenIdx !== -1 ? line.slice(0, parenIdx) : line).trim();
     }
   }
-  flushSub();
-
-  catalog['Pastel Gradients'] = Object.keys(PASTEL_SPECS).map(label => {
-    const list = generatePastelList(label);
-    return {
-      name: label,
-      desc: '30-step pastel spectrum matrix',
-      hexes: list.map(toHex),
-      summary: '30 pastel swatches'
-    };
-  });
-
-  catalog['Skin Complexions'] = Object.keys(SKIN_PROFILES).map(label => {
-    const list = generateSkinList(label);
-    return {
-      name: label,
-      desc: '30-step realistic skin tone grid (6\u00D75)',
-      hexes: list.map(toHex),
-      summary: '30 complexion swatches'
-    };
-  });
-
-  return catalog;
+  flush();
 }
+parseMasterThemesText(RAW_MASTER_THEMES_TXT);
 
-const MASTER_CATALOG = parseMasterThemes(RAW_MASTER_THEMES_TXT);
+const THEME_CATS = {};
+MASTER_THEMES.forEach(t => {
+  if (!THEME_CATS[t.category]) THEME_CATS[t.category] = [];
+  THEME_CATS[t.category].push(t);
+});
+THEME_CATS['Pastel Studio (30-Swatch Matrix)'] = Object.keys(PASTEL_SPECS).map(k => ({
+  category: 'Pastel Studio (30-Swatch Matrix)',
+  title: k,
+  hexes: generatePastelList(k).map(toHex)
+}));
+THEME_CATS['Complexion Matrix (Skin Tones)'] = Object.keys(SKIN_PROFILES).map(k => ({
+  category: 'Complexion Matrix (Skin Tones)',
+  title: k,
+  hexes: generateSkinList(k).map(toHex)
+}));
+
 let currentThemeList = [];
-
-function getShiftedThemeSwatches() {
+function getShiftedThemeList() {
   const tempVal = Number($('themeTempSlide').value) || 0;
   return currentThemeList.map(sw => applyTemperatureShift(sw, tempVal));
 }
 
-function renderShiftedThemeChips() {
-  const tempVal = Number($('themeTempSlide').value) || 0;
-  $('themeTempVal').textContent = formatTempLabel(tempVal, 'Original');
-  renderChipGrid($('themeOut'), getShiftedThemeSwatches());
+function populateThemesUI() {
+  const catSel = $('themeCategory');
+  catSel.innerHTML = '';
+  Object.keys(THEME_CATS).forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c + ' (' + THEME_CATS[c].length + ')';
+    catSel.appendChild(opt);
+  });
+  catSel.value = 'SEASONAL' in THEME_CATS ? 'SEASONAL' : Object.keys(THEME_CATS)[0];
+  populateThemeSubs();
 }
 
-function populateThemeSubSelect() {
+function populateThemeSubs() {
   const cat = $('themeCategory').value;
-  const q = ($('themeSearch').value || '').trim().toLowerCase();
-  const allInCat = MASTER_CATALOG[cat] || [];
-  const filtered = q
-    ? allInCat.filter(t => t.name.toLowerCase().includes(q) || t.summary.toLowerCase().includes(q))
+  const search = ($('themeSearch').value || '').trim().toLowerCase();
+  const allInCat = THEME_CATS[cat] || [];
+  const filtered = search
+    ? allInCat.filter(item => item.title.toLowerCase().includes(search) || item.hexes.some(h => h.toLowerCase().includes(search)))
     : allInCat;
 
   const subSel = $('themeSubSelect');
   subSel.innerHTML = '';
+
   if (!filtered.length) {
     const opt = document.createElement('option');
     opt.value = '';
     opt.textContent = 'No matching themes';
     subSel.appendChild(opt);
     currentThemeList = [];
-    renderShiftedThemeChips();
+    renderChipGrid($('themeOut'), []);
     return;
   }
 
-  filtered.forEach((t, i) => {
+  filtered.forEach((item, idx) => {
     const opt = document.createElement('option');
-    opt.value = String(i);
-    opt.textContent = t.name + ' (' + t.hexes.length + ')';
+    opt.value = String(idx);
+    opt.textContent = item.title + ' (' + item.hexes.length + ')';
     subSel.appendChild(opt);
   });
-
-  subSel._filtered = filtered;
-  selectThemeAtIndex(0);
+  subSel._items = filtered;
+  renderSelectedTheme();
 }
 
-function selectThemeAtIndex(idx) {
-  const list = $('themeSubSelect')._filtered || [];
-  const item = list[idx] || list[0];
-  if (!item) {
+function renderSelectedTheme() {
+  const subSel = $('themeSubSelect');
+  const items = subSel._items || [];
+  const idx = Number(subSel.value) || 0;
+  const chosen = items[idx];
+
+  if (!chosen) {
     currentThemeList = [];
-    renderShiftedThemeChips();
+    renderChipGrid($('themeOut'), []);
     return;
   }
-  currentThemeList = item.hexes.map(fromHex).filter(Boolean);
-  renderShiftedThemeChips();
+
+  if (chosen.category === 'Pastel Studio (30-Swatch Matrix)') {
+    currentThemeList = generatePastelList(chosen.title);
+  } else if (chosen.category === 'Complexion Matrix (Skin Tones)') {
+    currentThemeList = generateSkinList(chosen.title);
+  } else {
+    currentThemeList = chosen.hexes.map(fromHex).filter(Boolean);
+  }
+
+  const tempVal = Number($('themeTempSlide').value) || 0;
+  $('themeTempVal').textContent = formatTempLabel(tempVal);
+  renderChipGrid($('themeOut'), getShiftedThemeList());
 }
 
-function initMasterThemes() {
-  const catSel = $('themeCategory');
-  catSel.innerHTML = '';
-  Object.keys(MASTER_CATALOG).forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat + ' (' + MASTER_CATALOG[cat].length + ')';
-    catSel.appendChild(opt);
-  });
-  catSel.addEventListener('change', populateThemeSubSelect);
-  $('themeSearch').addEventListener('input', populateThemeSubSelect);
-  $('themeSubSelect').addEventListener('change', e => selectThemeAtIndex(Number(e.target.value) || 0));
-  $('themeTempSlide').addEventListener('input', renderShiftedThemeChips);
-  $('loadThemeBtn').addEventListener('click', () => {
-    const shifted = getShiftedThemeSwatches();
-    if (!shifted.length) return;
-    const list = $('themeSubSelect')._filtered || [];
-    const chosen = list[Number($('themeSubSelect').value) || 0];
-    const label = chosen ? chosen.name.toUpperCase().replace(/[^A-Z0-9]+/g, '_').slice(0, 24) : 'THEME';
-    addToEmpty(shifted, true, label);
-  });
-  populateThemeSubSelect();
-}
+$('themeCategory').addEventListener('change', populateThemeSubs);
+$('themeSearch').addEventListener('input', populateThemeSubs);
+$('themeSubSelect').addEventListener('change', renderSelectedTheme);
+$('themeTempSlide').addEventListener('input', () => {
+  $('themeTempVal').textContent = formatTempLabel(Number($('themeTempSlide').value) || 0);
+  renderChipGrid($('themeOut'), getShiftedThemeList());
+});
 
-function getAllFolders() {
-  const set = new Set(['Default_Project']);
-  library.forEach(item => { if (item.folder) set.add(item.folder); });
-  return [...set];
-}
-
-function refreshFolderFilter() {
-  const sel = $('folderFilter');
-  const prev = sel.value || 'ALL';
-  sel.innerHTML = '<option value="ALL">All Folders</option>';
-  getAllFolders().forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f;
-    opt.textContent = f;
-    sel.appendChild(opt);
-  });
-  sel.value = [...sel.options].some(o => o.value === prev) ? prev : 'ALL';
-}
+$('loadThemeBtn').addEventListener('click', () => {
+  const subSel = $('themeSubSelect');
+  const items = subSel._items || [];
+  const chosen = items[Number(subSel.value) || 0];
+  if (!chosen || !currentThemeList.length) return;
+  const shifted = getShiftedThemeList();
+  const tempVal = Number($('themeTempSlide').value) || 0;
+  const suffix = tempVal === 0 ? '' : (tempVal < 0 ? '_WARM' : '_COOL');
+  const cleanTitle = (chosen.title.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'THEME') + suffix;
+  addToEmpty(shifted, true, cleanTitle);
+});
 
 function renderLibrary() {
-  refreshFolderFilter();
-  const filterVal = $('folderFilter').value;
+  const filter = $('folderFilter').value;
+  const folders = new Set(library.map(x => x.folder || 'Default_Project'));
+  const fSel = $('folderFilter');
+  const curVal = fSel.value;
+  fSel.innerHTML = '<option value="ALL">All Folders (' + library.length + ')</option>';
+  folders.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f; opt.textContent = f;
+    fSel.appendChild(opt);
+  });
+  if ([...fSel.options].some(o => o.value === curVal)) fSel.value = curVal;
+
   const box = $('libOut');
   box.innerHTML = '';
-  const items = library.filter(it => filterVal === 'ALL' || (it.folder || 'Default_Project') === filterVal);
+  const items = filter === 'ALL' ? library : library.filter(x => (x.folder || 'Default_Project') === filter);
 
   if (!items.length) {
-    box.innerHTML = '<p class="muted" style="font-size:11px;text-align:center;padding:12px;">No saved palettes in this folder.</p>';
+    box.innerHTML = '<div class="muted" style="font-size:11px;text-align:center;padding:12px">// Archive empty.</div>';
     return;
   }
 
   items.forEach(item => {
-    const realIdx = library.indexOf(item);
-    const div = document.createElement('div');
-    div.className = 'libitem';
+    const row = document.createElement('div');
+    row.className = 'libitem';
 
-    const top = document.createElement('div');
-    top.className = 'row';
-    top.style.justifyContent = 'space-between';
-
-    const titleWrap = document.createElement('div');
-    titleWrap.innerHTML = '<strong style="font-size:12px">' + (item.name || 'UNTITLED') + '</strong> <span class="muted" style="font-size:10px">[' + (item.folder || 'Default_Project') + ']</span>';
-
-    const acts = document.createElement('div');
-    acts.className = 'row';
-    acts.style.gap = '4px';
-
-    const loadBtn = document.createElement('button');
-    loadBtn.type = 'button';
-    loadBtn.className = 'btn small primary';
-    loadBtn.textContent = 'Load';
-    loadBtn.addEventListener('click', () => {
-      commitNow();
-      name = item.name || 'LOADED_PALETTE';
-      swatches = [...Array(SLOTS).keys()].map(i => item.swatches[i] ? { ...item.swatches[i] } : null);
-      render(); commitNow();
-      toast('Loaded ' + name);
-    });
-
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn small danger';
-    delBtn.textContent = '\u00d7';
-    delBtn.addEventListener('click', () => {
-      library.splice(realIdx, 1);
-      localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
-      renderLibrary();
-    });
-
-    acts.append(loadBtn, delBtn);
-    top.append(titleWrap, acts);
+    const head = document.createElement('div');
+    head.className = 'row';
+    head.style.justifyContent = 'space-between';
+    head.innerHTML = '<span style="font-weight:700;font-size:12px">' + item.name + '</span><span class="muted" style="font-size:10px">' + (item.folder || 'Default_Project') + '</span>';
 
     const bar = document.createElement('div');
     bar.className = 'bar';
-    (item.swatches || []).filter(Boolean).forEach(s => {
-      const seg = document.createElement('i');
-      seg.style.background = toHex(s);
-      bar.appendChild(seg);
+    item.swatches.filter(Boolean).forEach(s => {
+      const i = document.createElement('i');
+      i.style.background = toHex(s);
+      bar.appendChild(i);
     });
 
-    div.append(top, bar);
-    box.appendChild(div);
+    const acts = document.createElement('div');
+    acts.className = 'row';
+    acts.style.justifyContent = 'flex-end';
+
+    const loadBtn = document.createElement('button');
+    loadBtn.type = 'button'; loadBtn.className = 'btn small primary'; loadBtn.textContent = 'Load';
+    loadBtn.addEventListener('click', () => {
+      commitNow();
+      name = item.name;
+      swatches = [...item.swatches, ...new Array(SLOTS).fill(null)].slice(0, SLOTS);
+      render(); commitNow();
+      toast('Loaded ' + item.name);
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button'; delBtn.className = 'btn small danger'; delBtn.textContent = '\u00d7';
+    delBtn.addEventListener('click', () => {
+      library = library.filter(x => x !== item);
+      localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
+      renderLibrary();
+      toast('Deleted entry');
+    });
+
+    acts.append(loadBtn, delBtn);
+    row.append(head, bar, acts);
+    box.appendChild(row);
   });
 }
 
 $('saveLib').addEventListener('click', () => {
-  const folder = ($('folderNameInput').value || 'Default_Project').trim();
+  const folder = $('folderNameInput').value.trim() || 'Default_Project';
+  const entryName = name || 'Untitled_Palette';
   library.unshift({
-    name: name || 'UNTITLED_PALETTE',
+    name: entryName,
     folder,
-    swatches: JSON.parse(JSON.stringify(swatches)),
-    ts: Date.now()
+    swatches: JSON.parse(JSON.stringify(swatches))
   });
   localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
   renderLibrary();
-  toast('Saved to ' + folder);
+  toast('Archived to ' + folder);
 });
 $('folderFilter').addEventListener('change', renderLibrary);
 
-$('cbSim').addEventListener('change', e => {
-  document.body.classList.remove('sim-protan', 'sim-deutan', 'sim-tritan', 'sim-achroma');
-  if (e.target.value !== 'none') document.body.classList.add('sim-' + e.target.value);
-});
-
 $('runAuditBtn').addEventListener('click', () => {
   const mode = $('auditMode').value;
-  const active = swatches.map((s, idx) => s ? { idx, sw: s, hex: toHex(s), simRgb: simulateColorBlindnessRgb(swRgb(s), mode) } : null).filter(Boolean);
+  const active = swatches.map((s, idx) => s ? { idx, sw: s, rgb: swRgb(s), hex: toHex(s) } : null).filter(Boolean);
+  const report = $('auditReport');
+
   if (active.length < 2) {
-    $('auditReport').innerHTML = '// Need at least 2 active swatches to audit conflicts.';
+    report.innerHTML = '// Need at least 2 active swatches to run accessibility similarity audit.';
     return;
   }
 
+  const simList = active.map(item => {
+    const sRgb = simulateColorBlindnessRgb(item.rgb, mode);
+    return { ...item, simRgb: sRgb, simHex: '#' + sRgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase() };
+  });
+
   const conflicts = [];
-  for (let i = 0; i < active.length; i++) {
-    for (let j = i + 1; j < active.length; j++) {
-      const a = active[i], b = active[j];
+  for (let i = 0; i < simList.length; i++) {
+    for (let j = i + 1; j < simList.length; j++) {
+      const a = simList[i], b = simList[j];
       const dist = Math.hypot(a.simRgb[0] - b.simRgb[0], a.simRgb[1] - b.simRgb[1], a.simRgb[2] - b.simRgb[2]);
-      if (dist < 28) conflicts.push({ a, b, dist: Math.round(dist) });
+      if (dist < 28) {
+        conflicts.push({ a, b, dist: Math.round(dist) });
+      }
     }
   }
 
-  let html = '<div style="margin-bottom:6px"><strong>Audit Mode:</strong> ' + mode.toUpperCase() + ' &middot; <strong>Active:</strong> ' + active.length + '</div>';
+  let html = '<div style="font-weight:700;margin-bottom:6px">Audit Mode: ' + mode.toUpperCase() + ' (' + active.length + ' swatches)</div>';
   if (!conflicts.length) {
-    html += '<div style="color:var(--ok)">\u2713 No indistinguishable swatch collisions detected.</div>';
+    html += '<div style="color:var(--ok)">\u2713 Optimal separation: No high-risk indistinguishable color pairs detected.</div>';
   } else {
-    html += '<div style="color:var(--danger);margin-bottom:6px">\u26A0 ' + conflicts.length + ' potential visual collision(s):</div>';
-    conflicts.slice(0, 8).forEach(c => {
-      const simHexA = '#' + c.a.simRgb.map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
-      const simHexB = '#' + c.b.simRgb.map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
-      html += '<div style="margin-bottom:4px">Slot ' + (c.a.idx + 1) + ' (' + c.a.hex + ') &harr; Slot ' + (c.b.idx + 1) + ' (' + c.b.hex + ') &rarr; looks like <span class="mono">' + simHexA + ' / ' + simHexB + '</span> (diff ' + c.dist + ')</div>';
+    html += '<div style="color:var(--danger);margin-bottom:6px">\u26A0 Found ' + conflicts.length + ' low-contrast pair(s):</div>';
+    conflicts.forEach(c => {
+      html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">';
+      html += '<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:' + c.a.simHex + ';border:1px solid #fff"></span>';
+      html += '<span>Slot ' + (c.a.idx + 1) + ' (' + c.a.hex + ')</span>';
+      html += '<span>\u2194</span>';
+      html += '<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:' + c.b.simHex + ';border:1px solid #fff"></span>';
+      html += '<span>Slot ' + (c.b.idx + 1) + ' (' + c.b.hex + ')</span>';
+      html += '<span class="muted">[\u0394 ' + c.dist + ']</span>';
+      html += '</div>';
     });
   }
-  $('auditReport').innerHTML = html;
+  report.innerHTML = html;
 });
 
-function formatPaletteText(fmt) {
+function formatExport(fmt) {
   const active = swatches.filter(Boolean);
-  const slug = (name || 'palette').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'palette';
-  if (!active.length) return '';
+  const pName = (name || 'palette').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const hexes = active.map(toHex);
 
-  if (fmt === 'hex') return active.map(toHex).join(', ');
-  if (fmt === 'rgb') return active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join(', ');
-  if (fmt === 'hsl') return active.map(s => { const h = rgbToHsl(...swRgb(s)); return 'hsl(' + h[0] + ', ' + h[1] + '%, ' + h[2] + '%)'; }).join(', ');
-  if (fmt === 'oklch') return active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join(', ');
-  if (fmt === 'css') return ':root {\n' + active.map((s, i) => '  --' + slug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n') + '\n}';
-  if (fmt === 'scss') return active.map((s, i) => '$' + slug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
+  if (fmt === 'hex') return hexes.join(', ');
+  if (fmt === 'rgb') return active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join('\n');
+  if (fmt === 'hsl') return active.map(s => { const [h, sat, l] = rgbToHsl(...swRgb(s)); return 'hsl(' + h + ', ' + sat + '%, ' + l + '%)'; }).join('\n');
+  if (fmt === 'oklch') return active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join('\n');
+  if (fmt === 'css') {
+    const vars = hexes.map((h, i) => '  --' + pName + '-' + (i + 1) + ': ' + h + ';').join('\n');
+    return ':root {\n' + vars + '\n}';
+  }
+  if (fmt === 'scss') {
+    return hexes.map((h, i) => '$' + pName + '-' + (i + 1) + ': ' + h + ';').join('\n');
+  }
   if (fmt === 'tailwind') {
-    const entries = active.map((s, i) => '        "' + ((i + 1) * 100) + '": "' + toHex(s) + '"').join(',\n');
-    return 'module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        "' + slug + '": {\n' + entries + '\n        }\n      }\n    }\n  }\n};';
+    const entries = hexes.map((h, i) => "        '" + (i + 1) + "': '" + h + "'").join(',\n');
+    return "module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '" + pName + "': {\n" + entries + "\n        }\n      }\n    }\n  }\n}";
   }
   if (fmt === 'svg') {
     const w = 60, h = 60;
-    const rects = active.map((s, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + toHex(s) + '"/>').join('\n');
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + (active.length * w) + '" height="' + h + '" viewBox="0 0 ' + (active.length * w) + ' ' + h + '">\n' + rects + '\n</svg>';
+    const rects = hexes.map((col, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + col + '"/>').join('\n');
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + (hexes.length * w) + '" height="' + h + '">\n' + rects + '\n</svg>';
   }
-  return JSON.stringify({ name: name || 'UNTITLED', colors: active.map(toHex) }, null, 2);
+  if (fmt === 'json') {
+    return JSON.stringify({
+      name: name || 'Untitled_Palette',
+      colors: active.map((s, i) => ({ slot: i + 1, hex: toHex(s), rgb: swRgb(s), name: getHumanColorName(s) }))
+    }, null, 2);
+  }
+  return hexes.join(', ');
 }
 
 function updateTextExport() {
-  const fmt = $('txtFmt').value;
-  $('pasteBox').value = formatPaletteText(fmt);
+  if (document.activeElement === $('pasteBox')) return;
+  $('pasteBox').value = formatExport($('txtFmt').value);
 }
 
 $('txtFmt').addEventListener('change', updateTextExport);
 $$('[data-exfmt]').forEach(btn => {
   btn.addEventListener('click', () => {
-    const fmt = btn.dataset.exfmt;
-    $('txtFmt').value = fmt === 'tailwind' ? 'tailwind' : fmt;
+    $('txtFmt').value = btn.dataset.exfmt;
     updateTextExport();
   });
 });
 
 $('copyTxtBtn').addEventListener('click', () => {
-  if (!$('pasteBox').value) return;
   copyText($('pasteBox').value, 'Copied Export Output');
 });
 
 $('dlTxtBtn').addEventListener('click', () => {
   const fmt = $('txtFmt').value;
   const extMap = { hex: 'txt', rgb: 'txt', hsl: 'txt', oklch: 'txt', css: 'css', scss: 'scss', tailwind: 'js', svg: 'svg', json: 'json' };
+  const ext = extMap[fmt] || 'txt';
+  const fname = (name || 'palette').toLowerCase().replace(/[^a-z0-9]+/g, '_') + '.' + ext;
   const blob = new Blob([$('pasteBox').value], { type: 'text/plain;charset=utf-8' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'palette') + '.' + (extMap[fmt] || 'txt');
-  a.click();
+  a.href = URL.createObjectURL(blob); a.download = fname; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Saved ' + fname);
 });
 
 $('importPasteBtn').addEventListener('click', () => {
   const raw = $('pasteBox').value;
-  const matches = raw.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g) || [];
+  const matches = raw.match(/#([0-9a-f]{3}|[0-9a-f]{6})\b/gi) || [];
   if (!matches.length) return toast('No valid HEX codes found');
-  const parsed = matches.slice(0, SLOTS).map(fromHex).filter(Boolean);
-  addToEmpty(parsed, true, name || 'IMPORTED_PALETTE');
-  toast('Imported ' + parsed.length + ' HEX colors');
+  const parsed = matches.map(fromHex).filter(Boolean).slice(0, SLOTS);
+  addToEmpty(parsed, false);
 });
 
-$('shareUrlBtn').addEventListener('click', () => {
-  const hexes = swatches.map(s => s ? toHex(s).slice(1) : '').join(',');
-  const url = location.origin + location.pathname + '?n=' + encodeURIComponent(name || 'PALETTE') + '&c=' + encodeURIComponent(hexes);
-  copyText(url, 'Shareable URL Copied');
-});
-
-function loadFromUrlParams() {
-  const params = new URLSearchParams(location.search);
-  const cParam = params.get('c');
-  const nParam = params.get('n');
-  if (nParam) name = decodeURIComponent(nParam).slice(0, 50);
-  if (cParam) {
-    const parts = cParam.split(',');
-    swatches = [...Array(SLOTS).keys()].map(i => parts[i] ? fromHex('#' + parts[i]) : null);
-  }
-}
-
-function buildSwatchesPlist(pName, pSwatches) {
-  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const items = [...Array(SLOTS).keys()].map(i => {
-    const sw = pSwatches[i];
-    if (!sw) return '<dict/>';
-    return '<dict><key>alpha</key><real>1</real><key>brightness</key><real>' + sw.brightness.toFixed(6) + '</real><key>colorSpace</key><integer>0</integer><key>hue</key><real>' + sw.hue.toFixed(6) + '</real><key>saturation</key><real>' + sw.saturation.toFixed(6) + '</real></dict>';
-  }).join('');
-  return '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><array><dict><key>name</key><string>' + esc(pName || 'Chromatik') + '</string><key>swatches</key><array>' + items + '</array></dict></array></plist>';
+function buildProcreateJson() {
+  const slotsArr = swatches.map(s => s ? {
+    hue: s.hue, saturation: s.saturation, brightness: s.brightness, alpha: 1, colorSpace: 0
+  } : null);
+  return JSON.stringify([{
+    name: name || 'Untitled_Palette',
+    swatches: slotsArr
+  }]);
 }
 
 $('saveBtn').addEventListener('click', async () => {
   if (typeof JSZip === 'undefined') return toast('JSZip unavailable');
   const zip = new JSZip();
-  zip.file('Swatches.plist', buildSwatchesPlist(name || 'Chromatik', swatches));
+  zip.file('Swatches.json', buildProcreateJson());
   const blob = await zip.generateAsync({ type: 'blob' });
+  const fname = (name || 'palette').replace(/[^a-z0-9_\-]+/gi, '_') + '.swatches';
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'Chromatik') + '.swatches';
-  a.click();
-  toast('Exported .swatches file');
+  a.href = URL.createObjectURL(blob); a.download = fname; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Exported ' + fname);
 });
 
 $('fileInput').addEventListener('change', async e => {
   const file = e.target.files[0];
-  if (!file || typeof JSZip === 'undefined') return;
+  if (!file) return;
+  if (typeof JSZip === 'undefined') return toast('JSZip unavailable');
   try {
     const zip = await JSZip.loadAsync(file);
-    const plistFile = zip.file('Swatches.plist') || Object.values(zip.files).find(f => f.name.endsWith('.plist'));
-    if (!plistFile) return toast('Invalid .swatches archive');
-    const txt = await plistFile.async('string');
-    const doc = new DOMParser().parseFromString(txt, 'text/xml');
-    const nameNode = doc.querySelector('dict > key');
-    const strings = [...doc.querySelectorAll('string')];
-    if (strings[0]?.textContent) name = strings[0].textContent;
-
-    const dicts = [...doc.querySelectorAll('array > dict')];
-    const parsed = [];
-    for (const d of dicts) {
-      const keys = [...d.children].filter(el => el.tagName === 'key');
-      const vals = [...d.children].filter(el => el.tagName !== 'key');
-      const obj = {};
-      keys.forEach((k, idx) => { obj[k.textContent] = parseFloat(vals[idx]?.textContent || '0'); });
-      if ('hue' in obj && 'saturation' in obj && 'brightness' in obj) {
-        parsed.push({ hue: obj.hue, saturation: obj.saturation, brightness: obj.brightness, alpha: 1, colorSpace: 0 });
-      }
-    }
-    swatches = [...Array(SLOTS).keys()].map(i => parsed[i] || null);
+    const jsonFile = zip.file('Swatches.json');
+    if (!jsonFile) throw new Error('Missing Swatches.json');
+    const txt = await jsonFile.async('string');
+    const data = JSON.parse(txt);
+    const first = Array.isArray(data) ? data[0] : data;
+    commitNow();
+    name = first.name || file.name.replace(/\.swatches$/i, '');
+    swatches = [...(first.swatches || []), ...new Array(SLOTS).fill(null)].slice(0, SLOTS);
     render(); commitNow();
-    toast('Loaded ' + (name || file.name));
-  } catch {
-    toast('Failed to parse .swatches file');
+    toast('Loaded ' + name);
+  } catch (err) {
+    toast('Invalid .swatches file');
   }
+  e.target.value = '';
 });
 
 $('aseBtn').addEventListener('click', () => {
   const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No active swatches for .ASE');
-  const encUtf16 = str => {
-    const buf = new Uint8Array(str.length * 2 + 2);
+  if (!active.length) return toast('No active swatches to export');
+  const titleStr = name || 'Chromatik Palette';
+  const encodeUtf16 = str => {
+    const buf = new Uint8Array((str.length + 1) * 2);
     for (let i = 0; i < str.length; i++) {
       const code = str.charCodeAt(i);
       buf[i * 2] = (code >> 8) & 0xff;
@@ -4423,99 +4639,148 @@ $('aseBtn').addEventListener('click', () => {
     }
     return buf;
   };
-  const chunks = [];
-  active.forEach((sw, idx) => {
-    const titleBytes = encUtf16('Swatch ' + (idx + 1) + '\0');
-    const [r, g, b] = swRgb(sw).map(v => v / 255);
-    const body = new Uint8Array(titleBytes.length + 4 + 12 + 2);
-    body.set(titleBytes, 0);
-    const dv = new DataView(body.buffer);
-    let off = titleBytes.length;
-    body[off++] = 82; body[off++] = 71; body[off++] = 66; body[off++] = 32;
-    dv.setFloat32(off, r, false); off += 4;
-    dv.setFloat32(off, g, false); off += 4;
-    dv.setFloat32(off, b, false); off += 4;
-    dv.setUint16(off, 0, false);
 
-    const block = new Uint8Array(6 + body.length);
-    const bdv = new DataView(block.buffer);
-    bdv.setUint16(0, 0x0001, false);
-    bdv.setUint32(2, body.length, false);
-    block.set(body, 6);
-    chunks.push(block);
+  const parts = [];
+  const pushU16 = (arr, v) => { arr.push((v >> 8) & 0xff, v & 0xff); };
+  const pushU32 = (arr, v) => { arr.push((v >> 24) & 0xff, (v >> 16) & 0xff, (v >> 8) & 0xff, v & 0xff); };
+  const pushF32 = (arr, f) => {
+    const dv = new DataView(new ArrayBuffer(4));
+    dv.setFloat32(0, f, false);
+    for (let i = 0; i < 4; i++) arr.push(dv.getUint8(i));
+  };
+
+  const grpStart = [];
+  const grpNameBuf = encodeUtf16(titleStr);
+  pushU16(grpStart, 0xc001);
+  pushU32(grpStart, 2 + grpNameBuf.length);
+  pushU16(grpStart, titleStr.length + 1);
+  grpStart.push(...grpNameBuf);
+  parts.push(new Uint8Array(grpStart));
+
+  active.forEach((sw, idx) => {
+    const swName = getHumanColorName(sw) + ' #' + (idx + 1);
+    const nameBuf = encodeUtf16(swName);
+    const [r, g, b] = swRgb(sw).map(v => v / 255);
+    const block = [];
+    pushU16(block, 0x0001);
+    const dataLen = 2 + nameBuf.length + 4 + 12 + 2;
+    pushU32(block, dataLen);
+    pushU16(block, swName.length + 1);
+    block.push(...nameBuf);
+    block.push(0x52, 0x47, 0x42, 0x20);
+    pushF32(block, r);
+    pushF32(block, g);
+    pushF32(block, b);
+    pushU16(block, 0);
+    parts.push(new Uint8Array(block));
   });
 
-  const totalLen = 12 + chunks.reduce((acc, c) => acc + c.length, 0);
-  const out = new Uint8Array(totalLen);
-  const odv = new DataView(out.buffer);
-  out[0] = 65; out[1] = 83; out[2] = 69; out[3] = 70;
-  odv.setUint16(4, 1, false);
-  odv.setUint16(6, 0, false);
-  odv.setUint32(8, active.length, false);
-  let pos = 12;
-  chunks.forEach(c => { out.set(c, pos); pos += c.length; });
+  const grpEnd = [];
+  pushU16(grpEnd, 0xc002);
+  pushU32(grpEnd, 0);
+  parts.push(new Uint8Array(grpEnd));
 
-  const blob = new Blob([out], { type: 'application/octet-stream' });
+  const bodyBytes = parts.reduce((acc, u) => acc + u.length, 0);
+  const header = new Uint8Array(12);
+  header.set([0x41, 0x53, 0x45, 0x46], 0);
+  header[4] = 0; header[5] = 1; header[6] = 0; header[7] = 0;
+  const hView = new DataView(header.buffer);
+  hView.setUint32(8, active.length + 2, false);
+
+  const full = new Uint8Array(12 + bodyBytes);
+  full.set(header, 0);
+  let offset = 12;
+  for (const p of parts) { full.set(p, offset); offset += p.length; }
+
+  const blob = new Blob([full], { type: 'application/octet-stream' });
+  const fname = (name || 'palette').replace(/[^a-z0-9_\-]+/gi, '_') + '.ase';
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'palette') + '.ase';
-  a.click();
-  toast('Exported Adobe .ASE Swatch File');
+  a.href = URL.createObjectURL(blob); a.download = fname; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Exported ' + fname);
 });
 
 $('cardBtn').addEventListener('click', () => {
   const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No active swatches for PNG');
+  if (!active.length) return toast('Add swatches first');
   const c = document.createElement('canvas');
-  c.width = 900; c.height = 360;
+  const cols = Math.min(10, active.length);
+  const rows = Math.ceil(active.length / cols);
+  c.width = cols * 120 + 40;
+  c.height = rows * 140 + 80;
   const g = c.getContext('2d');
-  g.fillStyle = '#0D1117';
+  g.fillStyle = '#07080d';
   g.fillRect(0, 0, c.width, c.height);
 
-  g.fillStyle = '#F3F4F6';
-  g.font = 'bold 24px sans-serif';
-  g.fillText(name || 'CHROMATIK PALETTE', 36, 54);
+  g.fillStyle = '#f3f4f6';
+  g.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+  g.fillText((name || 'CHROMATIK PALETTE').toUpperCase(), 20, 42);
 
-  const cols = Math.min(active.length, 10);
-  const rows = Math.ceil(active.length / 10);
-  const swW = (900 - 72 - (cols - 1) * 10) / cols;
-  const swH = rows === 1 ? 190 : 95;
-
-  active.forEach((s, idx) => {
-    const r = Math.floor(idx / 10);
-    const col = idx % 10;
-    const x = 36 + col * (swW + 10);
-    const y = 80 + r * (swH + 36);
-    const hex = toHex(s);
-    g.fillStyle = hex;
+  active.forEach((sw, idx) => {
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const x = 20 + col * 120;
+    const y = 64 + row * 140;
+    g.fillStyle = toHex(sw);
     g.beginPath();
-    g.roundRect(x, y, swW, swH, 10);
+    g.roundRect(x, y, 108, 90, 10);
     g.fill();
 
-    g.fillStyle = '#9CA3AF';
-    g.font = 'bold 11px sans-serif';
-    g.fillText(hex, x, y + swH + 16);
+    g.fillStyle = '#9ca3af';
+    g.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
+    g.fillText(toHex(sw), x + 4, y + 112);
   });
 
   const a = document.createElement('a');
   a.href = c.toDataURL('image/png');
-  a.download = (name || 'palette') + '.png';
+  a.download = (name || 'palette') + '_card.png';
   a.click();
-  toast('Downloaded PNG Swatch Card');
+  toast('Downloaded PNG Card');
 });
+
+$('shareUrlBtn').addEventListener('click', () => {
+  const hexParam = swatches.map(s => s ? toHex(s).slice(1) : '').join('-');
+  const url = new URL(location.href);
+  url.searchParams.set('p', hexParam);
+  if (name) url.searchParams.set('n', name);
+  copyText(url.toString(), 'Shareable URL Copied!');
+});
+
+function loadFromUrlParams() {
+  try {
+    const params = new URLSearchParams(location.search);
+    const p = params.get('p');
+    const n = params.get('n');
+    if (n) name = n;
+    if (p) {
+      const parts = p.split('-');
+      swatches = [...Array(SLOTS).keys()].map(i => parts[i] ? fromHex(parts[i]) : null);
+    }
+  } catch {}
+}
+
+$('cbSim').addEventListener('change', e => {
+  document.body.classList.remove('sim-protan', 'sim-deutan', 'sim-tritan', 'sim-achroma');
+  if (e.target.value !== 'none') document.body.classList.add('sim-' + e.target.value);
+});
+
+$('undoBtn').addEventListener('click', undo);
+$('redoBtn').addEventListener('click', redo);
 
 initThemeScroller();
 setThemeByIndex(3, false);
-buildPins();
 buildHarmonyWheel();
+buildPins();
+populateThemesUI();
 initHueMatrixTab();
-initMasterThemes();
 renderGradStops();
 updateGradientPreview();
-updateRamp();
+renderTrendingStrip();
 renderLibrary();
 loadFromUrlParams();
+
 steps = [snap()];
+histIndex = 0;
 updateHistoryButtons();
 render();
 })();
