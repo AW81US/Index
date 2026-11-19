@@ -638,7 +638,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
           </div>
         </div>
         <div class="palette-name-wrap">
-          <input id="paletteName" class="palette-name-input" type="text" maxlength="50" value="" placeholder="DARK_STUDIO_PALETTE">
+          <input id="paletteName" class="palette-name-input" type="text" maxlength="50" value="" placeholder="">
           <button type="button" id="randomizeNameBtn" class="btn small" title="Generate Random Theme Name">&#10024; Persona</button>
         </div>
 
@@ -748,7 +748,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
         <hr style="border:0;border-top:1px solid var(--line);margin:4px 0">
 
         <div class="row">
-          <input id="picker" type="color" aria-label="Color Picker" value="#f0835e">
+          <input id="picker" type="color" aria-label="Color Picker" value="#000000">
           <input id="hex" type="text" maxlength="7" spellcheck="false" class="grow" aria-label="HEX code" placeholder="#HEX">
           <button id="slotClearBtn" type="button" class="btn small danger">Purge</button>
         </div>
@@ -844,9 +844,9 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
         <div class="panel-tab" id="p-ramp">
           <span class="label">Tonal Ramp Generator</span>
           <div class="row" style="gap:8px">
-            <div id="rampBasePreview" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#000000"></div>
+            <div id="rampBasePreview" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--slot-empty)"></div>
             <div class="grow" style="display:flex;flex-direction:column;gap:2px">
-              <input type="text" id="rampManualRgb" value="0, 0, 0" spellcheck="false" placeholder="R, G, B">
+              <input type="text" id="rampManualRgb" value="" spellcheck="false" placeholder="R, G, B">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px">
@@ -2078,6 +2078,13 @@ function renderEditor() {
     fillChipRow($('hues'), cur, huesOf10(cur));
     fillChipRow($('tonesShades'), cur, tonesShadesOf30(cur));
   } else {
+    if (document.activeElement !== $('hex')) $('hex').value = '';
+    if (document.activeElement !== $('labR')) $('labR').value = '';
+    if (document.activeElement !== $('labG')) $('labG').value = '';
+    if (document.activeElement !== $('labB')) $('labB').value = '';
+    $('h').value = $('hNum').value = 0;
+    $('s').value = $('sNum').value = 0;
+    $('b').value = $('bNum').value = 0;
     $('colorHumanName').textContent = 'NO VECTOR';
     $('colorPsychNote').textContent = '// Psychology & Usage: Select a color to view emotional & industry profile.';
     $('multiFormatReadout').textContent = 'Select a swatch to inspect HEX \u00B7 RGB \u00B7 HSL \u00B7 CMYK \u00B7 OKLCH';
@@ -2654,14 +2661,11 @@ $('fillImgBtn').addEventListener('click', () => {
   addToEmpty(picked.map(p => ({ ...p.hsb, alpha: 1, colorSpace: 0 })), true, 'VISION_EXTRACT');
 });
 
-let gradStops = [
-  { color: '#3B82F6', pos: 0 },
-  { color: '#8B5CF6', pos: 0 },
-  { color: '#EC4899', pos: 0 }
-];
+let gradStops = [];
 let rampList = [];
 
 function buildGradientCss() {
+  if (!gradStops.length) return '';
   const type = $('cssGradType').value;
   const angle = clamp(Number($('gradAngle').value) || 0, 0, 360);
   const sorted = [...gradStops].sort((a, b) => a.pos - b.pos);
@@ -2678,6 +2682,7 @@ function buildGradientCss() {
 
 function sampleGradientStops(count) {
   const n = clamp(Number(count) || 10, 2, SLOTS);
+  if (!gradStops.length) return [];
   const sorted = [...gradStops]
     .map(s => ({ rgb: parseHex(s.color) || [0, 0, 0], pos: clamp(Number(s.pos) || 0, 0, 100) }))
     .sort((a, b) => a.pos - b.pos);
@@ -2782,6 +2787,12 @@ function updateGradientPreview() {
   $('gradAngleVal').textContent = angle + '\u00B0';
   $('gradAngleWrap').style.display = type === 'radial' ? 'none' : 'flex';
 
+  if (!gradStops.length) {
+    $('rampStrip').style.background = 'var(--slot-empty)';
+    $('gradCssCode').textContent = '';
+    return;
+  }
+
   const sorted = [...gradStops].sort((a, b) => a.pos - b.pos);
   const stopStr = sorted.map(s => s.color + ' ' + clamp(Number(s.pos) || 0, 0, 100) + '%').join(', ');
 
@@ -2797,8 +2808,8 @@ function updateGradientPreview() {
 $('addGradStopBtn').addEventListener('click', () => {
   if (gradStops.length >= 10) return toast('Max 10 gradient stops');
   const activeLab = labColor() || swatches[selected];
-  const nextCol = activeLab ? toHex(activeLab) : '#F59E0B';
-  const nextPos = gradStops.length ? clamp(Math.round((gradStops[gradStops.length - 1].pos + 15) % 101), 0, 100) : 50;
+  const nextCol = activeLab ? toHex(activeLab) : '#000000';
+  const nextPos = gradStops.length ? clamp(Math.round((gradStops[gradStops.length - 1].pos + 25) % 101), 0, 100) : 0;
   gradStops.push({ color: nextCol, pos: nextPos });
   renderGradStops();
   updateGradientPreview();
@@ -2819,6 +2830,7 @@ $('syncFromPaletteBtn').addEventListener('click', () => {
 
 $$('[data-grad-send]').forEach(btn => {
   btn.addEventListener('click', () => {
+    if (!gradStops.length) return toast('Add gradient stops first');
     const count = Number(btn.dataset.gradSend) || 10;
     const sampled = sampleGradientStops(count);
     addToEmpty(sampled, true, 'GRADIENT');
@@ -2830,13 +2842,27 @@ $('cssGradType').addEventListener('change', updateGradientPreview);
 $('gradAngle').addEventListener('input', updateGradientPreview);
 $('copyGradCssBtn').addEventListener('click', () => {
   const cssTxt = buildGradientCss();
+  if (!cssTxt) return;
   copyText(cssTxt, 'Copied CSS Gradient');
 });
 
 function updateRamp() {
-  const r = clamp(Number($('rampR').value) || 0, 0, 255);
-  const g = clamp(Number($('rampG').value) || 0, 0, 255);
-  const b = clamp(Number($('rampB').value) || 0, 0, 255);
+  const rawTxt = ($('rampManualRgb').value || '').trim();
+  const rInp = $('rampR').value;
+  const gInp = $('rampG').value;
+  const bInp = $('rampB').value;
+  const hasRgb = rawTxt !== '' || Number(rInp) !== 0 || Number(gInp) !== 0 || Number(bInp) !== 0;
+
+  if (!hasRgb) {
+    rampList = [];
+    $('rampBasePreview').style.background = 'var(--slot-empty)';
+    renderChipGrid($('rampOut'), []);
+    return;
+  }
+
+  const r = clamp(Number(rInp) || 0, 0, 255);
+  const g = clamp(Number(gInp) || 0, 0, 255);
+  const b = clamp(Number(bInp) || 0, 0, 255);
   const mode = $('rampMode').value;
   const stepsVal = clamp(Number($('rampSteps').value) || 12, 3, 30);
 
@@ -2882,7 +2908,10 @@ $('rampManualRgb').addEventListener('input', e => {
 });
 $('rampMode').addEventListener('change', updateRamp);
 $('rampSteps').addEventListener('input', updateRamp);
-$('rampAdd').addEventListener('click', () => addToEmpty(rampList, false));
+$('rampAdd').addEventListener('click', () => {
+  if (!rampList.length) return toast('Set an RGB color first');
+  addToEmpty(rampList, false);
+});
 
 const PASTEL_SPECS = {
   'Soft Pinks & Roses': [330, 355, false],
@@ -3942,605 +3971,225 @@ Espresso Skin: #2E1508, #1B0500, #080000, #000000
 Rich Espresso: #361A0C, #230A00, #100000, #000000
 
 Vibrant Undertones & Espresso
-Subtle Red Undertone: #8E543A, #7B4127, #682E14, #551B01
-Golden Red Undertone: #965B3E, #83482B, #703518, #5D2205
-Cool Red Undertone: #854B31, #72381E, #5F250B, #4C1200
-Deep Red Undertone: #7A4228, #672F15, #541C02, #410900
-Vibrant Red Undertone: #9E6142, #8B4E2F, #783B1C, #652809
-Rich Red Undertone: #894E31, #763B1E, #63280B, #501500
-Warm Dark Espresso: #381E12, #250D03, #120000, #000000
-Deep Dark Espresso: #30170D, #1D0700, #0A0000, #000000
-Glossy Dark Espresso: #402316, #2D1309, #1A0000, #070000
-Smooth Dark Espresso: #351C10, #220C01, #0F0000, #000000
-
-Cool & Neutral Undertone Varied
-Cool Porcelain: #F5EAE6, #ECD9D2, #E2C8BF, #D8B7AC
-Cool Fair Neutral: #EFE0D9, #E2CEC5, #D5BCB1, #C8AA9D
-Cool Medium: #C5A79B, #B29386, #9F7F72, #8C6B5E
-Cool Tan: #A8867B, #957267, #825E53, #6F4A3F
-Cool Deep: #6B4E44, #583B31, #45281E, #32150B
-Neutral Soft Beige: #EBDDD0, #DFCDBF, #D3BDB5, #C7AD9E
-Neutral Soft Medium: #BA9D8F, #A68A7C, #927769, #7E6456
-Neutral Soft Tan: #8E7364, #7A5F50, #664B3C, #523728
-Neutral Soft Deep: #5B4234, #472F21, #331C0E, #1F0900
-Neutral Rich Deep: #483327, #352014, #220D01, #0F0000
-
-Specialty & Illustrative Skin Tones
-Anime & Manga Skin: #FFE4D6, #F7C8B3, #E5A68E, #C9826B
-Cel-Shaded Warm Skin: #F9D5BE, #E8B092, #C88468, #9E5B43
-Stylized Fantasy Elf: #EBF4F6, #C9E2E8, #9EC3CE, #6E9BA8
-Orc & Goblin Skin: #8FB36B, #6E914C, #4D6E32, #314A1E
-Demon & Infernal Skin: #C93B3B, #9E2424, #6E1313, #3E0808
-Celestial & Starlight Skin: #E6E0F8, #C4B8EB, #9E8ED9, #7664C2
-Underwater Siren Skin: #78C6C2, #4FA39F, #2E7D7A, #195754
-Golden Sun-God Skin: #F2C14E, #D99B26, #B37412, #854E04
-
-================================================================================
-SKIN TONE MATRIX (30 SHADES)
-================================================================================
-
-30-Shade Portrait & Illustration Matrix
-Porcelain Highlight: #FFF5EE, #FCE7DC, #F7D4C3, #EFC0AA, #E3AA90
-Warm Fair Midtone: #F5C9B0, #EAA98A, #DE8B68, #CF704B, #BA5835
-Medium Olive & Tan: #D9A07B, #C88B65, #B57650, #9E613E, #874F30
-Rich Caramel & Sienna: #A66E4C, #8F5A3B, #78482C, #61371E, #4A2713
-Deep Espresso & Umber: #593524, #452719, #331B11, #211009, #120804
-Shadow & Subsurface Tones: #8F4A4A, #733838, #572828, #3D1A1A, #240E0E
-
-================================================================================
-WOOD, STONE & MATERIAL SHADE RAMPS (30 SHADES)
-================================================================================
-
-Wood Grain & Timber Ramp (30 Shades)
-Birch & Ash Sapwood: #F7EFE2, #EFE3CE, #E5D4B7, #D9C39E, #C9AE82
-Oak & Beech Heartwood: #C4A072, #B38B5B, #9F7646, #8A6235, #734E26
-Cherry & Mahogany: #8C4A32, #7A3C26, #662F1C, #522313, #3E180C
-Walnut & Rosewood: #5C3A28, #4A2D1E, #3A2215, #2B180E, #1D0F08
-Ebony & Charred Timber: #2A211B, #211914, #18120E, #100C09, #080605
-Bark, Moss & Sap Tones: #6E5D4F, #584B3F, #433930, #4A5D3F, #35442D
-
-Stone, Marble & Masonry Ramp (30 Shades)
-Calacatta & Carrara Marble: #FFFFFF, #F5F6F8, #E8EAEE, #D5D9E0, #BCC2CC
-Limestone & Travertine: #EFECE6, #E2DDD3, #D2CBBF, #BFB6A7, #A89E8E
-Sandstone & Terracotta: #D9B38C, #C89D72, #B5865A, #9E6E44, #825632
-Slate, Granite & Basalt: #6E757D, #5A6068, #464B52, #34383E, #23262B
-Obsidian & Coal: #2B2D30, #202224, #161719, #0E0F10, #070707
-Lichen & Mineral Veins: #8A9A8E, #6B7D70, #526357, #7D6B7D, #5D4E5D
-
-Brushed Metal & Alloy Ramp (30 Shades)
-Silver, Chrome & Platinum: #F2F4F7, #DCE1E7, #C2C9D2, #A4AEBA, #84909E
-Gold, Brass & Champagne: #FFF0B3, #F5DC82, #E3C152, #C9A232, #A6811C
-Copper & Rose Gold: #F2C6B6, #DF9F89, #C87A60, #AC5B40, #8A422B
-Bronze & Pewter: #9E8B78, #857260, #6B5A4B, #524438, #3B3027
-Gunmetal, Iron & Titanium: #545B64, #424850, #32363C, #23262A, #15171A
-Patina & Oxidation: #7EC4B6, #5BA698, #3E8578, #8C6D46, #694F30
-
-================================================================================
-PORTRAIT & CHARACTER PALETTES (30 SHADES)
-================================================================================
-
-Heroine & Fantasy Character Matrix (30 Shades)
-Skin Base & Highlights: #FDECE4, #F7D5C6, #EBB8A3, #DC9A80, #C77E63
-Blush, Lips & Cheeks: #F2A2A8, #E37D86, #CC5864, #A83B48, #7D2330
-Hair & Locks Spectrum: #F5D78E, #D9A75A, #9E6234, #5E351C, #24140C
-Eyes, Gems & Accents: #72EFDD, #38B6FF, #2B6CB0, #9D4EDD, #5A189A
-Costume, Armor & Shadows: #E63946, #457B9D, #1D3557, #2B2D42, #12131C
-Rim Light & Magic Glow: #FFF3B0, #FF9EBB, #C77DFF, #80FFDB, #FFFFFF
-
-Cyberpunk & Sci-Fi Character Matrix (30 Shades)
-Synth Skin & Visor Glow: #F7D6C8, #E2A996, #00F5D4, #4CC9F0, #FF007F
-Cybernetic Chrome & Plates: #E5E9F0, #B8C2D1, #7B889E, #465063, #232834
-Neon Accents & Wires: #FF2A6D, #05D9E8, #D300C5, #FEE440, #39FF14
-Dark Techwear & Carbon: #2B2E36, #1F2229, #15171C, #0D0E12, #060709
-Hologram & Energy UI: #A8FFF0, #48CAE4, #9B5DE5, #F15BB5, #FFFFFF
-Shadow & Contrast Tones: #3A0CA3, #240046, #10002B, #590D22, #1A090D
-
-================================================================================
-GAME & ENVIRONMENT PALETTES (30 SHADES)
-================================================================================
-
-Cozy RPG Village & Cottage Matrix (30 Shades)
-Thatch, Timber & Plaster: #F4EAD5, #E0CCA8, #C4A476, #8C6239, #4A3219
-Foliage, Hedges & Vines: #A7C957, #6A994E, #386641, #234229, #132617
-Cobblestone & Garden Paths: #C5C2BA, #9E9B93, #75726B, #4F4D48, #2E2D2A
-Lantern Glow & Windows: #FFF3B0, #FFD166, #F4A261, #E76F51, #9E2A2B
-Roofs, Banners & Accents: #BC4749, #780000, #3D5A80, #293241, #5E548E
-Sky, Water & Ambient Shadow: #90E0EF, #48CAE4, #2B4570, #1D2D44, #141824
-
-Dark Dungeon & Crypt Matrix (30 Shades)
-Damp Stone & Mossy Bricks: #5A626A, #434A52, #2F353B, #22262B, #15181C
-Torchlight, Embers & Gold: #FFBA08, #F48C06, #D00000, #7F4F24, #3D2B1F
-Spectral & Necrotic Glow: #80ED99, #38B000, #9B5DE5, #5A189A, #240046
-Rust, Iron & Chains: #8A4F3D, #63392C, #3E444B, #272B30, #141619
-Blood, Wax & Velvet: #9B0000, #660708, #370617, #5E1914, #260A0E
-Abyssal Voids & Fog: #1B222C, #12171F, #0B0E14, #06080C, #020305
+Subtle Red Undertone: #8B3A3A, #A05252, #B56B6B, #CA8484
+Warm Golden Undertone: #B8860B, #DAA520, #FFD700, #F0E68C
+Cool Rosy Undertone: #C08081, #D4A5A5, #E8C5C5, #FCE4EC
+Deep Rich Ebony: #1C100B, #2E1B12, #40271B, #523425
+Warm Amber Complexion: #C68642, #D99B52, #ECB062, #FFC572
+Golden Honey Complexion: #E0AC69, #E8BE82, #F0D09B, #F8E2B4
+Rich Mocha Tone: #5C4033, #704F40, #845E4D, #986D5A
+Warm Bronze Tone: #804A00, #995B00, #B36C00, #CC7D00
+Soft Peach Undertone: #FFDAB9, #FFE5CC, #FFF0E0, #FFF8F0
+Deep Espresso Undertone: #24120A, #361C10, #482716, #5A321C
 `;
 
 function parseMasterThemes(rawText) {
-  const tree = {};
-  let currentCat = 'General';
-  let currentSub = null;
+  const catalog = {};
+  let currentSection = 'General';
+  let currentSub = '';
   let currentDesc = '';
-  const hexRegex = /#[0-9A-Fa-f]{6}\b/g;
+  let currentItems = [];
+
+  const flushSub = () => {
+    if (!currentSub || !currentItems.length) return;
+    if (!catalog[currentSection]) catalog[currentSection] = [];
+    const hexes = [];
+    const parts = [];
+    currentItems.forEach(it => {
+      it.hexes.forEach(h => { if (!hexes.includes(h)) hexes.push(h); });
+      parts.push(it.label + ' (' + it.hexes.join(', ') + ')');
+    });
+    catalog[currentSection].push({
+      name: currentSub,
+      desc: currentDesc,
+      hexes,
+      summary: parts.join(' \u00B7 ')
+    });
+    currentSub = '';
+    currentDesc = '';
+    currentItems = [];
+  };
 
   const lines = rawText.split(/\r?\n/);
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
     if (!line || /^=+$/.test(line)) continue;
 
-    if (/^[A-Z0-9 &,\-]+$/.test(line) && line.length > 3 && !line.includes(':')) {
-      currentCat = line.replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase()).replace(/\bAnd\b/g, '&');
-      if (!tree[currentCat]) tree[currentCat] = {};
-      currentSub = null;
-      currentDesc = '';
+    if (/^[A-Z0-9 &(),/+-]+$/.test(line) && line.length >= 4 && !line.includes(':')) {
+      flushSub();
+      currentSection = line.split(' ').map(w => w.length <= 2 ? w : (w[0] + w.slice(1).toLowerCase())).join(' ');
+      if (line === 'METAL THEMES') currentSection = 'Metal Themes';
+      if (line === 'NATURE THEMES') currentSection = 'Nature Themes';
+      if (line === 'NEON THEMES') currentSection = 'Neon Themes';
+      if (line === 'PASTEL THEMES') currentSection = 'Pastel Themes';
+      if (line === 'SKIN THEMES') currentSection = 'Skin Themes';
       continue;
     }
 
-    const parenMatch = /^([^(]+?)\s*\(([^)]+)\)\s*$/.exec(line);
-    if (parenMatch && !line.includes('#')) {
-      currentSub = parenMatch[1].trim();
-      currentDesc = parenMatch[2].trim();
-      if (!tree[currentCat]) tree[currentCat] = {};
-      if (!tree[currentCat][currentSub]) tree[currentCat][currentSub] = { desc: currentDesc, colors: [] };
-      continue;
-    }
-
-    if (line.toLowerCase().startsWith('description:')) {
-      if (currentSub && tree[currentCat]?.[currentSub]) {
-        tree[currentCat][currentSub].desc = line.slice(12).trim();
-      }
-      continue;
-    }
-
-    const foundHexes = line.match(hexRegex);
-    if (foundHexes && foundHexes.length) {
-      if (!currentSub) {
-        currentSub = 'Collection';
-        if (!tree[currentCat]) tree[currentCat] = {};
-        if (!tree[currentCat][currentSub]) tree[currentCat][currentSub] = { desc: '', colors: [] };
-      }
-      foundHexes.forEach(h => {
-        const up = h.toUpperCase();
-        if (!tree[currentCat][currentSub].colors.includes(up)) {
-          tree[currentCat][currentSub].colors.push(up);
-        }
-      });
+    const hexMatches = line.match(/#[0-9A-Fa-f]{6}\b/g);
+    if (hexMatches && hexMatches.length) {
+      const colonIdx = line.indexOf(':');
+      const label = colonIdx > -1 ? line.slice(0, colonIdx).trim() : 'Swatch';
+      currentItems.push({ label, hexes: hexMatches.map(h => h.toUpperCase()) });
+    } else if (/^Description:/i.test(line)) {
+      currentDesc = line.replace(/^Description:\s*/i, '').trim();
+    } else if (!line.includes(':')) {
+      flushSub();
+      currentSub = line;
     }
   }
+  flushSub();
 
-  tree['Pastel Spectrum'] = {};
-  Object.keys(PASTEL_SPECS).forEach(label => {
-    tree['Pastel Spectrum'][label] = {
-      desc: '30-step pastel matrix for ' + label,
-      colors: generatePastelList(label).map(toHex)
+  catalog['Pastel Gradients'] = Object.keys(PASTEL_SPECS).map(label => {
+    const list = generatePastelList(label);
+    return {
+      name: label,
+      desc: '30-step pastel spectrum matrix',
+      hexes: list.map(toHex),
+      summary: '30 pastel swatches'
     };
   });
 
-  tree['Skin Tone Matrix'] = {};
-  Object.keys(SKIN_PROFILES).forEach(label => {
-    tree['Skin Tone Matrix'][label] = {
-      desc: '30-shade portrait complexion grid for ' + label,
-      colors: generateSkinList(label).map(toHex)
+  catalog['Skin Complexions'] = Object.keys(SKIN_PROFILES).map(label => {
+    const list = generateSkinList(label);
+    return {
+      name: label,
+      desc: '30-step realistic skin tone grid (6\u00D75)',
+      hexes: list.map(toHex),
+      summary: '30 complexion swatches'
     };
   });
 
-  return tree;
+  return catalog;
 }
 
-const MASTER_THEMES = parseMasterThemes(RAW_MASTER_THEMES_TXT);
+const MASTER_CATALOG = parseMasterThemes(RAW_MASTER_THEMES_TXT);
+let currentThemeList = [];
 
-function populateThemeCatalog() {
-  const catSel = $('themeCategory');
-  catSel.innerHTML = '';
-  Object.keys(MASTER_THEMES).forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    catSel.appendChild(opt);
-  });
-  filterThemeSubList();
+function getShiftedThemeSwatches() {
+  const tempVal = Number($('themeTempSlide').value) || 0;
+  return currentThemeList.map(sw => applyTemperatureShift(sw, tempVal));
 }
 
-function filterThemeSubList() {
-  const cat = $('themeCategory').value;
-  const q = ($('themeSearch').value || '').toLowerCase().trim();
-  const subSel = $('themeSubSelect');
-  const subs = Object.keys(MASTER_THEMES[cat] || {}).filter(s => !q || s.toLowerCase().includes(q));
-
-  subSel.innerHTML = '';
-  subs.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s;
-    opt.textContent = s;
-    subSel.appendChild(opt);
-  });
-  renderSelectedTheme();
-}
-
-function renderSelectedTheme() {
-  const cat = $('themeCategory').value;
-  const sub = $('themeSubSelect').value;
+function renderShiftedThemeChips() {
   const tempVal = Number($('themeTempSlide').value) || 0;
   $('themeTempVal').textContent = formatTempLabel(tempVal, 'Original');
-
-  const item = MASTER_THEMES[cat]?.[sub];
-  const rawList = item ? item.colors : [];
-  const shiftedSwatches = rawList.map(h => {
-    const baseSw = fromHex(h);
-    return baseSw ? applyTemperatureShift(baseSw, tempVal) : null;
-  }).filter(Boolean);
-
-  renderChipGrid($('themeOut'), shiftedSwatches);
+  renderChipGrid($('themeOut'), getShiftedThemeSwatches());
 }
 
-$('themeCategory').addEventListener('change', filterThemeSubList);
-$('themeSearch').addEventListener('input', filterThemeSubList);
-$('themeSubSelect').addEventListener('change', renderSelectedTheme);
-$('themeTempSlide').addEventListener('input', renderSelectedTheme);
-$('loadThemeBtn').addEventListener('click', () => {
+function populateThemeSubSelect() {
   const cat = $('themeCategory').value;
-  const sub = $('themeSubSelect').value;
-  const tempVal = Number($('themeTempSlide').value) || 0;
-  const rawList = MASTER_THEMES[cat]?.[sub]?.colors || [];
-  if (!rawList.length) return;
-  const list = rawList.map(h => {
-    const baseSw = fromHex(h);
-    return baseSw ? applyTemperatureShift(baseSw, tempVal) : null;
-  }).filter(Boolean);
-  const suffix = tempVal === 0 ? '' : (tempVal < 0 ? '_W' + Math.abs(tempVal) : '_C' + tempVal);
-  addToEmpty(list, true, (sub || 'THEME').toUpperCase().replace(/[^A-Z0-9]+/g, '_') + suffix);
-});
+  const q = ($('themeSearch').value || '').trim().toLowerCase();
+  const allInCat = MASTER_CATALOG[cat] || [];
+  const filtered = q
+    ? allInCat.filter(t => t.name.toLowerCase().includes(q) || t.summary.toLowerCase().includes(q))
+    : allInCat;
 
-let activeExportFormat = 'hex';
-
-function updateTextExport() {
-  const active = swatches.filter(Boolean);
-  const fmt = $('txtFmt').value;
-  const pName = (name || 'PALETTE').replace(/[^a-zA-Z0-9_-]/g, '_');
-
-  if (!active.length) {
-    $('pasteBox').value = '';
+  const subSel = $('themeSubSelect');
+  subSel.innerHTML = '';
+  if (!filtered.length) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'No matching themes';
+    subSel.appendChild(opt);
+    currentThemeList = [];
+    renderShiftedThemeChips();
     return;
   }
 
-  if (fmt === 'hex') {
-    $('pasteBox').value = active.map(toHex).join(', ');
-  } else if (fmt === 'rgb') {
-    $('pasteBox').value = active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join('\n');
-  } else if (fmt === 'hsl') {
-    $('pasteBox').value = active.map(s => {
-      const [h, sat, l] = rgbToHsl(...swRgb(s));
-      return 'hsl(' + h + ', ' + sat + '%, ' + l + '%)';
-    }).join('\n');
-  } else if (fmt === 'oklch') {
-    $('pasteBox').value = active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join('\n');
-  } else if (fmt === 'css') {
-    const vars = active.map((s, i) => '  --color-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
-    $('pasteBox').value = ':root {\n' + vars + '\n}';
-  } else if (fmt === 'scss') {
-    $('pasteBox').value = active.map((s, i) => '$color-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
-  } else if (fmt === 'tailwind') {
-    const entries = active.map((s, i) => "        '" + (i + 1) + "': '" + toHex(s) + "'").join(',\n');
-    $('pasteBox').value = "module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '" + pName.toLowerCase() + "': {\n" + entries + "\n        }\n      }\n    }\n  }\n}";
-  } else if (fmt === 'svg') {
-    const w = 60, h = 60;
-    const rects = active.map((s, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + toHex(s) + '"/>').join('\n');
-    $('pasteBox').value = '<svg xmlns="http://www.w3.org/2000/svg" width="' + (active.length * w) + '" height="' + h + '">\n' + rects + '\n</svg>';
-  } else if (fmt === 'json') {
-    $('pasteBox').value = JSON.stringify({ name: name || 'Untitled', swatches: active.map(toHex) }, null, 2);
-  }
-}
-
-$('txtFmt').addEventListener('change', updateTextExport);
-$$('[data-exfmt]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    activeExportFormat = btn.dataset.exfmt;
-    $('txtFmt').value = activeExportFormat;
-    updateTextExport();
-    copyText($('pasteBox').value, 'Copied ' + activeExportFormat.toUpperCase());
-  });
-});
-
-$('copyTxtBtn').addEventListener('click', () => {
-  copyText($('pasteBox').value, 'Copied Export Buffer');
-});
-
-$('dlTxtBtn').addEventListener('click', () => {
-  const fmt = $('txtFmt').value;
-  const extMap = { hex: 'txt', rgb: 'txt', hsl: 'txt', oklch: 'txt', css: 'css', scss: 'scss', tailwind: 'js', svg: 'svg', json: 'json' };
-  const ext = extMap[fmt] || 'txt';
-  const blob = new Blob([$('pasteBox').value], { type: 'text/plain;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'palette') + '.' + ext;
-  a.click();
-  toast('Saved .' + ext.toUpperCase());
-});
-
-$('importPasteBtn').addEventListener('click', () => {
-  const raw = $('pasteBox').value;
-  const matches = raw.match(/#([0-9a-f]{3}|[0-9a-f]{6})\b/gi) || [];
-  if (!matches.length) return toast('No valid HEX codes found');
-  const parsed = matches.slice(0, SLOTS).map(fromHex).filter(Boolean);
-  addToEmpty(parsed, false);
-});
-
-/* PROCREATE .SWATCHES & ADOBE .ASE */
-const utf16be = str => {
-  const buf = new Uint8Array(str.length * 2);
-  for (let i = 0; i < str.length; i++) {
-    const code = str.charCodeAt(i);
-    buf[i * 2] = (code >> 8) & 0xff;
-    buf[i * 2 + 1] = code & 0xff;
-  }
-  return buf;
-};
-const readUtf16be = (bytes, offset, charLen) => {
-  let out = '';
-  for (let i = 0; i < charLen; i++) {
-    out += String.fromCharCode((bytes[offset + i * 2] << 8) | bytes[offset + i * 2 + 1]);
-  }
-  return out;
-};
-const f32be = val => {
-  const b = new ArrayBuffer(4);
-  new DataView(b).setFloat32(0, val, false);
-  return new Uint8Array(b);
-};
-const readF32be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getFloat32(0, false);
-const u32be = val => {
-  const b = new ArrayBuffer(4);
-  new DataView(b).setUint32(0, val, false);
-  return new Uint8Array(b);
-};
-const readU32be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getUint32(0, false);
-const u16be = val => {
-  const b = new ArrayBuffer(2);
-  new DataView(b).setUint16(0, val, false);
-  return new Uint8Array(b);
-};
-const readU16be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 2).getUint16(0, false);
-
-function concatBytes(chunks) {
-  const total = chunks.reduce((acc, c) => acc + c.length, 0);
-  const out = new Uint8Array(total);
-  let pos = 0;
-  for (const c of chunks) { out.set(c, pos); pos += c.length; }
-  return out;
-}
-
-function buildSwatchesBin(paletteName, slotArr) {
-  const title = paletteName || 'Untitled';
-  const nameBytes = utf16be(title);
-  const chunks = [u32be(title.length), nameBytes];
-  for (let i = 0; i < SLOTS; i++) {
-    const sw = slotArr[i];
-    if (!sw) {
-      chunks.push(new Uint8Array(20));
-    } else {
-      chunks.push(
-        f32be(sw.hue), f32be(sw.saturation), f32be(sw.brightness),
-        f32be(sw.alpha ?? 1), f32be(sw.colorSpace ?? 0)
-      );
-    }
-  }
-  return concatBytes(chunks);
-}
-
-function parseSwatchesBin(bytes) {
-  let pos = 0;
-  const nameLen = readU32be(bytes, pos); pos += 4;
-  const parsedName = readUtf16be(bytes, pos, nameLen); pos += nameLen * 2;
-  const parsedSlots = [];
-  for (let i = 0; i < SLOTS; i++) {
-    if (pos + 20 > bytes.length) { parsedSlots.push(null); continue; }
-    const hue = readF32be(bytes, pos);
-    const saturation = readF32be(bytes, pos + 4);
-    const brightness = readF32be(bytes, pos + 8);
-    const alpha = readF32be(bytes, pos + 12);
-    const colorSpace = readF32be(bytes, pos + 16);
-    pos += 20;
-    const isEmpty = hue === 0 && saturation === 0 && brightness === 0 && alpha === 0 && colorSpace === 0;
-    parsedSlots.push(isEmpty ? null : { hue: clamp(hue, 0, 1), saturation: clamp(saturation, 0, 1), brightness: clamp(brightness, 0, 1), alpha: alpha || 1, colorSpace: 0 });
-  }
-  return { name: parsedName, swatches: parsedSlots };
-}
-
-async function exportProcreate() {
-  if (!window.JSZip) return toast('JSZip unavailable');
-  const zip = new JSZip();
-  const safeName = (name || 'Palette').trim() || 'Palette';
-  zip.file('Swatches.json', JSON.stringify([{ name: safeName, swatches: swatches.map(s => s ? { hue: s.hue, saturation: s.saturation, brightness: s.brightness, alpha: 1, colorSpace: 0 } : null) }]));
-  zip.file('Swatches.bin', buildSwatchesBin(safeName, swatches));
-  const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = safeName + '.swatches';
-  a.click();
-  toast('Exported ' + safeName + '.swatches');
-}
-
-$('fileInput').addEventListener('change', async e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    if (!window.JSZip) throw new Error('JSZip missing');
-    const zip = await JSZip.loadAsync(file);
-    const binFile = zip.file(/\.bin$/i)[0];
-    const jsonFile = zip.file(/\.json$/i)[0];
-    if (binFile) {
-      const binData = await binFile.async('uint8array');
-      const parsed = parseSwatchesBin(binData);
-      commitNow();
-      name = parsed.name || file.name.replace(/\.swatches$/i, '');
-      swatches = parsed.swatches;
-      render(); commitNow();
-      toast('Loaded ' + name);
-    } else if (jsonFile) {
-      const txt = await jsonFile.async('string');
-      const arr = JSON.parse(txt);
-      const first = Array.isArray(arr) ? arr[0] : arr;
-      commitNow();
-      name = first.name || file.name.replace(/\.swatches$/i, '');
-      swatches = [...Array(SLOTS).keys()].map(i => first.swatches?.[i] ? { ...first.swatches[i], alpha: 1, colorSpace: 0 } : null);
-      render(); commitNow();
-      toast('Loaded ' + name);
-    } else {
-      toast('Unrecognized .swatches archive');
-    }
-  } catch (err) {
-    toast('Failed to load file: ' + err.message);
-  }
-  e.target.value = '';
-});
-
-$('saveBtn').addEventListener('click', exportProcreate);
-
-$('aseBtn').addEventListener('click', () => {
-  const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No active swatches to export');
-  const title = (name || 'Palette').trim() || 'Palette';
-
-  const buildColorBlock = (label, [r, g, b]) => {
-    const lblBytes = utf16be(label + '\0');
-    const body = concatBytes([
-      u16be(label.length + 1),
-      lblBytes,
-      new Uint8Array([82, 71, 66, 32]),
-      f32be(r / 255), f32be(g / 255), f32be(b / 255),
-      u16be(0)
-    ]);
-    return concatBytes([u16be(0x0001), u32be(body.length), body]);
-  };
-
-  const grpStartBody = concatBytes([u16be(title.length + 1), utf16be(title + '\0')]);
-  const grpStart = concatBytes([u16be(0xC001), u32be(grpStartBody.length), grpStartBody]);
-  const grpEnd = concatBytes([u16be(0xC002), u32be(0)]);
-
-  const colorBlocks = active.map((s, idx) => buildColorBlock('Swatch ' + (idx + 1) + ' ' + toHex(s), swRgb(s)));
-  const blocksAll = concatBytes([grpStart, ...colorBlocks, grpEnd]);
-
-  const header = concatBytes([
-    new Uint8Array([65, 83, 69, 70]),
-    u16be(1), u16be(0),
-    u32be(active.length + 2)
-  ]);
-
-  const blob = new Blob([concatBytes([header, blocksAll])], { type: 'application/octet-stream' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = title + '.ase';
-  a.click();
-  toast('Exported ' + title + '.ase');
-});
-
-$('cardBtn').addEventListener('click', () => {
-  const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No active swatches for PNG card');
-  const c = document.createElement('canvas');
-  c.width = 1200; c.height = 630;
-  const g = c.getContext('2d');
-  g.fillStyle = '#0b0e14';
-  g.fillRect(0, 0, c.width, c.height);
-
-  g.fillStyle = '#f3f4f6';
-  g.font = '800 36px Outfit, sans-serif';
-  g.fillText((name || 'CHROMATIK PALETTE').toUpperCase(), 60, 84);
-
-  g.fillStyle = '#94a3b8';
-  g.font = '600 18px Plus Jakarta Sans, sans-serif';
-  g.fillText('CHROMATIK // ' + active.length + ' VECTORS', 60, 118);
-
-  const cols = Math.min(active.length, 10);
-  const rows = Math.ceil(active.length / 10);
-  const gap = 16;
-  const availW = c.width - 120 - gap * (cols - 1);
-  const swW = Math.min(104, availW / cols);
-  const startY = 165;
-
-  active.forEach((s, idx) => {
-    const r = Math.floor(idx / 10);
-    const col = idx % 10;
-    const x = 60 + col * (swW + gap);
-    const y = startY + r * (swW + 44);
-    const hex = toHex(s);
-    g.fillStyle = hex;
-    g.beginPath();
-    g.roundRect(x, y, swW, swW, 12);
-    g.fill();
-
-    g.fillStyle = '#cbd5e1';
-    g.font = '700 13px Plus Jakarta Sans, sans-serif';
-    g.fillText(hex, x, y + swW + 22);
+  filtered.forEach((t, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = t.name + ' (' + t.hexes.length + ')';
+    subSel.appendChild(opt);
   });
 
-  const a = document.createElement('a');
-  a.href = c.toDataURL('image/png');
-  a.download = (name || 'palette') + '-card.png';
-  a.click();
-  toast('Downloaded PNG Card');
-});
-
-$('shareUrlBtn').addEventListener('click', () => {
-  const compact = swatches.map(s => s ? toHex(s).slice(1) : '').join(',');
-  const url = location.origin + location.pathname + '#p=' + encodeURIComponent(name || 'Palette') + '&c=' + encodeURIComponent(compact);
-  copyText(url, 'Shareable URL Copied');
-});
-
-function loadFromHash() {
-  if (!location.hash.startsWith('#p=')) return false;
-  try {
-    const params = new URLSearchParams(location.hash.slice(1));
-    const pName = params.get('p') || '';
-    const cStr = params.get('c') || '';
-    const parts = cStr.split(',');
-    if (parts.length) {
-      name = pName;
-      swatches = [...Array(SLOTS).keys()].map(i => parts[i] ? fromHex('#' + parts[i]) : null);
-      return true;
-    }
-  } catch {}
-  return false;
+  subSel._filtered = filtered;
+  selectThemeAtIndex(0);
 }
 
-function renderLibrary() {
-  const folderFilterEl = $('folderFilter');
-  const prevFilter = folderFilterEl.value || 'ALL';
-  const folders = [...new Set(library.map(item => item.folder || 'Default_Project'))];
-  folderFilterEl.innerHTML = '<option value="ALL">All Folders (' + library.length + ')</option>';
-  folders.forEach(f => {
+function selectThemeAtIndex(idx) {
+  const list = $('themeSubSelect')._filtered || [];
+  const item = list[idx] || list[0];
+  if (!item) {
+    currentThemeList = [];
+    renderShiftedThemeChips();
+    return;
+  }
+  currentThemeList = item.hexes.map(fromHex).filter(Boolean);
+  renderShiftedThemeChips();
+}
+
+function initMasterThemes() {
+  const catSel = $('themeCategory');
+  catSel.innerHTML = '';
+  Object.keys(MASTER_CATALOG).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat + ' (' + MASTER_CATALOG[cat].length + ')';
+    catSel.appendChild(opt);
+  });
+  catSel.addEventListener('change', populateThemeSubSelect);
+  $('themeSearch').addEventListener('input', populateThemeSubSelect);
+  $('themeSubSelect').addEventListener('change', e => selectThemeAtIndex(Number(e.target.value) || 0));
+  $('themeTempSlide').addEventListener('input', renderShiftedThemeChips);
+  $('loadThemeBtn').addEventListener('click', () => {
+    const shifted = getShiftedThemeSwatches();
+    if (!shifted.length) return;
+    const list = $('themeSubSelect')._filtered || [];
+    const chosen = list[Number($('themeSubSelect').value) || 0];
+    const label = chosen ? chosen.name.toUpperCase().replace(/[^A-Z0-9]+/g, '_').slice(0, 24) : 'THEME';
+    addToEmpty(shifted, true, label);
+  });
+  populateThemeSubSelect();
+}
+
+function getAllFolders() {
+  const set = new Set(['Default_Project']);
+  library.forEach(item => { if (item.folder) set.add(item.folder); });
+  return [...set];
+}
+
+function refreshFolderFilter() {
+  const sel = $('folderFilter');
+  const prev = sel.value || 'ALL';
+  sel.innerHTML = '<option value="ALL">All Folders</option>';
+  getAllFolders().forEach(f => {
     const opt = document.createElement('option');
     opt.value = f;
     opt.textContent = f;
-    folderFilterEl.appendChild(opt);
+    sel.appendChild(opt);
   });
-  folderFilterEl.value = folders.includes(prevFilter) ? prevFilter : 'ALL';
+  sel.value = [...sel.options].some(o => o.value === prev) ? prev : 'ALL';
+}
 
-  const activeFilter = folderFilterEl.value;
-  const visible = library.filter(item => activeFilter === 'ALL' || (item.folder || 'Default_Project') === activeFilter);
-  const out = $('libOut');
-  out.innerHTML = '';
+function renderLibrary() {
+  refreshFolderFilter();
+  const filterVal = $('folderFilter').value;
+  const box = $('libOut');
+  box.innerHTML = '';
+  const items = library.filter(it => filterVal === 'ALL' || (it.folder || 'Default_Project') === filterVal);
 
-  if (!visible.length) {
-    out.innerHTML = '<p class="muted" style="font-size:11px;text-align:center;padding:14px">No archived palettes in this folder.</p>';
+  if (!items.length) {
+    box.innerHTML = '<p class="muted" style="font-size:11px;text-align:center;padding:12px;">No saved palettes in this folder.</p>';
     return;
   }
 
-  visible.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'libitem';
+  items.forEach(item => {
+    const realIdx = library.indexOf(item);
+    const div = document.createElement('div');
+    div.className = 'libitem';
 
-    const topRow = document.createElement('div');
-    topRow.className = 'row';
-    topRow.style.justifyContent = 'space-between';
+    const top = document.createElement('div');
+    top.className = 'row';
+    top.style.justifyContent = 'space-between';
 
-    const titleSpan = document.createElement('span');
-    titleSpan.style.cssText = 'font-weight:700;font-size:12px';
-    titleSpan.textContent = (item.name || 'Untitled') + ' [' + (item.folder || 'Default_Project') + ']';
+    const titleWrap = document.createElement('div');
+    titleWrap.innerHTML = '<strong style="font-size:12px">' + (item.name || 'UNTITLED') + '</strong> <span class="muted" style="font-size:10px">[' + (item.folder || 'Default_Project') + ']</span>';
 
-    const actions = document.createElement('div');
-    actions.className = 'row';
-    actions.style.gap = '4px';
+    const acts = document.createElement('div');
+    acts.className = 'row';
+    acts.style.gap = '4px';
 
     const loadBtn = document.createElement('button');
     loadBtn.type = 'button';
@@ -4548,8 +4197,8 @@ function renderLibrary() {
     loadBtn.textContent = 'Load';
     loadBtn.addEventListener('click', () => {
       commitNow();
-      name = item.name;
-      swatches = [...Array(SLOTS).keys()].map(i => item.swatches[i] ? { ...item.swatches[i], alpha: 1, colorSpace: 0 } : null);
+      name = item.name || 'LOADED_PALETTE';
+      swatches = [...Array(SLOTS).keys()].map(i => item.swatches[i] ? { ...item.swatches[i] } : null);
       render(); commitNow();
       toast('Loaded ' + name);
     });
@@ -4559,40 +4208,38 @@ function renderLibrary() {
     delBtn.className = 'btn small danger';
     delBtn.textContent = '\u00d7';
     delBtn.addEventListener('click', () => {
-      library = library.filter(x => x !== item);
+      library.splice(realIdx, 1);
       localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
       renderLibrary();
-      toast('Deleted from Archive');
     });
 
-    actions.append(loadBtn, delBtn);
-    topRow.append(titleSpan, actions);
+    acts.append(loadBtn, delBtn);
+    top.append(titleWrap, acts);
 
     const bar = document.createElement('div');
     bar.className = 'bar';
-    item.swatches.filter(Boolean).forEach(s => {
+    (item.swatches || []).filter(Boolean).forEach(s => {
       const seg = document.createElement('i');
       seg.style.background = toHex(s);
       bar.appendChild(seg);
     });
 
-    card.append(topRow, bar);
-    out.appendChild(card);
+    div.append(top, bar);
+    box.appendChild(div);
   });
 }
 
 $('saveLib').addEventListener('click', () => {
-  const folder = ($('folderNameInput').value || 'Default_Project').trim() || 'Default_Project';
-  const entry = {
-    name: (name || 'Untitled_Palette').trim(),
+  const folder = ($('folderNameInput').value || 'Default_Project').trim();
+  library.unshift({
+    name: name || 'UNTITLED_PALETTE',
     folder,
     swatches: JSON.parse(JSON.stringify(swatches)),
     ts: Date.now()
-  };
-  library.unshift(entry);
+  });
   localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
   renderLibrary();
-  toast('Archived to ' + folder);
+  toast('Saved to ' + folder);
 });
 $('folderFilter').addEventListener('change', renderLibrary);
 
@@ -4603,70 +4250,274 @@ $('cbSim').addEventListener('change', e => {
 
 $('runAuditBtn').addEventListener('click', () => {
   const mode = $('auditMode').value;
-  const activeIndices = [];
-  swatches.forEach((s, i) => { if (s) activeIndices.push({ idx: i, sw: s }); });
-
-  if (activeIndices.length < 2) {
-    $('auditReport').innerHTML = 'Need at least 2 active swatches in palette to run conflict audit.';
+  const active = swatches.map((s, idx) => s ? { idx, sw: s, hex: toHex(s), simRgb: simulateColorBlindnessRgb(swRgb(s), mode) } : null).filter(Boolean);
+  if (active.length < 2) {
+    $('auditReport').innerHTML = '// Need at least 2 active swatches to audit conflicts.';
     return;
   }
 
-  const simulated = activeIndices.map(item => ({
-    idx: item.idx,
-    origHex: toHex(item.sw),
-    simRgb: simulateColorBlindnessRgb(swRgb(item.sw), mode)
-  }));
-
   const conflicts = [];
-  for (let i = 0; i < simulated.length; i++) {
-    for (let j = i + 1; j < simulated.length; j++) {
-      const a = simulated[i], b = simulated[j];
+  for (let i = 0; i < active.length; i++) {
+    for (let j = i + 1; j < active.length; j++) {
+      const a = active[i], b = active[j];
       const dist = Math.hypot(a.simRgb[0] - b.simRgb[0], a.simRgb[1] - b.simRgb[1], a.simRgb[2] - b.simRgb[2]);
-      if (dist < 28) {
-        conflicts.push({ a, b, dist: Math.round(dist) });
-      }
+      if (dist < 28) conflicts.push({ a, b, dist: Math.round(dist) });
     }
   }
 
-  let html = '<div><strong>Mode:</strong> ' + mode.toUpperCase() + ' &middot; <strong>Active Swatches:</strong> ' + simulated.length + '</div>';
+  let html = '<div style="margin-bottom:6px"><strong>Audit Mode:</strong> ' + mode.toUpperCase() + ' &middot; <strong>Active:</strong> ' + active.length + '</div>';
   if (!conflicts.length) {
-    html += '<div style="color:var(--ok);margin-top:8px;font-weight:700">&#10004; No perceptual collision conflicts detected (all pairs &Delta; &ge; 28).</div>';
+    html += '<div style="color:var(--ok)">\u2713 No indistinguishable swatch collisions detected.</div>';
   } else {
-    html += '<div style="color:var(--danger);margin-top:8px;font-weight:700">&#9888; ' + conflicts.length + ' potential visual ambiguity pair(s):</div><ul style="margin:6px 0 0 18px;padding:0">';
-    conflicts.slice(0, 12).forEach(c => {
-      const simHexA = '#' + c.a.simRgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
-      const simHexB = '#' + c.b.simRgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
-      html += '<li style="margin-bottom:4px">Slot ' + (c.a.idx + 1) + ' (' + c.a.origHex + ' &rarr; <span style="color:' + simHexA + '">' + simHexA + '</span>) vs Slot ' + (c.b.idx + 1) + ' (' + c.b.origHex + ' &rarr; <span style="color:' + simHexB + '">' + simHexB + '</span>) [&Delta;' + c.dist + ']</li>';
+    html += '<div style="color:var(--danger);margin-bottom:6px">\u26A0 ' + conflicts.length + ' potential visual collision(s):</div>';
+    conflicts.slice(0, 8).forEach(c => {
+      const simHexA = '#' + c.a.simRgb.map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const simHexB = '#' + c.b.simRgb.map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+      html += '<div style="margin-bottom:4px">Slot ' + (c.a.idx + 1) + ' (' + c.a.hex + ') &harr; Slot ' + (c.b.idx + 1) + ' (' + c.b.hex + ') &rarr; looks like <span class="mono">' + simHexA + ' / ' + simHexB + '</span> (diff ' + c.dist + ')</div>';
     });
-    html += '</ul>';
   }
   $('auditReport').innerHTML = html;
 });
 
-$('undoBtn').addEventListener('click', undo);
-$('redoBtn').addEventListener('click', redo);
+function formatPaletteText(fmt) {
+  const active = swatches.filter(Boolean);
+  const slug = (name || 'palette').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'palette';
+  if (!active.length) return '';
+
+  if (fmt === 'hex') return active.map(toHex).join(', ');
+  if (fmt === 'rgb') return active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join(', ');
+  if (fmt === 'hsl') return active.map(s => { const h = rgbToHsl(...swRgb(s)); return 'hsl(' + h[0] + ', ' + h[1] + '%, ' + h[2] + '%)'; }).join(', ');
+  if (fmt === 'oklch') return active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join(', ');
+  if (fmt === 'css') return ':root {\n' + active.map((s, i) => '  --' + slug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n') + '\n}';
+  if (fmt === 'scss') return active.map((s, i) => '$' + slug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
+  if (fmt === 'tailwind') {
+    const entries = active.map((s, i) => '        "' + ((i + 1) * 100) + '": "' + toHex(s) + '"').join(',\n');
+    return 'module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        "' + slug + '": {\n' + entries + '\n        }\n      }\n    }\n  }\n};';
+  }
+  if (fmt === 'svg') {
+    const w = 60, h = 60;
+    const rects = active.map((s, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + toHex(s) + '"/>').join('\n');
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + (active.length * w) + '" height="' + h + '" viewBox="0 0 ' + (active.length * w) + ' ' + h + '">\n' + rects + '\n</svg>';
+  }
+  return JSON.stringify({ name: name || 'UNTITLED', colors: active.map(toHex) }, null, 2);
+}
+
+function updateTextExport() {
+  const fmt = $('txtFmt').value;
+  $('pasteBox').value = formatPaletteText(fmt);
+}
+
+$('txtFmt').addEventListener('change', updateTextExport);
+$$('[data-exfmt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const fmt = btn.dataset.exfmt;
+    $('txtFmt').value = fmt === 'tailwind' ? 'tailwind' : fmt;
+    updateTextExport();
+  });
+});
+
+$('copyTxtBtn').addEventListener('click', () => {
+  if (!$('pasteBox').value) return;
+  copyText($('pasteBox').value, 'Copied Export Output');
+});
+
+$('dlTxtBtn').addEventListener('click', () => {
+  const fmt = $('txtFmt').value;
+  const extMap = { hex: 'txt', rgb: 'txt', hsl: 'txt', oklch: 'txt', css: 'css', scss: 'scss', tailwind: 'js', svg: 'svg', json: 'json' };
+  const blob = new Blob([$('pasteBox').value], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (name || 'palette') + '.' + (extMap[fmt] || 'txt');
+  a.click();
+});
+
+$('importPasteBtn').addEventListener('click', () => {
+  const raw = $('pasteBox').value;
+  const matches = raw.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g) || [];
+  if (!matches.length) return toast('No valid HEX codes found');
+  const parsed = matches.slice(0, SLOTS).map(fromHex).filter(Boolean);
+  addToEmpty(parsed, true, name || 'IMPORTED_PALETTE');
+  toast('Imported ' + parsed.length + ' HEX colors');
+});
+
+$('shareUrlBtn').addEventListener('click', () => {
+  const hexes = swatches.map(s => s ? toHex(s).slice(1) : '').join(',');
+  const url = location.origin + location.pathname + '?n=' + encodeURIComponent(name || 'PALETTE') + '&c=' + encodeURIComponent(hexes);
+  copyText(url, 'Shareable URL Copied');
+});
+
+function loadFromUrlParams() {
+  const params = new URLSearchParams(location.search);
+  const cParam = params.get('c');
+  const nParam = params.get('n');
+  if (nParam) name = decodeURIComponent(nParam).slice(0, 50);
+  if (cParam) {
+    const parts = cParam.split(',');
+    swatches = [...Array(SLOTS).keys()].map(i => parts[i] ? fromHex('#' + parts[i]) : null);
+  }
+}
+
+function buildSwatchesPlist(pName, pSwatches) {
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const items = [...Array(SLOTS).keys()].map(i => {
+    const sw = pSwatches[i];
+    if (!sw) return '<dict/>';
+    return '<dict><key>alpha</key><real>1</real><key>brightness</key><real>' + sw.brightness.toFixed(6) + '</real><key>colorSpace</key><integer>0</integer><key>hue</key><real>' + sw.hue.toFixed(6) + '</real><key>saturation</key><real>' + sw.saturation.toFixed(6) + '</real></dict>';
+  }).join('');
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><array><dict><key>name</key><string>' + esc(pName || 'Chromatik') + '</string><key>swatches</key><array>' + items + '</array></dict></array></plist>';
+}
+
+$('saveBtn').addEventListener('click', async () => {
+  if (typeof JSZip === 'undefined') return toast('JSZip unavailable');
+  const zip = new JSZip();
+  zip.file('Swatches.plist', buildSwatchesPlist(name || 'Chromatik', swatches));
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (name || 'Chromatik') + '.swatches';
+  a.click();
+  toast('Exported .swatches file');
+});
+
+$('fileInput').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file || typeof JSZip === 'undefined') return;
+  try {
+    const zip = await JSZip.loadAsync(file);
+    const plistFile = zip.file('Swatches.plist') || Object.values(zip.files).find(f => f.name.endsWith('.plist'));
+    if (!plistFile) return toast('Invalid .swatches archive');
+    const txt = await plistFile.async('string');
+    const doc = new DOMParser().parseFromString(txt, 'text/xml');
+    const nameNode = doc.querySelector('dict > key');
+    const strings = [...doc.querySelectorAll('string')];
+    if (strings[0]?.textContent) name = strings[0].textContent;
+
+    const dicts = [...doc.querySelectorAll('array > dict')];
+    const parsed = [];
+    for (const d of dicts) {
+      const keys = [...d.children].filter(el => el.tagName === 'key');
+      const vals = [...d.children].filter(el => el.tagName !== 'key');
+      const obj = {};
+      keys.forEach((k, idx) => { obj[k.textContent] = parseFloat(vals[idx]?.textContent || '0'); });
+      if ('hue' in obj && 'saturation' in obj && 'brightness' in obj) {
+        parsed.push({ hue: obj.hue, saturation: obj.saturation, brightness: obj.brightness, alpha: 1, colorSpace: 0 });
+      }
+    }
+    swatches = [...Array(SLOTS).keys()].map(i => parsed[i] || null);
+    render(); commitNow();
+    toast('Loaded ' + (name || file.name));
+  } catch {
+    toast('Failed to parse .swatches file');
+  }
+});
+
+$('aseBtn').addEventListener('click', () => {
+  const active = swatches.filter(Boolean);
+  if (!active.length) return toast('No active swatches for .ASE');
+  const encUtf16 = str => {
+    const buf = new Uint8Array(str.length * 2 + 2);
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      buf[i * 2] = (code >> 8) & 0xff;
+      buf[i * 2 + 1] = code & 0xff;
+    }
+    return buf;
+  };
+  const chunks = [];
+  active.forEach((sw, idx) => {
+    const titleBytes = encUtf16('Swatch ' + (idx + 1) + '\0');
+    const [r, g, b] = swRgb(sw).map(v => v / 255);
+    const body = new Uint8Array(titleBytes.length + 4 + 12 + 2);
+    body.set(titleBytes, 0);
+    const dv = new DataView(body.buffer);
+    let off = titleBytes.length;
+    body[off++] = 82; body[off++] = 71; body[off++] = 66; body[off++] = 32;
+    dv.setFloat32(off, r, false); off += 4;
+    dv.setFloat32(off, g, false); off += 4;
+    dv.setFloat32(off, b, false); off += 4;
+    dv.setUint16(off, 0, false);
+
+    const block = new Uint8Array(6 + body.length);
+    const bdv = new DataView(block.buffer);
+    bdv.setUint16(0, 0x0001, false);
+    bdv.setUint32(2, body.length, false);
+    block.set(body, 6);
+    chunks.push(block);
+  });
+
+  const totalLen = 12 + chunks.reduce((acc, c) => acc + c.length, 0);
+  const out = new Uint8Array(totalLen);
+  const odv = new DataView(out.buffer);
+  out[0] = 65; out[1] = 83; out[2] = 69; out[3] = 70;
+  odv.setUint16(4, 1, false);
+  odv.setUint16(6, 0, false);
+  odv.setUint32(8, active.length, false);
+  let pos = 12;
+  chunks.forEach(c => { out.set(c, pos); pos += c.length; });
+
+  const blob = new Blob([out], { type: 'application/octet-stream' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (name || 'palette') + '.ase';
+  a.click();
+  toast('Exported Adobe .ASE Swatch File');
+});
+
+$('cardBtn').addEventListener('click', () => {
+  const active = swatches.filter(Boolean);
+  if (!active.length) return toast('No active swatches for PNG');
+  const c = document.createElement('canvas');
+  c.width = 900; c.height = 360;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0D1117';
+  g.fillRect(0, 0, c.width, c.height);
+
+  g.fillStyle = '#F3F4F6';
+  g.font = 'bold 24px sans-serif';
+  g.fillText(name || 'CHROMATIK PALETTE', 36, 54);
+
+  const cols = Math.min(active.length, 10);
+  const rows = Math.ceil(active.length / 10);
+  const swW = (900 - 72 - (cols - 1) * 10) / cols;
+  const swH = rows === 1 ? 190 : 95;
+
+  active.forEach((s, idx) => {
+    const r = Math.floor(idx / 10);
+    const col = idx % 10;
+    const x = 36 + col * (swW + 10);
+    const y = 80 + r * (swH + 36);
+    const hex = toHex(s);
+    g.fillStyle = hex;
+    g.beginPath();
+    g.roundRect(x, y, swW, swH, 10);
+    g.fill();
+
+    g.fillStyle = '#9CA3AF';
+    g.font = 'bold 11px sans-serif';
+    g.fillText(hex, x, y + swH + 16);
+  });
+
+  const a = document.createElement('a');
+  a.href = c.toDataURL('image/png');
+  a.download = (name || 'palette') + '.png';
+  a.click();
+  toast('Downloaded PNG Swatch Card');
+});
 
 initThemeScroller();
 setThemeByIndex(3, false);
-buildHarmonyWheel();
 buildPins();
-renderTrendingStrip();
-populateThemeCatalog();
+buildHarmonyWheel();
 initHueMatrixTab();
+initMasterThemes();
 renderGradStops();
 updateGradientPreview();
 updateRamp();
 renderLibrary();
-
-const loadedFromUrl = loadFromHash();
-if (!loadedFromUrl) {
-  loadIntoFirstFive(AMETHYST_TO_ORCHID_HEXES, 'AMETHYST_ORCHID');
-} else {
-  render();
-}
+loadFromUrlParams();
 steps = [snap()];
-histIndex = 0;
 updateHistoryButtons();
+render();
 })();
 </script>
 </body>
