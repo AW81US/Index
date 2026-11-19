@@ -196,7 +196,89 @@ input[type="range"].temp-range {
   font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
   font-weight: 700; display: flex; align-items: center; gap: 8px;
 }
-.card h2::before, .label::before { content: '•'; color: var(--accent); font-size: 14px; font-weight: 900; }
+.card h2::before, .label::before { content: '\2022'; color: var(--accent); font-size: 14px; font-weight: 900; }
+
+/* Quick 5-Swatch Bar & Trending Strip */
+.quick-bar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+@media(max-width: 820px) { .quick-bar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width: 460px) { .quick-bar-grid { grid-template-columns: 1fr; } }
+
+.qswatch {
+  min-height: 112px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.qswatch:hover { transform: translateY(-2px); border-color: var(--accent); }
+.qswatch.active { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+.qswatch-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.qswatch-lock {
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 4px 7px;
+  font-size: 10px;
+  line-height: 1;
+}
+.qswatch-lock.locked {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.qswatch-hex { font-family: var(--font-mono); font-size: 14px; font-weight: 800; letter-spacing: 0.02em; }
+.qswatch-sub { font-size: 10px; font-weight: 600; opacity: 0.88; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.trending-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 10px;
+}
+.trend-pill-card {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: border-color .18s ease;
+}
+.trend-pill-card:hover { border-color: var(--accent); }
+.trend-swatches {
+  display: flex;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.trend-swatches i { flex: 1; }
+
+.contrast-helper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media(max-width: 640px) { .contrast-helper-grid { grid-template-columns: 1fr; } }
+.contrast-sample-box {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .bench { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 @media(max-width: 1200px) { .bench { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } .col-image { grid-column: 1 / -1; } }
@@ -247,8 +329,8 @@ input[type="range"].temp-range {
 .slot.empty { border: 1.5px dashed var(--line); background: transparent; }
 .slot.selected { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); z-index: 3; }
 .slot.multi { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); z-index: 3; }
-.slot.locked::after { content: "🔒"; position: absolute; top: 4px; right: 4px; font-size: 9px; pointer-events: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
-.slot.conflict::before { content: "⚠️"; position: absolute; bottom: 4px; right: 4px; font-size: 9px; pointer-events: none; z-index: 4; }
+.slot.locked::after { content: "\1F512"; position: absolute; top: 4px; right: 4px; font-size: 9px; pointer-events: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+.slot.conflict::before { content: "\26A0\FE0F"; position: absolute; bottom: 4px; right: 4px; font-size: 9px; pointer-events: none; z-index: 4; }
 .slot.drop { box-shadow: 0 0 0 2px var(--accent); }
 .slot.ins-before::before, .slot.ins-after::before {
   content: ""; position: absolute; top: -4px; bottom: -4px; width: 4px; border-radius: 2px;
@@ -525,6 +607,25 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
     </div>
   </header>
 
+  <!-- Quick 5-Swatch Bar & Trending Strip Synced with 30-Slot Grid -->
+  <section class="card previewable" aria-label="Quick 5-Swatch Generator & Trending Strip">
+    <div class="row" style="justify-content:space-between">
+      <span class="label">Quick 5-Swatch Bar [Synced w/ Slots 1–5]</span>
+      <div class="row" style="gap:6px">
+        <button type="button" id="quickAmethystBtn" class="btn small">Amethyst &rarr; Orchid</button>
+        <button type="button" id="quickRandomBtn" class="btn small primary" title="Shortcut: Spacebar">&#127922; Randomize [Space]</button>
+      </div>
+    </div>
+
+    <div id="quickPaletteBar" class="quick-bar-grid"></div>
+
+    <div class="row" style="justify-content:space-between;margin-top:4px">
+      <span class="label">Trending &amp; Curated Palettes</span>
+      <span class="muted" style="font-size:11px">Load into Slots 1–5 or Deploy into empty grid slots</span>
+    </div>
+    <div id="trendingStrip" class="trending-strip"></div>
+  </section>
+
   <div class="bench">
     <div class="col">
       <section class="card" aria-label="Palette Grid">
@@ -560,7 +661,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
           <button id="applyGlobalBtn" type="button" class="btn small primary" disabled>Commit Shift</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="slider"><span>HUE</span><input id="globH" type="range" min="-180" max="180" value="0"><span id="globHVal">0°</span></div>
+          <div class="slider"><span>HUE</span><input id="globH" type="range" min="-180" max="180" value="0"><span id="globHVal">0&deg;</span></div>
           <div class="slider"><span>SAT</span><input id="globS" type="range" min="-50" max="50" value="0"><span id="globSVal">0%</span></div>
           <div class="slider"><span>BRT</span><input id="globB" type="range" min="-50" max="50" value="0"><span id="globBVal">0%</span></div>
           <div class="slider"><span>TMP</span><input id="globT" type="range" min="-50" max="50" value="0"><span id="globTVal">0</span></div>
@@ -620,8 +721,27 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
           </div>
         </div>
 
+        <!-- Quick WCAG Contrast & FG/BG Text Preview Helper -->
+        <div class="contrast-helper-grid previewable">
+          <div id="fgBgPreviewLight" class="contrast-sample-box">
+            <div class="row" style="justify-content:space-between;gap:4px">
+              <span style="font-size:10px;font-weight:800;letter-spacing:0.04em">ON LIGHT (#F8FAFC)</span>
+              <span id="wcagLightScore" class="mono" style="font-size:10px;font-weight:800">--</span>
+            </div>
+            <div style="font-size:12px;font-weight:700">Sample Heading &amp; Body Text</div>
+          </div>
+          <div id="fgBgPreviewDark" class="contrast-sample-box">
+            <div class="row" style="justify-content:space-between;gap:4px">
+              <span style="font-size:10px;font-weight:800;letter-spacing:0.04em">ON DARK (#090D16)</span>
+              <span id="wcagDarkScore" class="mono" style="font-size:10px;font-weight:800">--</span>
+            </div>
+            <div style="font-size:12px;font-weight:700">Sample Heading &amp; Body Text</div>
+          </div>
+        </div>
+
         <div class="pins-row">
           <button id="pinBtn" type="button" class="btn small">Pin Matrix</button>
+          <button id="clearPinsBtn" type="button" class="btn small danger" title="Clear all pinned colors">Clear Pins</button>
           <div id="pins" class="pins previewable" aria-label="Pinned colors"></div>
         </div>
 
@@ -699,7 +819,7 @@ button.hname[aria-pressed="true"] { color: var(--accent); background: var(--pane
             <div id="gradAngleWrap" class="row" style="gap:4px;flex:1">
               <span class="muted" style="font-size:10px;font-family:var(--font-mono)">ANG</span>
               <input id="gradAngle" type="range" min="0" max="360" value="90" style="flex:1">
-              <span id="gradAngleVal" class="mono" style="font-size:10px;min-width:34px;text-align:right">90°</span>
+              <span id="gradAngleVal" class="mono" style="font-size:10px;min-width:34px;text-align:right">90&deg;</span>
             </div>
           </div>
 
@@ -891,6 +1011,14 @@ const $ = id => document.getElementById(id);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
+const AMETHYST_TO_ORCHID_HEXES = ['#231942', '#5E548E', '#9F86C0', '#BE95C4', '#E0B1CB'];
+const TRENDING_CURATED_PALETTES = [
+  { name: 'AMETHYST_ORCHID', hexes: ['#231942', '#5E548E', '#9F86C0', '#BE95C4', '#E0B1CB'] },
+  { name: 'FIERY_OCEAN', hexes: ['#660708', '#D90429', '#FAF3DD', '#003049', '#669BBC'] },
+  { name: 'ROSE_PETAL', hexes: ['#780000', '#E63946', '#F48C06', '#FF9EBB', '#CAF0F8'] },
+  { name: 'OCEAN_SERENITY', hexes: ['#03045E', '#0077B6', '#00B4D8', '#90E0EF', '#CAF0F8'] }
+];
+
 function addToEmpty(newSwatches, replaceAll = false, newName = null) {
   commitNow();
   if (newName) name = newName;
@@ -912,6 +1040,23 @@ function addToEmpty(newSwatches, replaceAll = false, newName = null) {
   render();
   commitNow();
   toast('Vectors Deployed to Palette');
+}
+
+function loadIntoFirstFive(hexList, label = null) {
+  commitNow();
+  if (label) name = label;
+  hexList.slice(0, 5).forEach((hex, i) => {
+    const sw = fromHex(hex);
+    if (!sw) return;
+    const keepLock = !!swatches[i]?._locked;
+    if (!keepLock) {
+      swatches[i] = { ...sw, alpha: 1, colorSpace: 0 };
+    }
+  });
+  selected = 0;
+  render();
+  commitNow();
+  toast('Updated Quick 5-Swatch Bar & Grid Slots 1–5');
 }
 
 function hsbToRgb(h, s, v) {
@@ -1067,6 +1212,13 @@ function getContrastRatio(rgb1, rgb2) {
   return (brightest + 0.05) / (darkest + 0.05);
 }
 
+function wcagRating(ratio) {
+  if (ratio >= 7) return 'AAA';
+  if (ratio >= 4.5) return 'AA';
+  if (ratio >= 3) return 'AA-LG';
+  return 'FAIL';
+}
+
 function simulateColorBlindnessRgb([r, g, b], type) {
   let nr = r, ng = g, nb = b;
   if (type === 'protan') {
@@ -1136,6 +1288,47 @@ function toast(msg, ms = 2400) {
   t._tid = setTimeout(() => t.hidden = true, ms);
 }
 
+function fallbackCopyText(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = String(text ?? '');
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    document.execCommand('copy');
+    ta.remove();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function copyText(text, successMsg) {
+  const val = String(text ?? '');
+  if (!val) return;
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(val).then(
+        () => { if (successMsg) toast(successMsg); },
+        () => {
+          fallbackCopyText(val);
+          if (successMsg) toast(successMsg);
+        }
+      ).catch(() => {
+        fallbackCopyText(val);
+        if (successMsg) toast(successMsg);
+      });
+      return;
+    }
+  } catch {}
+  fallbackCopyText(val);
+  if (successMsg) toast(successMsg);
+}
+
 const THEME_STOPS = ['ember', 'sand', 'neutral', 'cobalt', 'glacier'];
 let activeThemeIdx = 3;
 let isProgrammaticScroll = false;
@@ -1186,6 +1379,138 @@ function initThemeScroller() {
   $('themePrevBtn').addEventListener('click', () => setThemeByIndex(activeThemeIdx - 1));
   $('themeNextBtn').addEventListener('click', () => setThemeByIndex(activeThemeIdx + 1));
 }
+
+/* Quick 5-Swatch Bar & Trending Strip */
+function renderQuickFiveBar() {
+  const bar = $('quickPaletteBar');
+  if (!bar) return;
+  bar.innerHTML = '';
+
+  for (let i = 0; i < 5; i++) {
+    const sw = swatches[i];
+    const card = document.createElement('div');
+    card.className = 'qswatch' + (selected === i ? ' active' : '');
+    const hex = sw ? toHex(sw) : '#141A26';
+    const ratioDark = sw ? getContrastRatio(swRgb(sw), [0, 0, 0]) : 1;
+    const fg = ratioDark >= 4.5 ? '#FFFFFF' : '#11141D';
+
+    card.style.background = sw ? hex : 'var(--slot-empty)';
+    card.style.color = sw ? fg : 'var(--muted)';
+    card.title = sw ? hex + ' \u00B7 Click to copy & inspect' : 'Slot ' + (i + 1) + ' empty';
+
+    const topRow = document.createElement('div');
+    topRow.className = 'qswatch-top';
+
+    const slotTag = document.createElement('span');
+    slotTag.style.cssText = 'font-size:10px;font-weight:800;opacity:0.85';
+    slotTag.textContent = '0' + (i + 1);
+
+    const lockBtn = document.createElement('button');
+    lockBtn.type = 'button';
+    lockBtn.className = 'qswatch-lock' + (isLocked(i) ? ' locked' : '');
+    lockBtn.textContent = isLocked(i) ? '\uD83D\uDD12' : '\uD83D\uDD13';
+    lockBtn.title = isLocked(i) ? 'Unlock Slot ' + (i + 1) : 'Lock Slot ' + (i + 1);
+    lockBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!swatches[i]) return;
+      commitNow();
+      swatches[i]._locked = !swatches[i]._locked;
+      render();
+      commitNow();
+      toast((swatches[i]._locked ? 'Locked ' : 'Unlocked ') + toHex(swatches[i]));
+    });
+
+    topRow.append(slotTag, lockBtn);
+
+    const bottomInfo = document.createElement('div');
+    const hexEl = document.createElement('div');
+    hexEl.className = 'qswatch-hex';
+    hexEl.textContent = sw ? hex : 'EMPTY';
+
+    const subEl = document.createElement('div');
+    subEl.className = 'qswatch-sub';
+    subEl.textContent = sw ? getHumanColorName(sw) : 'Click Randomize or Load';
+
+    bottomInfo.append(hexEl, subEl);
+    card.append(topRow, bottomInfo);
+
+    card.addEventListener('click', () => {
+      selected = i;
+      anchor = i;
+      if (sw) {
+        setDraft({ ...sw });
+        copyText(hex, 'Copied ' + hex);
+      }
+      render();
+    });
+
+    bar.appendChild(card);
+  }
+}
+
+function renderTrendingStrip() {
+  const strip = $('trendingStrip');
+  if (!strip) return;
+  strip.innerHTML = '';
+
+  TRENDING_CURATED_PALETTES.forEach(item => {
+    const box = document.createElement('div');
+    box.className = 'trend-pill-card';
+
+    const bar = document.createElement('div');
+    bar.className = 'trend-swatches';
+    item.hexes.forEach(h => {
+      const seg = document.createElement('i');
+      seg.style.background = h;
+      seg.title = h;
+      bar.appendChild(seg);
+    });
+
+    const footer = document.createElement('div');
+    footer.className = 'row';
+    footer.style.justifyContent = 'space-between';
+    footer.style.gap = '4px';
+
+    const title = document.createElement('span');
+    title.style.cssText = 'font-size:10px;font-weight:800;letter-spacing:0.03em';
+    title.textContent = item.name.replace(/_/g, ' ');
+
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'row';
+    btnGroup.style.gap = '4px';
+
+    const load5Btn = document.createElement('button');
+    load5Btn.type = 'button';
+    load5Btn.className = 'btn small';
+    load5Btn.style.padding = '4px 7px';
+    load5Btn.style.fontSize = '10px';
+    load5Btn.textContent = '1–5';
+    load5Btn.title = 'Load into Slots 1–5';
+    load5Btn.addEventListener('click', () => loadIntoFirstFive(item.hexes, item.name));
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn small primary';
+    addBtn.style.padding = '4px 7px';
+    addBtn.style.fontSize = '10px';
+    addBtn.textContent = '+ Grid';
+    addBtn.title = 'Deploy into next empty palette slots';
+    addBtn.addEventListener('click', () => {
+      const parsed = item.hexes.map(fromHex).filter(Boolean);
+      addToEmpty(parsed, false);
+    });
+
+    btnGroup.append(load5Btn, addBtn);
+    footer.append(title, btnGroup);
+    box.append(bar, footer);
+    strip.appendChild(box);
+  });
+}
+
+$('quickAmethystBtn').addEventListener('click', () => {
+  loadIntoFirstFive(AMETHYST_TO_ORCHID_HEXES, 'AMETHYST_ORCHID');
+});
+$('quickRandomBtn').addEventListener('click', randomizeUnlocked);
 
 const grid = $('grid');
 for (let i = 0; i < SLOTS; i++) {
@@ -1261,6 +1586,7 @@ function render() {
   $('startHint').hidden = swatches.some(Boolean);
   $('applyGlobalBtn').disabled = !swatches.some(Boolean);
   scheduleCommit();
+  renderQuickFiveBar();
   renderEditor();
   updateTextExport();
 }
@@ -1336,6 +1662,7 @@ function previewGlobalShift() {
   [...grid.children].forEach((el, i) => {
     el.style.background = swatches[i] ? toHex(swatches[i]) : '';
   });
+  renderQuickFiveBar();
   updateTextExport();
 }
 
@@ -1682,6 +2009,12 @@ $('pinBtn').addEventListener('click', () => {
   renderPins();
   toast('Pinned to Matrix Slot ' + (idx + 1));
 });
+$('clearPinsBtn').addEventListener('click', () => {
+  if (!pins.some(Boolean)) return toast('Pin Matrix already empty');
+  pins = new Array(10).fill(null);
+  renderPins();
+  toast('Pin Matrix Cleared');
+});
 
 const labColor = () => draft || swatches[selected];
 
@@ -1727,11 +2060,19 @@ function renderEditor() {
     $('colorPsychNote').textContent = '// ' + getColorPsychology(cur);
     $('multiFormatReadout').textContent = hex + ' \u00B7 rgb(' + rgb.join(', ') + ') \u00B7 hsl(' + hsl[0] + '\u00B0, ' + hsl[1] + '%, ' + hsl[2] + '%) \u00B7 cmyk(' + cmyk.join('%, ') + '%) \u00B7 oklch(' + oklch + ')';
 
-    const ratioWhite = getContrastRatio(rgb, [255, 255, 255]).toFixed(1);
-    const ratioBlack = getContrastRatio(rgb, [0, 0, 0]).toFixed(1);
-    const bestRatio = Math.max(ratioWhite, ratioBlack);
+    const ratioWhite = getContrastRatio(rgb, [248, 250, 252]);
+    const ratioBlack = getContrastRatio(rgb, [9, 13, 22]);
+    const bestRatio = Math.max(ratioWhite, ratioBlack).toFixed(1);
     $('contrastBadge').textContent = 'WCAG: ' + bestRatio + ':1';
-    $('contrastBadge').title = 'Contrast against White: ' + ratioWhite + ':1 | Against Black: ' + ratioBlack + ':1';
+    $('contrastBadge').title = 'Contrast against Light: ' + ratioWhite.toFixed(1) + ':1 | Against Dark: ' + ratioBlack.toFixed(1) + ':1';
+
+    $('fgBgPreviewLight').style.background = '#F8FAFC';
+    $('fgBgPreviewLight').style.color = hex;
+    $('wcagLightScore').textContent = ratioWhite.toFixed(1) + ':1 (' + wcagRating(ratioWhite) + ')';
+
+    $('fgBgPreviewDark').style.background = '#090D16';
+    $('fgBgPreviewDark').style.color = hex;
+    $('wcagDarkScore').textContent = ratioBlack.toFixed(1) + ':1 (' + wcagRating(ratioBlack) + ')';
 
     fillChipRow($('twScale'), cur, tailwindScaleOf10(cur));
     fillChipRow($('hues'), cur, huesOf10(cur));
@@ -1741,6 +2082,12 @@ function renderEditor() {
     $('colorPsychNote').textContent = '// Psychology & Usage: Select a color to view emotional & industry profile.';
     $('multiFormatReadout').textContent = 'Select a swatch to inspect HEX \u00B7 RGB \u00B7 HSL \u00B7 CMYK \u00B7 OKLCH';
     $('contrastBadge').textContent = 'Ratio: --';
+    $('fgBgPreviewLight').style.background = 'var(--panel2)';
+    $('fgBgPreviewLight').style.color = 'var(--muted)';
+    $('wcagLightScore').textContent = '--';
+    $('fgBgPreviewDark').style.background = 'var(--panel2)';
+    $('fgBgPreviewDark').style.color = 'var(--muted)';
+    $('wcagDarkScore').textContent = '--';
     fillChipRow($('twScale'), null, []);
     fillChipRow($('hues'), null, []);
     fillChipRow($('tonesShades'), null, []);
@@ -1753,8 +2100,7 @@ function renderEditor() {
     if (e.target.tagName === 'BUTTON') return;
     const c = id === 'chipSaved' ? swatches[selected] : labColor();
     if (!c) return;
-    navigator.clipboard?.writeText(toHex(c));
-    toast('Copied ' + toHex(c));
+    copyText(toHex(c), 'Copied ' + toHex(c));
   });
 });
 
@@ -2484,8 +2830,7 @@ $('cssGradType').addEventListener('change', updateGradientPreview);
 $('gradAngle').addEventListener('input', updateGradientPreview);
 $('copyGradCssBtn').addEventListener('click', () => {
   const cssTxt = buildGradientCss();
-  navigator.clipboard?.writeText(cssTxt);
-  toast('Copied CSS Gradient');
+  copyText(cssTxt, 'Copied CSS Gradient');
 });
 
 function updateRamp() {
@@ -3621,351 +3966,661 @@ Neutral Soft Deep: #5B4234, #472F21, #331C0E, #1F0900
 Neutral Rich Deep: #483327, #352014, #220D01, #0F0000
 
 Specialty & Illustrative Skin Tones
-Fantasy Pale: #FDF9F6, #F5ECE5, #EDDFD4, #E5D3C3
-Fantasy Elf: #EEDCCE, #DFCCA9, #D0BC9F, #C2AC95
-Fantasy Orc/Olive: #B5C99A, #9AB37B, #7F9C5C, #64853D
-Fantasy Bronze: #CD853F, #BC752F, #AB651F, #9A550F
-Fantasy Copper: #D27D46, #C16D36, #B05D26, #9F4D16
-Fantasy Golden: #F0DC82, #DFCB71, #CEBA60, #BDA94F
-Fantasy Dark Elf: #3B444B, #2C353D, #1D262F, #0E1721
-Fantasy Shadow: #2F353B, #20262C, #11171D, #02080E
-Fantasy Warm Tan: #D2906C, #C17F5B, #B06E4A, #9F5D39
-Fantasy Deep Dusk: #4A3B4C, #392A3B, #28192A, #170819
+Anime & Manga Skin: #FFE4D6, #F7C8B3, #E5A68E, #C9826B
+Cel-Shaded Warm Skin: #F9D5BE, #E8B092, #C88468, #9E5B43
+Stylized Fantasy Elf: #EBF4F6, #C9E2E8, #9EC3CE, #6E9BA8
+Orc & Goblin Skin: #8FB36B, #6E914C, #4D6E32, #314A1E
+Demon & Infernal Skin: #C93B3B, #9E2424, #6E1313, #3E0808
+Celestial & Starlight Skin: #E6E0F8, #C4B8EB, #9E8ED9, #7664C2
+Underwater Siren Skin: #78C6C2, #4FA39F, #2E7D7A, #195754
+Golden Sun-God Skin: #F2C14E, #D99B26, #B37412, #854E04
 
 ================================================================================
-TOP 1,000 COLOR THEMES & PALETTES
+SKIN TONE MATRIX (30 SHADES)
 ================================================================================
 
-MODERN & MINIMALIST
-Pure Nordic: #FFFFFF, #F5F5F7, #D2D2D7, #86868B, #1D1D1F
-Warm Alabaster: #FAF8F5, #EFECE6, #D8D2C5, #9E9589, #3A3530
-Slate & Stone: #F4F6F8, #DCE1E7, #9AA5B1, #52606D, #1F2933
-Soft Concrete: #EDEDED, #D6D6D6, #A3A3A3, #666666, #2B2B2B
-Oatmeal & Clay: #F7F3EE, #E6DDD0, #C7B7A3, #8C7A6B, #4A3F35
-Crisp Linen: #FCFAF8, #F0EBE1, #D5CEC2, #8E877E, #2E2B28
-Architectural Gray: #F2F2F2, #CCCCCC, #999999, #4D4D4D, #1A1A1A
-Pebble & Sand: #F5F2EB, #E2DCD0, #BDB5A6, #7A7367, #33302B
-Mist & Charcoal: #F0F4F5, #D3DCE0, #95A5AC, #4F5D63, #1E2426
-Ivory Tower: #FFFFF0, #F5F5DC, #E0DFC8, #9C9B88, #3D3C33
-Minimalist Blush: #FDF8F7, #F5E6E3, #E0C3BE, #9E7B75, #42302D
-Zen Garden: #F4F5F0, #DCE0D5, #A7B09B, #636B58, #272B22
-Frosted Glass: #F7FAFC, #E2E8F0, #CBD5E0, #718096, #2D3748
-Paper & Ink: #FAF9F6, #EAE6DF, #BDB7AE, #5C5852, #141312
-Quiet Luxury: #F6F4F0, #E3DDD3, #C2B6A3, #7D705D, #2C261E
-Scandi Birch: #F9F7F2, #EBE5D8, #D1C6B2, #8A7E6B, #383229
-Monochrome Dust: #F8F8F8, #E0E0E0, #B0B0B0, #707070, #202020
-Chalk & Charcoal: #FAFAFA, #E5E5E5, #A3A3A3, #525252, #171717
-Desert Minimal: #F9F5F0, #EADFD2, #D1BFA9, #8F7A62, #3D3226
-Cool Quartz: #F5F7FA, #E4E7EB, #CBD2D9, #616E7C, #1F2933
-Warm Taupe: #F6F3F0, #E5DDD5, #C7B9AC, #827366, #362F29
-Clean Canvas: #FFFFFF, #F4F4F5, #E4E4E7, #71717A, #18181B
-Soft Sage Minimal: #F4F7F5, #E1E8E3, #BAC7BE, #6E7D73, #262E29
-Bone & Espresso: #F7F4EF, #E6DFD3, #C4B8A5, #6E5D4F, #2B211A
-Silver Lining: #F8F9FA, #E9ECEF, #CED4DA, #6C757D, #212529
-Muted Clay: #F7F2F0, #E8DBD5, #CCB5AB, #8A6E63, #3B2D28
-Glacier White: #F2F7F9, #DCE8ED, #B0C7D1, #5E7885, #1D282E
-Raw Silk: #FAF7F2, #EDE6D8, #D4C8B4, #8C7F6A, #363026
-Urban Loft: #F3F3F3, #D9D9D9, #A6A6A6, #595959, #1F1F1F
-Nordic Pine: #F3F5F4, #DCE2DF, #B0BDB7, #5F6E67, #222925
-Limestone: #F6F5F0, #E5E3D8, #C7C3B2, #7D7968, #302E26
-Whisper Gray: #F7F7F8, #E6E6E9, #C4C4CC, #737380, #232329
-Warm Putty: #F5F2EE, #E3DCD3, #C4B9AC, #7D7265, #332E28
-Minimalist Navy: #F4F6F9, #DCE2EC, #9AA8C2, #475878, #162033
-Vanilla Bean: #FCF9F2, #F2EBD9, #D9CCB0, #8F8164, #383123
-Ash & Ember: #F5F4F4, #E0DCDC, #B5ADAD, #6E6363, #292222
-Cloud Nine: #F9FBFD, #EBF1F6, #CEDCE8, #758A9E, #222B33
-Travertine: #F7F4EE, #E8E1D3, #CEC2AC, #877A63, #363025
-Minimalist Olive: #F5F6F2, #E2E5D8, #BFC4AD, #72785E, #2B2E22
-Porcelain: #FAFAFA, #EFEFEF, #D4D4D4, #737373, #262626
-Sandstone Minimal: #F8F4EE, #EBE1D3, #D1C0A8, #8C7960, #3B3125
-Steel & Snow: #F6F8FA, #E1E6EB, #B8C2CC, #5C6873, #1D2226
-Pale Terracotta: #FAF5F2, #EFE2DC, #D9BFB4, #947467, #3D2D27
-Whisper Blue: #F5F8FA, #E3ECF2, #BDD0DE, #688091, #212B33
-Linen Closet: #F9F8F6, #ECE9E2, #D1CCC0, #858075, #33312C
-Graphite Minimal: #F2F2F3, #DCDCE0, #AEAEB5, #5C5C63, #1C1C1F
-Soft Mocha: #F7F4F2, #E8DFDA, #C9B9B0, #826F65, #362C27
-Arctic Breeze: #F4F9FA, #DDF0F2, #B0D5D9, #5A848A, #1B2B2E
-Rice Paper: #FBF9F5, #EFECE4, #D6D0C2, #8C8577, #36332C
-Charcoal Sketch: #F5F5F5, #E0E0E0, #9E9E9E, #424242, #121212
-Greige Harmony: #F6F5F3, #E6E3DE, #C9C4BC, #807A72, #33302C
-Pale Mauve Minimal: #F9F6F7, #EDE3E6, #D4C1C7, #8C737B, #382B30
-Driftwood Minimal: #F7F5F2, #E6E1DA, #C7BEB2, #7D7468, #332E28
-Morning Fog: #F4F6F7, #E1E6E8, #BFC8CC, #6C777C, #23282B
-Cream & Copper: #FAF7F2, #EDE3D5, #D4BC9E, #96724D, #3D2B19
-Minimalist Ochre: #FAF7F0, #EFE7D3, #D6C69E, #8F7D50, #3B321D
-Silver Mist: #F7F8F9, #E6E9EC, #C5CCD3, #6E7780, #222629
-Chalkboard: #F5F5F5, #DCDCDC, #A8A8A8, #545454, #1A1A1A
-Soft Pistachio: #F6F8F4, #E5EBE0, #C4D1B8, #738266, #293023
-Alabaster Rose: #FAF6F6, #EFE4E4, #D9C3C3, #917575, #3B2C2C
-Basalt & Snow: #F7F8F8, #E2E5E5, #B5BCBC, #5E6666, #1E2222
-Warm Cashmere: #F8F5F1, #EAE2D7, #CFC1AE, #877763, #383026
-Pale Periwinkle: #F6F7FA, #E4E7F2, #C2C8E0, #6D7594, #242836
-Minimalist Teal: #F4F8F8, #DFECEC, #B5D1D1, #5E8080, #1E2B2B
-Birch Bark: #F9F8F6, #EBE8E1, #CFCAC0, #857F74, #33302B
-Concrete Jungle: #F2F3F2, #DCDEDC, #B2B5B2, #636663, #212221
-Soft Lavender Minimal: #F8F6FA, #EAE4F0, #CFC3DB, #7E6E8F, #2E2636
-Dune Grass: #F7F7F2, #E6E6DC, #C4C4B2, #7A7A63, #2E2E24
-Pale Coral Minimal: #FAF5F4, #EFE1DE, #D9BCB6, #916E67, #3B2926
-Cloud & Slate: #F5F7F8, #E2E7EA, #BCC6CC, #66737A, #21272B
-Creamy Oat: #FAF7F2, #EDE6DA, #D4C8B4, #8C7F6A, #363026
-Minimalist Bronze: #F8F5F0, #EAE2D5, #CFC2AD, #87765D, #382F22
-Frost & Pine: #F3F6F5, #DCE5E2, #B0C4BD, #5B756C, #1F2B27
-Soft Peach Minimal: #FAF6F3, #EFE3DA, #D9C2B2, #917460, #3B2D23
-Pale Mint Minimal: #F4F9F7, #DDF0EA, #B0D9CC, #5A8778, #1B2E28
-Warm Slate: #F5F6F7, #E2E5E8, #BCC2C7, #687078, #222629
-Ivory & Walnut: #FAF7F2, #ECE4D8, #D1C3AF, #87755E, #362C20
-Soft Lilac Minimal: #F8F6FA, #EAE3F0, #CFC2DB, #7E6C8F, #2E2636
-Pebble Gray: #F6F6F6, #E4E4E4, #C2C2C2, #737373, #262626
-Desert Sand Minimal: #F9F6F0, #ECE4D5, #D4C5AA, #8C7B5E, #383022
-Cool Mist: #F4F8FA, #E1EEF2, #B8D4DE, #5E7E8A, #1E2B30
-Soft Rose Minimal: #FAF5F6, #EFE1E4, #D9BCC2, #916E75, #3B292D
-Nordic Stone: #F6F7F6, #E3E6E3, #BFC4BF, #6E756E, #262926
-Pale Amber Minimal: #FAF7F0, #EFE7D3, #D6C69E, #8F7D50, #3B321D
-Warm Linen: #F9F7F3, #ECE8DF, #D1C9BA, #857D6E, #33302A
-Soft Aqua Minimal: #F4F9F9, #DDF0F0, #B0D9D9, #5A8787, #1B2E2E
-Chalk & Stone: #F7F7F5, #E6E6E1, #C4C4BC, #7A7A70, #2E2E29
-Minimalist Plum: #F8F5F9, #ECE2EE, #D4BDD9, #85688C, #332536
-Pale Gold Minimal: #FAF8F0, #EFE9D3, #D6CA9E, #8F8150, #3B341D
-Soft Moss Minimal: #F5F7F3, #E2E7DC, #BFC9B3, #6E7A60, #272B22
-Cloud & Ash: #F6F7F7, #E4E6E6, #C2C7C7, #707575, #242626
-Warm Parchment: #FAF7F2, #EDE5D8, #D4C6B0, #8C7C64, #362F24
-Minimalist Cobalt: #F4F6FA, #E1E7F2, #B8C7E0, #5E7394, #1E2536
-Soft Apricot Minimal: #FAF5F1, #EFE2D8, #D9BFA9, #917157, #3B2B1E
-Pale Sage Minimal: #F4F8F6, #E1ECE7, #B8D1C6, #5E7E70, #1E2E27
-Cool Ash: #F5F6F6, #E2E4E4, #BCC2C2, #687070, #222626
-Ivory & Cedar: #FAF6F1, #EDE2D5, #D4C0A8, #8C7458, #362B1E
-Soft Violet Minimal: #F8F6FA, #EAE3F0, #CFC2DB, #7E6C8F, #2E2636
-Pebble & Moss: #F5F6F3, #E3E6DE, #BFC7B5, #6E7863, #262B22
-Desert Clay Minimal: #F9F5F2, #ECE2DA, #D4C2B3, #8C7664, #382E26
-Cool Slate Minimal: #F4F7F8, #E1E9EC, #B8CCD4, #5E7782, #1E292E
-Soft Blush Minimal: #FAF6F6, #EFE4E4, #D9C3C3, #917575, #3B2C2C
-Nordic Fog: #F5F7F7, #E2E6E6, #BCC4C4, #687272, #222626
-Pale Honey Minimal: #FAF7F0, #EFE7D3, #D6C69E, #8F7D50, #3B321D
-Warm Cotton Minimal: #F9F8F6, #ECEAE4, #D1CEC4, #858278, #33322E
-Soft Cyan Minimal: #F4F9FA, #DDF0F2, #B0D5D9, #5A848A, #1B2B2E
-Chalk & Timber: #F7F5F2, #E6E1DA, #C7BEB2, #7D7468, #332E28
-Minimalist Magenta: #F9F5F8, #EFE1EB, #D9BCD1, #916985, #3B2635
-Pale Olive Minimal: #F6F7F2, #E4E7DC, #C2C9B3, #707A60, #262B22
-Cloud & Granite: #F5F6F7, #E2E5E8, #BCC2C7, #687078, #222629
-Warm Sand & Clay: #F9F5F0, #ECE2D5, #D4C2AA, #8C765E, #382E24
-Minimalist Cyan: #F4F9FA, #DDF0F2, #B0D5D9, #5A848A, #1B2B2E
-Soft Mauve Minimal: #F9F6F7, #EDE3E6, #D4C1C7, #8C737B, #382B30`;
+30-Shade Portrait & Illustration Matrix
+Porcelain Highlight: #FFF5EE, #FCE7DC, #F7D4C3, #EFC0AA, #E3AA90
+Warm Fair Midtone: #F5C9B0, #EAA98A, #DE8B68, #CF704B, #BA5835
+Medium Olive & Tan: #D9A07B, #C88B65, #B57650, #9E613E, #874F30
+Rich Caramel & Sienna: #A66E4C, #8F5A3B, #78482C, #61371E, #4A2713
+Deep Espresso & Umber: #593524, #452719, #331B11, #211009, #120804
+Shadow & Subsurface Tones: #8F4A4A, #733838, #572828, #3D1A1A, #240E0E
 
-const parsedThemeCategories = {};
-let currentThemeCat = 'General';
-let currentThemeSub = '';
+================================================================================
+WOOD, STONE & MATERIAL SHADE RAMPS (30 SHADES)
+================================================================================
 
-function parseMasterThemes() {
-  const lines = RAW_MASTER_THEMES_TXT.split(/\r?\n/);
-  lines.forEach(rawLine => {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('===')) return;
+Wood Grain & Timber Ramp (30 Shades)
+Birch & Ash Sapwood: #F7EFE2, #EFE3CE, #E5D4B7, #D9C39E, #C9AE82
+Oak & Beech Heartwood: #C4A072, #B38B5B, #9F7646, #8A6235, #734E26
+Cherry & Mahogany: #8C4A32, #7A3C26, #662F1C, #522313, #3E180C
+Walnut & Rosewood: #5C3A28, #4A2D1E, #3A2215, #2B180E, #1D0F08
+Ebony & Charred Timber: #2A211B, #211914, #18120E, #100C09, #080605
+Bark, Moss & Sap Tones: #6E5D4F, #584B3F, #433930, #4A5D3F, #35442D
 
-    if (!line.includes(':')) {
-      if (/^[A-Z0-9 &,\-\/]+$/.test(line) && line.length > 3) {
-        currentThemeCat = line.replace(/\bTHEMES?\b/gi, '').trim() || 'General';
-        if (!parsedThemeCategories[currentThemeCat]) parsedThemeCategories[currentThemeCat] = {};
-      } else {
-        currentThemeSub = line;
-        if (!parsedThemeCategories[currentThemeCat]) parsedThemeCategories[currentThemeCat] = {};
-        if (!parsedThemeCategories[currentThemeCat][currentThemeSub]) parsedThemeCategories[currentThemeCat][currentThemeSub] = [];
-      }
-      return;
+Stone, Marble & Masonry Ramp (30 Shades)
+Calacatta & Carrara Marble: #FFFFFF, #F5F6F8, #E8EAEE, #D5D9E0, #BCC2CC
+Limestone & Travertine: #EFECE6, #E2DDD3, #D2CBBF, #BFB6A7, #A89E8E
+Sandstone & Terracotta: #D9B38C, #C89D72, #B5865A, #9E6E44, #825632
+Slate, Granite & Basalt: #6E757D, #5A6068, #464B52, #34383E, #23262B
+Obsidian & Coal: #2B2D30, #202224, #161719, #0E0F10, #070707
+Lichen & Mineral Veins: #8A9A8E, #6B7D70, #526357, #7D6B7D, #5D4E5D
+
+Brushed Metal & Alloy Ramp (30 Shades)
+Silver, Chrome & Platinum: #F2F4F7, #DCE1E7, #C2C9D2, #A4AEBA, #84909E
+Gold, Brass & Champagne: #FFF0B3, #F5DC82, #E3C152, #C9A232, #A6811C
+Copper & Rose Gold: #F2C6B6, #DF9F89, #C87A60, #AC5B40, #8A422B
+Bronze & Pewter: #9E8B78, #857260, #6B5A4B, #524438, #3B3027
+Gunmetal, Iron & Titanium: #545B64, #424850, #32363C, #23262A, #15171A
+Patina & Oxidation: #7EC4B6, #5BA698, #3E8578, #8C6D46, #694F30
+
+================================================================================
+PORTRAIT & CHARACTER PALETTES (30 SHADES)
+================================================================================
+
+Heroine & Fantasy Character Matrix (30 Shades)
+Skin Base & Highlights: #FDECE4, #F7D5C6, #EBB8A3, #DC9A80, #C77E63
+Blush, Lips & Cheeks: #F2A2A8, #E37D86, #CC5864, #A83B48, #7D2330
+Hair & Locks Spectrum: #F5D78E, #D9A75A, #9E6234, #5E351C, #24140C
+Eyes, Gems & Accents: #72EFDD, #38B6FF, #2B6CB0, #9D4EDD, #5A189A
+Costume, Armor & Shadows: #E63946, #457B9D, #1D3557, #2B2D42, #12131C
+Rim Light & Magic Glow: #FFF3B0, #FF9EBB, #C77DFF, #80FFDB, #FFFFFF
+
+Cyberpunk & Sci-Fi Character Matrix (30 Shades)
+Synth Skin & Visor Glow: #F7D6C8, #E2A996, #00F5D4, #4CC9F0, #FF007F
+Cybernetic Chrome & Plates: #E5E9F0, #B8C2D1, #7B889E, #465063, #232834
+Neon Accents & Wires: #FF2A6D, #05D9E8, #D300C5, #FEE440, #39FF14
+Dark Techwear & Carbon: #2B2E36, #1F2229, #15171C, #0D0E12, #060709
+Hologram & Energy UI: #A8FFF0, #48CAE4, #9B5DE5, #F15BB5, #FFFFFF
+Shadow & Contrast Tones: #3A0CA3, #240046, #10002B, #590D22, #1A090D
+
+================================================================================
+GAME & ENVIRONMENT PALETTES (30 SHADES)
+================================================================================
+
+Cozy RPG Village & Cottage Matrix (30 Shades)
+Thatch, Timber & Plaster: #F4EAD5, #E0CCA8, #C4A476, #8C6239, #4A3219
+Foliage, Hedges & Vines: #A7C957, #6A994E, #386641, #234229, #132617
+Cobblestone & Garden Paths: #C5C2BA, #9E9B93, #75726B, #4F4D48, #2E2D2A
+Lantern Glow & Windows: #FFF3B0, #FFD166, #F4A261, #E76F51, #9E2A2B
+Roofs, Banners & Accents: #BC4749, #780000, #3D5A80, #293241, #5E548E
+Sky, Water & Ambient Shadow: #90E0EF, #48CAE4, #2B4570, #1D2D44, #141824
+
+Dark Dungeon & Crypt Matrix (30 Shades)
+Damp Stone & Mossy Bricks: #5A626A, #434A52, #2F353B, #22262B, #15181C
+Torchlight, Embers & Gold: #FFBA08, #F48C06, #D00000, #7F4F24, #3D2B1F
+Spectral & Necrotic Glow: #80ED99, #38B000, #9B5DE5, #5A189A, #240046
+Rust, Iron & Chains: #8A4F3D, #63392C, #3E444B, #272B30, #141619
+Blood, Wax & Velvet: #9B0000, #660708, #370617, #5E1914, #260A0E
+Abyssal Voids & Fog: #1B222C, #12171F, #0B0E14, #06080C, #020305
+`;
+
+function parseMasterThemes(rawText) {
+  const tree = {};
+  let currentCat = 'General';
+  let currentSub = null;
+  let currentDesc = '';
+  const hexRegex = /#[0-9A-Fa-f]{6}\b/g;
+
+  const lines = rawText.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || /^=+$/.test(line)) continue;
+
+    if (/^[A-Z0-9 &,\-]+$/.test(line) && line.length > 3 && !line.includes(':')) {
+      currentCat = line.replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase()).replace(/\bAnd\b/g, '&');
+      if (!tree[currentCat]) tree[currentCat] = {};
+      currentSub = null;
+      currentDesc = '';
+      continue;
     }
 
-    const idx = line.indexOf(':');
-    const label = line.slice(0, idx).trim();
-    if (label.toLowerCase() === 'description') return;
-    const hexMatches = line.slice(idx + 1).match(/#[0-9a-fA-F]{6}/g) || [];
-    if (!hexMatches.length) return;
+    const parenMatch = /^([^(]+?)\s*\(([^)]+)\)\s*$/.exec(line);
+    if (parenMatch && !line.includes('#')) {
+      currentSub = parenMatch[1].trim();
+      currentDesc = parenMatch[2].trim();
+      if (!tree[currentCat]) tree[currentCat] = {};
+      if (!tree[currentCat][currentSub]) tree[currentCat][currentSub] = { desc: currentDesc, colors: [] };
+      continue;
+    }
 
-    if (!parsedThemeCategories[currentThemeCat]) parsedThemeCategories[currentThemeCat] = {};
-    const targetKey = currentThemeSub || currentThemeCat;
-    if (!parsedThemeCategories[currentThemeCat][targetKey]) parsedThemeCategories[currentThemeCat][targetKey] = [];
-    parsedThemeCategories[currentThemeCat][targetKey].push({ label, hexes: hexMatches });
-  });
+    if (line.toLowerCase().startsWith('description:')) {
+      if (currentSub && tree[currentCat]?.[currentSub]) {
+        tree[currentCat][currentSub].desc = line.slice(12).trim();
+      }
+      continue;
+    }
 
-  parsedThemeCategories['PASTEL MATRICES'] = {};
-  Object.keys(PASTEL_SPECS).forEach(k => {
-    parsedThemeCategories['PASTEL MATRICES'][k] = [{ label: k, list: generatePastelList(k) }];
-  });
-
-  parsedThemeCategories['SKIN MATRICES'] = {};
-  Object.keys(SKIN_PROFILES).forEach(k => {
-    parsedThemeCategories['SKIN MATRICES'][k] = [{ label: k, list: generateSkinList(k) }];
-  });
-}
-
-function getCurrentThemeSwatches() {
-  const cat = $('themeCategory').value;
-  const sub = $('themeSubSelect').value;
-  const tempVal = Number($('themeTempSlide').value) || 0;
-  const items = parsedThemeCategories[cat]?.[sub] || [];
-
-  let combined = [];
-  items.forEach(entry => {
-    if (entry.list) combined.push(...entry.list);
-    else if (entry.hexes) entry.hexes.forEach(h => { const c = fromHex(h); if (c) combined.push(c); });
-  });
-
-  return combined.map(sw => applyTemperatureShift(sw, tempVal));
-}
-
-function populateThemeSubSelect() {
-  const cat = $('themeCategory').value;
-  const search = ($('themeSearch').value || '').toLowerCase().trim();
-  const subSel = $('themeSubSelect');
-  const subs = Object.keys(parsedThemeCategories[cat] || {}).filter(k => !search || k.toLowerCase().includes(search));
-
-  subSel.innerHTML = '';
-  if (!subs.length) {
-    const opt = document.createElement('option');
-    opt.value = '';
-    opt.textContent = 'No matching themes';
-    subSel.appendChild(opt);
-    $('themeOut').innerHTML = '';
-    return;
+    const foundHexes = line.match(hexRegex);
+    if (foundHexes && foundHexes.length) {
+      if (!currentSub) {
+        currentSub = 'Collection';
+        if (!tree[currentCat]) tree[currentCat] = {};
+        if (!tree[currentCat][currentSub]) tree[currentCat][currentSub] = { desc: '', colors: [] };
+      }
+      foundHexes.forEach(h => {
+        const up = h.toUpperCase();
+        if (!tree[currentCat][currentSub].colors.includes(up)) {
+          tree[currentCat][currentSub].colors.push(up);
+        }
+      });
+    }
   }
 
+  tree['Pastel Spectrum'] = {};
+  Object.keys(PASTEL_SPECS).forEach(label => {
+    tree['Pastel Spectrum'][label] = {
+      desc: '30-step pastel matrix for ' + label,
+      colors: generatePastelList(label).map(toHex)
+    };
+  });
+
+  tree['Skin Tone Matrix'] = {};
+  Object.keys(SKIN_PROFILES).forEach(label => {
+    tree['Skin Tone Matrix'][label] = {
+      desc: '30-shade portrait complexion grid for ' + label,
+      colors: generateSkinList(label).map(toHex)
+    };
+  });
+
+  return tree;
+}
+
+const MASTER_THEMES = parseMasterThemes(RAW_MASTER_THEMES_TXT);
+
+function populateThemeCatalog() {
+  const catSel = $('themeCategory');
+  catSel.innerHTML = '';
+  Object.keys(MASTER_THEMES).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    catSel.appendChild(opt);
+  });
+  filterThemeSubList();
+}
+
+function filterThemeSubList() {
+  const cat = $('themeCategory').value;
+  const q = ($('themeSearch').value || '').toLowerCase().trim();
+  const subSel = $('themeSubSelect');
+  const subs = Object.keys(MASTER_THEMES[cat] || {}).filter(s => !q || s.toLowerCase().includes(q));
+
+  subSel.innerHTML = '';
   subs.forEach(s => {
     const opt = document.createElement('option');
     opt.value = s;
     opt.textContent = s;
     subSel.appendChild(opt);
   });
-  renderThemeOut();
+  renderSelectedTheme();
 }
 
-function renderThemeOut() {
+function renderSelectedTheme() {
+  const cat = $('themeCategory').value;
+  const sub = $('themeSubSelect').value;
   const tempVal = Number($('themeTempSlide').value) || 0;
-  $('themeTempVal').textContent = formatTempLabel(tempVal);
-  renderChipGrid($('themeOut'), getCurrentThemeSwatches());
+  $('themeTempVal').textContent = formatTempLabel(tempVal, 'Original');
+
+  const item = MASTER_THEMES[cat]?.[sub];
+  const rawList = item ? item.colors : [];
+  const shiftedSwatches = rawList.map(h => {
+    const baseSw = fromHex(h);
+    return baseSw ? applyTemperatureShift(baseSw, tempVal) : null;
+  }).filter(Boolean);
+
+  renderChipGrid($('themeOut'), shiftedSwatches);
 }
 
-function initMasterThemes() {
-  parseMasterThemes();
-  const catSel = $('themeCategory');
-  catSel.innerHTML = '';
-  Object.keys(parsedThemeCategories).forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    catSel.appendChild(opt);
-  });
+$('themeCategory').addEventListener('change', filterThemeSubList);
+$('themeSearch').addEventListener('input', filterThemeSubList);
+$('themeSubSelect').addEventListener('change', renderSelectedTheme);
+$('themeTempSlide').addEventListener('input', renderSelectedTheme);
+$('loadThemeBtn').addEventListener('click', () => {
+  const cat = $('themeCategory').value;
+  const sub = $('themeSubSelect').value;
+  const tempVal = Number($('themeTempSlide').value) || 0;
+  const rawList = MASTER_THEMES[cat]?.[sub]?.colors || [];
+  if (!rawList.length) return;
+  const list = rawList.map(h => {
+    const baseSw = fromHex(h);
+    return baseSw ? applyTemperatureShift(baseSw, tempVal) : null;
+  }).filter(Boolean);
+  const suffix = tempVal === 0 ? '' : (tempVal < 0 ? '_W' + Math.abs(tempVal) : '_C' + tempVal);
+  addToEmpty(list, true, (sub || 'THEME').toUpperCase().replace(/[^A-Z0-9]+/g, '_') + suffix);
+});
 
-  catSel.addEventListener('change', populateThemeSubSelect);
-  $('themeSearch').addEventListener('input', populateThemeSubSelect);
-  $('themeSubSelect').addEventListener('change', renderThemeOut);
-  $('themeTempSlide').addEventListener('input', renderThemeOut);
+let activeExportFormat = 'hex';
 
-  $('loadThemeBtn').addEventListener('click', () => {
-    const list = getCurrentThemeSwatches();
-    if (!list.length) return;
-    const subName = $('themeSubSelect').value || 'THEME';
-    addToEmpty(list, true, subName.replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase().slice(0, 24));
-  });
+function updateTextExport() {
+  const active = swatches.filter(Boolean);
+  const fmt = $('txtFmt').value;
+  const pName = (name || 'PALETTE').replace(/[^a-zA-Z0-9_-]/g, '_');
 
-  populateThemeSubSelect();
-}
-
-function renderLibrary() {
-  const folderFilter = $('folderFilter');
-  const currentFilter = folderFilter.value;
-  const folders = [...new Set(library.map(item => item.folder || 'Default_Project'))];
-  folderFilter.innerHTML = '<option value="ALL">All Folders</option>' + folders.map(f => '<option value="' + f + '">' + f + '</option>').join('');
-  if (folders.includes(currentFilter)) folderFilter.value = currentFilter;
-
-  const list = library.filter(item => folderFilter.value === 'ALL' || (item.folder || 'Default_Project') === folderFilter.value);
-  const box = $('libOut');
-  box.innerHTML = '';
-
-  if (!list.length) {
-    box.innerHTML = '<p class="muted" style="font-size:11px;text-align:center;padding:12px;">No saved palettes in archive.</p>';
+  if (!active.length) {
+    $('pasteBox').value = '';
     return;
   }
 
-  list.forEach((item, idx) => {
-    const div = document.createElement('div');
-    div.className = 'libitem';
+  if (fmt === 'hex') {
+    $('pasteBox').value = active.map(toHex).join(', ');
+  } else if (fmt === 'rgb') {
+    $('pasteBox').value = active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join('\n');
+  } else if (fmt === 'hsl') {
+    $('pasteBox').value = active.map(s => {
+      const [h, sat, l] = rgbToHsl(...swRgb(s));
+      return 'hsl(' + h + ', ' + sat + '%, ' + l + '%)';
+    }).join('\n');
+  } else if (fmt === 'oklch') {
+    $('pasteBox').value = active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join('\n');
+  } else if (fmt === 'css') {
+    const vars = active.map((s, i) => '  --color-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
+    $('pasteBox').value = ':root {\n' + vars + '\n}';
+  } else if (fmt === 'scss') {
+    $('pasteBox').value = active.map((s, i) => '$color-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
+  } else if (fmt === 'tailwind') {
+    const entries = active.map((s, i) => "        '" + (i + 1) + "': '" + toHex(s) + "'").join(',\n');
+    $('pasteBox').value = "module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '" + pName.toLowerCase() + "': {\n" + entries + "\n        }\n      }\n    }\n  }\n}";
+  } else if (fmt === 'svg') {
+    const w = 60, h = 60;
+    const rects = active.map((s, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + toHex(s) + '"/>').join('\n');
+    $('pasteBox').value = '<svg xmlns="http://www.w3.org/2000/svg" width="' + (active.length * w) + '" height="' + h + '">\n' + rects + '\n</svg>';
+  } else if (fmt === 'json') {
+    $('pasteBox').value = JSON.stringify({ name: name || 'Untitled', swatches: active.map(toHex) }, null, 2);
+  }
+}
+
+$('txtFmt').addEventListener('change', updateTextExport);
+$$('[data-exfmt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeExportFormat = btn.dataset.exfmt;
+    $('txtFmt').value = activeExportFormat;
+    updateTextExport();
+    copyText($('pasteBox').value, 'Copied ' + activeExportFormat.toUpperCase());
+  });
+});
+
+$('copyTxtBtn').addEventListener('click', () => {
+  copyText($('pasteBox').value, 'Copied Export Buffer');
+});
+
+$('dlTxtBtn').addEventListener('click', () => {
+  const fmt = $('txtFmt').value;
+  const extMap = { hex: 'txt', rgb: 'txt', hsl: 'txt', oklch: 'txt', css: 'css', scss: 'scss', tailwind: 'js', svg: 'svg', json: 'json' };
+  const ext = extMap[fmt] || 'txt';
+  const blob = new Blob([$('pasteBox').value], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (name || 'palette') + '.' + ext;
+  a.click();
+  toast('Saved .' + ext.toUpperCase());
+});
+
+$('importPasteBtn').addEventListener('click', () => {
+  const raw = $('pasteBox').value;
+  const matches = raw.match(/#([0-9a-f]{3}|[0-9a-f]{6})\b/gi) || [];
+  if (!matches.length) return toast('No valid HEX codes found');
+  const parsed = matches.slice(0, SLOTS).map(fromHex).filter(Boolean);
+  addToEmpty(parsed, false);
+});
+
+/* PROCREATE .SWATCHES & ADOBE .ASE */
+const utf16be = str => {
+  const buf = new Uint8Array(str.length * 2);
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    buf[i * 2] = (code >> 8) & 0xff;
+    buf[i * 2 + 1] = code & 0xff;
+  }
+  return buf;
+};
+const readUtf16be = (bytes, offset, charLen) => {
+  let out = '';
+  for (let i = 0; i < charLen; i++) {
+    out += String.fromCharCode((bytes[offset + i * 2] << 8) | bytes[offset + i * 2 + 1]);
+  }
+  return out;
+};
+const f32be = val => {
+  const b = new ArrayBuffer(4);
+  new DataView(b).setFloat32(0, val, false);
+  return new Uint8Array(b);
+};
+const readF32be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getFloat32(0, false);
+const u32be = val => {
+  const b = new ArrayBuffer(4);
+  new DataView(b).setUint32(0, val, false);
+  return new Uint8Array(b);
+};
+const readU32be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getUint32(0, false);
+const u16be = val => {
+  const b = new ArrayBuffer(2);
+  new DataView(b).setUint16(0, val, false);
+  return new Uint8Array(b);
+};
+const readU16be = (bytes, offset) => new DataView(bytes.buffer, bytes.byteOffset + offset, 2).getUint16(0, false);
+
+function concatBytes(chunks) {
+  const total = chunks.reduce((acc, c) => acc + c.length, 0);
+  const out = new Uint8Array(total);
+  let pos = 0;
+  for (const c of chunks) { out.set(c, pos); pos += c.length; }
+  return out;
+}
+
+function buildSwatchesBin(paletteName, slotArr) {
+  const title = paletteName || 'Untitled';
+  const nameBytes = utf16be(title);
+  const chunks = [u32be(title.length), nameBytes];
+  for (let i = 0; i < SLOTS; i++) {
+    const sw = slotArr[i];
+    if (!sw) {
+      chunks.push(new Uint8Array(20));
+    } else {
+      chunks.push(
+        f32be(sw.hue), f32be(sw.saturation), f32be(sw.brightness),
+        f32be(sw.alpha ?? 1), f32be(sw.colorSpace ?? 0)
+      );
+    }
+  }
+  return concatBytes(chunks);
+}
+
+function parseSwatchesBin(bytes) {
+  let pos = 0;
+  const nameLen = readU32be(bytes, pos); pos += 4;
+  const parsedName = readUtf16be(bytes, pos, nameLen); pos += nameLen * 2;
+  const parsedSlots = [];
+  for (let i = 0; i < SLOTS; i++) {
+    if (pos + 20 > bytes.length) { parsedSlots.push(null); continue; }
+    const hue = readF32be(bytes, pos);
+    const saturation = readF32be(bytes, pos + 4);
+    const brightness = readF32be(bytes, pos + 8);
+    const alpha = readF32be(bytes, pos + 12);
+    const colorSpace = readF32be(bytes, pos + 16);
+    pos += 20;
+    const isEmpty = hue === 0 && saturation === 0 && brightness === 0 && alpha === 0 && colorSpace === 0;
+    parsedSlots.push(isEmpty ? null : { hue: clamp(hue, 0, 1), saturation: clamp(saturation, 0, 1), brightness: clamp(brightness, 0, 1), alpha: alpha || 1, colorSpace: 0 });
+  }
+  return { name: parsedName, swatches: parsedSlots };
+}
+
+async function exportProcreate() {
+  if (!window.JSZip) return toast('JSZip unavailable');
+  const zip = new JSZip();
+  const safeName = (name || 'Palette').trim() || 'Palette';
+  zip.file('Swatches.json', JSON.stringify([{ name: safeName, swatches: swatches.map(s => s ? { hue: s.hue, saturation: s.saturation, brightness: s.brightness, alpha: 1, colorSpace: 0 } : null) }]));
+  zip.file('Swatches.bin', buildSwatchesBin(safeName, swatches));
+  const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = safeName + '.swatches';
+  a.click();
+  toast('Exported ' + safeName + '.swatches');
+}
+
+$('fileInput').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    if (!window.JSZip) throw new Error('JSZip missing');
+    const zip = await JSZip.loadAsync(file);
+    const binFile = zip.file(/\.bin$/i)[0];
+    const jsonFile = zip.file(/\.json$/i)[0];
+    if (binFile) {
+      const binData = await binFile.async('uint8array');
+      const parsed = parseSwatchesBin(binData);
+      commitNow();
+      name = parsed.name || file.name.replace(/\.swatches$/i, '');
+      swatches = parsed.swatches;
+      render(); commitNow();
+      toast('Loaded ' + name);
+    } else if (jsonFile) {
+      const txt = await jsonFile.async('string');
+      const arr = JSON.parse(txt);
+      const first = Array.isArray(arr) ? arr[0] : arr;
+      commitNow();
+      name = first.name || file.name.replace(/\.swatches$/i, '');
+      swatches = [...Array(SLOTS).keys()].map(i => first.swatches?.[i] ? { ...first.swatches[i], alpha: 1, colorSpace: 0 } : null);
+      render(); commitNow();
+      toast('Loaded ' + name);
+    } else {
+      toast('Unrecognized .swatches archive');
+    }
+  } catch (err) {
+    toast('Failed to load file: ' + err.message);
+  }
+  e.target.value = '';
+});
+
+$('saveBtn').addEventListener('click', exportProcreate);
+
+$('aseBtn').addEventListener('click', () => {
+  const active = swatches.filter(Boolean);
+  if (!active.length) return toast('No active swatches to export');
+  const title = (name || 'Palette').trim() || 'Palette';
+
+  const buildColorBlock = (label, [r, g, b]) => {
+    const lblBytes = utf16be(label + '\0');
+    const body = concatBytes([
+      u16be(label.length + 1),
+      lblBytes,
+      new Uint8Array([82, 71, 66, 32]),
+      f32be(r / 255), f32be(g / 255), f32be(b / 255),
+      u16be(0)
+    ]);
+    return concatBytes([u16be(0x0001), u32be(body.length), body]);
+  };
+
+  const grpStartBody = concatBytes([u16be(title.length + 1), utf16be(title + '\0')]);
+  const grpStart = concatBytes([u16be(0xC001), u32be(grpStartBody.length), grpStartBody]);
+  const grpEnd = concatBytes([u16be(0xC002), u32be(0)]);
+
+  const colorBlocks = active.map((s, idx) => buildColorBlock('Swatch ' + (idx + 1) + ' ' + toHex(s), swRgb(s)));
+  const blocksAll = concatBytes([grpStart, ...colorBlocks, grpEnd]);
+
+  const header = concatBytes([
+    new Uint8Array([65, 83, 69, 70]),
+    u16be(1), u16be(0),
+    u32be(active.length + 2)
+  ]);
+
+  const blob = new Blob([concatBytes([header, blocksAll])], { type: 'application/octet-stream' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = title + '.ase';
+  a.click();
+  toast('Exported ' + title + '.ase');
+});
+
+$('cardBtn').addEventListener('click', () => {
+  const active = swatches.filter(Boolean);
+  if (!active.length) return toast('No active swatches for PNG card');
+  const c = document.createElement('canvas');
+  c.width = 1200; c.height = 630;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0b0e14';
+  g.fillRect(0, 0, c.width, c.height);
+
+  g.fillStyle = '#f3f4f6';
+  g.font = '800 36px Outfit, sans-serif';
+  g.fillText((name || 'CHROMATIK PALETTE').toUpperCase(), 60, 84);
+
+  g.fillStyle = '#94a3b8';
+  g.font = '600 18px Plus Jakarta Sans, sans-serif';
+  g.fillText('CHROMATIK // ' + active.length + ' VECTORS', 60, 118);
+
+  const cols = Math.min(active.length, 10);
+  const rows = Math.ceil(active.length / 10);
+  const gap = 16;
+  const availW = c.width - 120 - gap * (cols - 1);
+  const swW = Math.min(104, availW / cols);
+  const startY = 165;
+
+  active.forEach((s, idx) => {
+    const r = Math.floor(idx / 10);
+    const col = idx % 10;
+    const x = 60 + col * (swW + gap);
+    const y = startY + r * (swW + 44);
+    const hex = toHex(s);
+    g.fillStyle = hex;
+    g.beginPath();
+    g.roundRect(x, y, swW, swW, 12);
+    g.fill();
+
+    g.fillStyle = '#cbd5e1';
+    g.font = '700 13px Plus Jakarta Sans, sans-serif';
+    g.fillText(hex, x, y + swW + 22);
+  });
+
+  const a = document.createElement('a');
+  a.href = c.toDataURL('image/png');
+  a.download = (name || 'palette') + '-card.png';
+  a.click();
+  toast('Downloaded PNG Card');
+});
+
+$('shareUrlBtn').addEventListener('click', () => {
+  const compact = swatches.map(s => s ? toHex(s).slice(1) : '').join(',');
+  const url = location.origin + location.pathname + '#p=' + encodeURIComponent(name || 'Palette') + '&c=' + encodeURIComponent(compact);
+  copyText(url, 'Shareable URL Copied');
+});
+
+function loadFromHash() {
+  if (!location.hash.startsWith('#p=')) return false;
+  try {
+    const params = new URLSearchParams(location.hash.slice(1));
+    const pName = params.get('p') || '';
+    const cStr = params.get('c') || '';
+    const parts = cStr.split(',');
+    if (parts.length) {
+      name = pName;
+      swatches = [...Array(SLOTS).keys()].map(i => parts[i] ? fromHex('#' + parts[i]) : null);
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+function renderLibrary() {
+  const folderFilterEl = $('folderFilter');
+  const prevFilter = folderFilterEl.value || 'ALL';
+  const folders = [...new Set(library.map(item => item.folder || 'Default_Project'))];
+  folderFilterEl.innerHTML = '<option value="ALL">All Folders (' + library.length + ')</option>';
+  folders.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f;
+    folderFilterEl.appendChild(opt);
+  });
+  folderFilterEl.value = folders.includes(prevFilter) ? prevFilter : 'ALL';
+
+  const activeFilter = folderFilterEl.value;
+  const visible = library.filter(item => activeFilter === 'ALL' || (item.folder || 'Default_Project') === activeFilter);
+  const out = $('libOut');
+  out.innerHTML = '';
+
+  if (!visible.length) {
+    out.innerHTML = '<p class="muted" style="font-size:11px;text-align:center;padding:14px">No archived palettes in this folder.</p>';
+    return;
+  }
+
+  visible.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'libitem';
 
     const topRow = document.createElement('div');
     topRow.className = 'row';
     topRow.style.justifyContent = 'space-between';
-    topRow.innerHTML = '<div><strong style="font-size:12px">' + (item.name || 'UNTITLED') + '</strong> <span class="muted" style="font-size:10px">[' + (item.folder || 'Default_Project') + ']</span></div>';
+
+    const titleSpan = document.createElement('span');
+    titleSpan.style.cssText = 'font-weight:700;font-size:12px';
+    titleSpan.textContent = (item.name || 'Untitled') + ' [' + (item.folder || 'Default_Project') + ']';
 
     const actions = document.createElement('div');
     actions.className = 'row';
     actions.style.gap = '4px';
 
-    const loadB = document.createElement('button');
-    loadB.type = 'button'; loadB.className = 'btn small primary'; loadB.textContent = 'Load';
-    loadB.addEventListener('click', () => {
-      addToEmpty(item.swatches.map(fromHex).filter(Boolean), true, item.name);
+    const loadBtn = document.createElement('button');
+    loadBtn.type = 'button';
+    loadBtn.className = 'btn small primary';
+    loadBtn.textContent = 'Load';
+    loadBtn.addEventListener('click', () => {
+      commitNow();
+      name = item.name;
+      swatches = [...Array(SLOTS).keys()].map(i => item.swatches[i] ? { ...item.swatches[i], alpha: 1, colorSpace: 0 } : null);
+      render(); commitNow();
+      toast('Loaded ' + name);
     });
 
-    const delB = document.createElement('button');
-    delB.type = 'button'; delB.className = 'btn small danger'; delB.textContent = '\u00d7';
-    delB.addEventListener('click', () => {
-      const realIdx = library.indexOf(item);
-      if (realIdx !== -1) {
-        library.splice(realIdx, 1);
-        localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
-        renderLibrary();
-      }
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn small danger';
+    delBtn.textContent = '\u00d7';
+    delBtn.addEventListener('click', () => {
+      library = library.filter(x => x !== item);
+      localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
+      renderLibrary();
+      toast('Deleted from Archive');
     });
 
-    actions.append(loadB, delB);
-    topRow.appendChild(actions);
+    actions.append(loadBtn, delBtn);
+    topRow.append(titleSpan, actions);
 
     const bar = document.createElement('div');
     bar.className = 'bar';
-    (item.swatches || []).forEach(h => {
+    item.swatches.filter(Boolean).forEach(s => {
       const seg = document.createElement('i');
-      seg.style.background = h;
+      seg.style.background = toHex(s);
       bar.appendChild(seg);
     });
 
-    div.append(topRow, bar);
-    box.appendChild(div);
+    card.append(topRow, bar);
+    out.appendChild(card);
   });
 }
 
 $('saveLib').addEventListener('click', () => {
-  const activeHexes = swatches.filter(Boolean).map(toHex);
-  if (!activeHexes.length) return toast('Palette is empty');
-  const folder = ($('folderNameInput').value || 'Default_Project').trim();
-  library.unshift({
-    name: (name || 'UNTITLED_PALETTE').trim(),
+  const folder = ($('folderNameInput').value || 'Default_Project').trim() || 'Default_Project';
+  const entry = {
+    name: (name || 'Untitled_Palette').trim(),
     folder,
-    swatches: activeHexes,
-    date: Date.now()
-  });
+    swatches: JSON.parse(JSON.stringify(swatches)),
+    ts: Date.now()
+  };
+  library.unshift(entry);
   localStorage.setItem('swatchstudio.lib', JSON.stringify(library));
   renderLibrary();
-  toast('Saved to Archive [' + folder + ']');
+  toast('Archived to ' + folder);
 });
 $('folderFilter').addEventListener('change', renderLibrary);
 
-function runAccessibilityAudit() {
-  const mode = $('auditMode').value;
-  const active = swatches.map((sw, idx) => ({ sw, idx })).filter(x => x.sw);
-  const report = $('auditReport');
+$('cbSim').addEventListener('change', e => {
+  document.body.classList.remove('sim-protan', 'sim-deutan', 'sim-tritan', 'sim-achroma');
+  if (e.target.value !== 'none') document.body.classList.add('sim-' + e.target.value);
+});
 
-  if (active.length < 2) {
-    report.innerHTML = '// Need at least 2 active swatches in palette to run vision deficiency conflict scan.';
+$('runAuditBtn').addEventListener('click', () => {
+  const mode = $('auditMode').value;
+  const activeIndices = [];
+  swatches.forEach((s, i) => { if (s) activeIndices.push({ idx: i, sw: s }); });
+
+  if (activeIndices.length < 2) {
+    $('auditReport').innerHTML = 'Need at least 2 active swatches in palette to run conflict audit.';
     return;
   }
 
-  const simColors = active.map(({ sw, idx }) => ({
-    idx,
-    hex: toHex(sw),
-    simRgb: simulateColorBlindnessRgb(swRgb(sw), mode)
+  const simulated = activeIndices.map(item => ({
+    idx: item.idx,
+    origHex: toHex(item.sw),
+    simRgb: simulateColorBlindnessRgb(swRgb(item.sw), mode)
   }));
 
   const conflicts = [];
-  for (let i = 0; i < simColors.length; i++) {
-    for (let j = i + 1; j < simColors.length; j++) {
-      const a = simColors[i], b = simColors[j];
+  for (let i = 0; i < simulated.length; i++) {
+    for (let j = i + 1; j < simulated.length; j++) {
+      const a = simulated[i], b = simulated[j];
       const dist = Math.hypot(a.simRgb[0] - b.simRgb[0], a.simRgb[1] - b.simRgb[1], a.simRgb[2] - b.simRgb[2]);
       if (dist < 28) {
         conflicts.push({ a, b, dist: Math.round(dist) });
@@ -3973,286 +4628,45 @@ function runAccessibilityAudit() {
     }
   }
 
+  let html = '<div><strong>Mode:</strong> ' + mode.toUpperCase() + ' &middot; <strong>Active Swatches:</strong> ' + simulated.length + '</div>';
   if (!conflicts.length) {
-    report.innerHTML = '<div style="color:var(--ok);font-weight:700;margin-bottom:6px">\u2713 Clear Audit (' + active.length + ' swatches)</div><div>No indistinguishable color pairs detected under <strong>' + mode.toUpperCase() + '</strong> simulation.</div>';
+    html += '<div style="color:var(--ok);margin-top:8px;font-weight:700">&#10004; No perceptual collision conflicts detected (all pairs &Delta; &ge; 28).</div>';
   } else {
-    report.innerHTML = '<div style="color:var(--danger);font-weight:700;margin-bottom:6px">\u26A0 ' + conflicts.length + ' Potential Confusion Pair(s)</div>' +
-      conflicts.map(c => '<div style="margin-bottom:4px">Slot ' + (c.a.idx + 1) + ' (' + c.a.hex + ') &harr; Slot ' + (c.b.idx + 1) + ' (' + c.b.hex + ') <span class="muted">[\u0394 ' + c.dist + ']</span></div>').join('');
+    html += '<div style="color:var(--danger);margin-top:8px;font-weight:700">&#9888; ' + conflicts.length + ' potential visual ambiguity pair(s):</div><ul style="margin:6px 0 0 18px;padding:0">';
+    conflicts.slice(0, 12).forEach(c => {
+      const simHexA = '#' + c.a.simRgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const simHexB = '#' + c.b.simRgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+      html += '<li style="margin-bottom:4px">Slot ' + (c.a.idx + 1) + ' (' + c.a.origHex + ' &rarr; <span style="color:' + simHexA + '">' + simHexA + '</span>) vs Slot ' + (c.b.idx + 1) + ' (' + c.b.origHex + ' &rarr; <span style="color:' + simHexB + '">' + simHexB + '</span>) [&Delta;' + c.dist + ']</li>';
+    });
+    html += '</ul>';
   }
-}
-$('runAuditBtn').addEventListener('click', runAccessibilityAudit);
-
-$('cbSim').addEventListener('change', e => {
-  document.body.className = document.body.className.replace(/\bsim-\w+/g, '').trim();
-  if (e.target.value !== 'none') document.body.classList.add('sim-' + e.target.value);
+  $('auditReport').innerHTML = html;
 });
-
-function formatPaletteOutput(fmt) {
-  const active = swatches.filter(Boolean);
-  const pName = (name || 'palette').trim() || 'palette';
-  const safeSlug = pName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'palette';
-
-  if (fmt === 'hex') return active.map(toHex).join(', ');
-  if (fmt === 'rgb') return active.map(s => 'rgb(' + swRgb(s).join(', ') + ')').join('\n');
-  if (fmt === 'hsl') return active.map(s => { const [h, sat, l] = rgbToHsl(...swRgb(s)); return 'hsl(' + h + ', ' + sat + '%, ' + l + '%)'; }).join('\n');
-  if (fmt === 'oklch') return active.map(s => 'oklch(' + rgbToOklch(swRgb(s)) + ')').join('\n');
-  if (fmt === 'css') {
-    return ':root {\n' + active.map((s, i) => '  --' + safeSlug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n') + '\n}';
-  }
-  if (fmt === 'scss') {
-    return active.map((s, i) => '$' + safeSlug + '-' + (i + 1) + ': ' + toHex(s) + ';').join('\n');
-  }
-  if (fmt === 'tailwind') {
-    const entries = active.map((s, i) => "        '" + (i + 1) + "': '" + toHex(s) + "'").join(',\n');
-    return "module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '" + safeSlug + "': {\n" + entries + "\n        }\n      }\n    }\n  }\n};";
-  }
-  if (fmt === 'svg') {
-    const w = 60, h = 60;
-    const rects = active.map((s, i) => '  <rect x="' + (i * w) + '" y="0" width="' + w + '" height="' + h + '" fill="' + toHex(s) + '"/>').join('\n');
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + (active.length * w) + '" height="' + h + '" viewBox="0 0 ' + (active.length * w) + ' ' + h + '">\n' + rects + '\n</svg>';
-  }
-  if (fmt === 'json') {
-    return JSON.stringify({ name: pName, swatches: active.map(toHex) }, null, 2);
-  }
-  return active.map(toHex).join('\n');
-}
-
-function updateTextExport() {
-  const fmt = $('txtFmt').value;
-  $('pasteBox').value = formatPaletteOutput(fmt);
-}
-
-$('txtFmt').addEventListener('change', updateTextExport);
-$$('[data-exfmt]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    $('txtFmt').value = btn.dataset.exfmt;
-    updateTextExport();
-  });
-});
-
-$('copyTxtBtn').addEventListener('click', () => {
-  navigator.clipboard?.writeText($('pasteBox').value);
-  toast('Copied Export Buffer');
-});
-
-$('dlTxtBtn').addEventListener('click', () => {
-  const fmt = $('txtFmt').value;
-  const extMap = { css: 'css', scss: 'scss', tailwind: 'js', svg: 'svg', json: 'json' };
-  const ext = extMap[fmt] || 'txt';
-  const blob = new Blob([$('pasteBox').value], { type: 'text/plain;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'chromatik_palette') + '.' + ext;
-  a.click();
-  toast('Downloaded .' + ext);
-});
-
-$('importPasteBtn').addEventListener('click', () => {
-  const raw = $('pasteBox').value;
-  const hexMatches = raw.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g) || [];
-  if (!hexMatches.length) return toast('No valid HEX codes found');
-  const parsed = hexMatches.map(fromHex).filter(Boolean);
-  addToEmpty(parsed, true, name || 'IMPORTED_PALETTE');
-});
-
-function buildSwatchesArchiveBytes(paletteName, swatchArray) {
-  const zip = new JSZip();
-  const procreateSwatches = swatchArray.map(sw => {
-    if (!sw) return null;
-    return {
-      hue: sw.hue,
-      saturation: sw.saturation,
-      brightness: sw.brightness,
-      alpha: 1,
-      colorSpace: 0
-    };
-  });
-  const payload = [{
-    name: paletteName || 'Chromatik Palette',
-    swatches: procreateSwatches
-  }];
-  zip.file('Swatches.json', JSON.stringify(payload));
-  return zip.generateAsync({ type: 'uint8array' });
-}
-
-$('saveBtn').addEventListener('click', async () => {
-  try {
-    const bytes = await buildSwatchesArchiveBytes(name || 'Chromatik Palette', swatches);
-    const blob = new Blob([bytes], { type: 'application/octet-stream' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = (name || 'Chromatik_Palette') + '.swatches';
-    a.click();
-    toast('Exported Procreate .swatches');
-  } catch (err) {
-    toast('Export failed: ' + err.message);
-  }
-});
-
-$('fileInput').addEventListener('change', async e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    const zip = await JSZip.loadAsync(file);
-    const jsonFile = zip.file('Swatches.json');
-    if (!jsonFile) throw new Error('Missing Swatches.json');
-    const txt = await jsonFile.async('string');
-    const parsed = JSON.parse(txt);
-    const first = Array.isArray(parsed) ? parsed[0] : parsed;
-    if (first && Array.isArray(first.swatches)) {
-      const loaded = first.swatches.slice(0, SLOTS).map(s => s ? {
-        hue: clamp(Number(s.hue) || 0, 0, 1),
-        saturation: clamp(Number(s.saturation) || 0, 0, 1),
-        brightness: clamp(Number(s.brightness) || 0, 0, 1),
-        alpha: 1, colorSpace: 0
-      } : null);
-      while (loaded.length < SLOTS) loaded.push(null);
-      commitNow();
-      name = first.name || file.name.replace(/\.swatches$/i, '');
-      swatches = loaded;
-      render(); commitNow();
-      toast('Loaded ' + name);
-    }
-  } catch (err) {
-    toast('Invalid .swatches file');
-  }
-  e.target.value = '';
-});
-
-$('aseBtn').addEventListener('click', () => {
-  const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No swatches to export');
-  const blocks = [];
-  active.forEach((sw, i) => {
-    const [r, g, b] = swRgb(sw).map(v => v / 255);
-    const label = 'Color ' + (i + 1);
-    const nameChars = [...label].map(ch => ch.charCodeAt(0));
-    nameChars.push(0);
-    const entryLen = 2 + nameChars.length * 2 + 4 + 12 + 2;
-    const buf = new ArrayBuffer(entryLen);
-    const view = new DataView(buf);
-    let off = 0;
-    view.setUint16(off, 0x0001, false); off += 2;
-    view.setUint32(off, entryLen - 6, false); off += 4;
-    view.setUint16(off, nameChars.length, false); off += 2;
-    nameChars.forEach(code => { view.setUint16(off, code, false); off += 2; });
-    view.setUint8(off, 0x52); view.setUint8(off + 1, 0x47); view.setUint8(off + 2, 0x42); view.setUint8(off + 3, 0x20); off += 4;
-    view.setFloat32(off, r, false); off += 4;
-    view.setFloat32(off, g, false); off += 4;
-    view.setFloat32(off, b, false); off += 4;
-    view.setUint16(off, 0, false);
-    blocks.push(new Uint8Array(buf));
-  });
-
-  const totalBody = blocks.reduce((acc, b) => acc + b.length, 0);
-  const header = new ArrayBuffer(12);
-  const hView = new DataView(header);
-  hView.setUint8(0, 0x41); hView.setUint8(1, 0x53); hView.setUint8(2, 0x45); hView.setUint8(3, 0x46);
-  hView.setUint16(4, 1, false);
-  hView.setUint16(6, 0, false);
-  hView.setUint32(8, active.length, false);
-
-  const out = new Uint8Array(12 + totalBody);
-  out.set(new Uint8Array(header), 0);
-  let pos = 12;
-  blocks.forEach(b => { out.set(b, pos); pos += b.length; });
-
-  const blob = new Blob([out], { type: 'application/octet-stream' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (name || 'Chromatik_Palette') + '.ase';
-  a.click();
-  toast('Exported Adobe .ASE');
-});
-
-$('cardBtn').addEventListener('click', () => {
-  const active = swatches.filter(Boolean);
-  if (!active.length) return toast('No swatches for card');
-  const c = document.createElement('canvas');
-  c.width = 1200; c.height = 630;
-  const g = c.getContext('2d');
-  g.fillStyle = '#0a0d14';
-  g.fillRect(0, 0, 1200, 630);
-
-  g.fillStyle = '#f3f4f6';
-  g.font = '800 36px Outfit, sans-serif';
-  g.fillText((name || 'CHROMATIK PALETTE').toUpperCase(), 60, 82);
-
-  const cols = Math.min(active.length, 10);
-  const rows = Math.ceil(active.length / cols);
-  const padX = 60, topY = 120;
-  const gap = 16;
-  const swW = (1200 - padX * 2 - gap * (cols - 1)) / cols;
-  const swH = Math.min(380, (440 - gap * (rows - 1)) / rows);
-
-  active.forEach((sw, i) => {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = padX + col * (swW + gap);
-    const y = topY + row * (swH + gap);
-    const hex = toHex(sw);
-    g.fillStyle = hex;
-    g.beginPath();
-    g.roundRect(x, y, swW, swH, 12);
-    g.fill();
-
-    if (active.length <= 15) {
-      g.fillStyle = '#cbd5e1';
-      g.font = '700 13px Plus Jakarta Sans, sans-serif';
-      g.fillText(hex, x, y + swH + 22);
-    }
-  });
-
-  const a = document.createElement('a');
-  a.href = c.toDataURL('image/png');
-  a.download = (name || 'chromatik_card') + '.png';
-  a.click();
-  toast('Downloaded PNG Card');
-});
-
-$('shareUrlBtn').addEventListener('click', () => {
-  const hexes = swatches.map(s => s ? toHex(s).slice(1) : '');
-  const payload = encodeURIComponent(JSON.stringify({ n: name, s: hexes }));
-  const url = location.origin + location.pathname + '#p=' + payload;
-  navigator.clipboard?.writeText(url);
-  toast('Copied Shareable URL');
-});
-
-function loadFromHash() {
-  const m = /#p=([^&]+)/.exec(location.hash);
-  if (!m) return false;
-  try {
-    const data = JSON.parse(decodeURIComponent(m[1]));
-    if (Array.isArray(data.s)) {
-      name = data.n || '';
-      swatches = data.s.slice(0, SLOTS).map(h => h ? fromHex('#' + h) : null);
-      while (swatches.length < SLOTS) swatches.push(null);
-      return true;
-    }
-  } catch {}
-  return false;
-}
 
 $('undoBtn').addEventListener('click', undo);
 $('redoBtn').addEventListener('click', redo);
 
 initThemeScroller();
+setThemeByIndex(3, false);
 buildHarmonyWheel();
 buildPins();
+renderTrendingStrip();
+populateThemeCatalog();
+initHueMatrixTab();
 renderGradStops();
 updateGradientPreview();
 updateRamp();
-initHueMatrixTab();
-initMasterThemes();
 renderLibrary();
 
-const loadedHash = loadFromHash();
+const loadedFromUrl = loadFromHash();
+if (!loadedFromUrl) {
+  loadIntoFirstFive(AMETHYST_TO_ORCHID_HEXES, 'AMETHYST_ORCHID');
+} else {
+  render();
+}
 steps = [snap()];
 histIndex = 0;
 updateHistoryButtons();
-render();
-if (loadedHash) toast('Loaded Shared Palette');
-
 })();
 </script>
 </body>
