@@ -1,3 +1,243 @@
-🎨 Chromatik — Elite EditionPalette Lab & Procreate Command EngineChromatik is a zero-build, single-file web application for designers, digital illustrators, and frontend developers. It combines perceptual OKLab color science, interactive harmony wheels, vision-based image extraction, accessibility auditing, and direct export to Procreate (.swatches), Adobe Swatch Exchange (.ase), Tailwind CSS, CSS/SCSS variables, and PNG swatch cards.✨ Key Features🎛️ 30-Slot Palette Grid & Quick 5-Swatch BarQuick 5-Swatch Bar: Synced live with Grid Slots 1–5 for rapid ideation, one-click HEX copying, and individual slot locking.30-Slot Interactive Matrix: Drag-and-drop reordering, Shift-click range multi-selection, Ctrl/Cmd-click multi-selection, right-click purging, and slot locking (🔒).Smart Palette Actions:Invert: Invert RGB values of all unlocked swatches.Harmonize: Pull unlocked swatches toward the active color harmony rule.+ Fill Empty: Automatically populate open slots using variations of the active harmony.Global Palette Shift: Non-destructively preview and commit Hue, Saturation, Brightness, and Warm/Cool Temperature shifts across the entire palette.🧪 Color Lab Matrix & Perceptual ScalesMulti-Space Precision: Edit colors simultaneously in HEX, RGB, and HSB with live readouts for HSL, CMYK, and OKLCH.OKLab Perceptual Scales: Auto-generates 10-step Tailwind Scales, 10-step Hue Shifts, and 30-step Tones & Shades Matrices with one-click deployment or drag-and-drop into any slot.Interactive Harmony Wheel: Supports Analogous, Complementary, Split-Complementary, Triadic, Tetradic, and Monochrome harmonies with draggable hue spokes.10-Slot Pin Matrix: Scratchpad for staging and comparing candidate colors without altering your active grid.🛠️ Advanced Studio Tools📊 Multi-Stop Gradient Engine: Build linear, radial, and conic CSS gradients with OKLab perceptual color interpolation, copy production CSS, or sample 10, 20, or 30 stops directly into the grid.📈 Tonal Ramp Generator: Generate custom 3–30 step ramps (Black → Color → White, Dark → Light, Tints, or Shades).🌈 Hue Step Matrix (H000–H350 + B&W): Structured value/saturation ladders across 15 hue angles plus a 5%-step grayscale ramp.✨ AI Prompt Palette Synthesizer: Generate 10-swatch palettes from descriptive prompts and mood presets (Vibrant, Pastel, Nocturnal/Darkmode, Earthy, Luxury).🖼️ Vision Extraction Engine: Load images via file upload, drag-and-drop, or URL; inspect pixels with a zoomable loupe; or auto-extract 10 perceptually distinct colors by mood (Balanced, Hyper Colorful, High Brightness, Muted, Deep Shadow).🎨 Master Color Themes & Skin Tone Catalog: Curated library spanning 12 categories—including Skin Tones organized by Undertone (Cool, Warm, Neutral, Olive), Monk Skin Tone Scale (01–10), Fitzpatrick Phototypes (I–VI), and Complexion Grades—complete with a real-time Warm ↔ Cool temperature slider.📁 Project Collections & Archive: Save, organize by folder, and reload palettes via localStorage.👁️ Accessibility, Live Preview & UI ThemesColor Vision Deficiency (CVD) Simulator & Audit: Live viewport filters and mathematical $\Delta E$ conflict scanning for Protanopia, Deuteranopia, Tritanopia, and Achromatopsia.WCAG Contrast Helper: Instant contrast ratio badges (AAA, AA, AA-LG, FAIL) tested against light (#F8FAFC) and dark (#090D16) surfaces, plus lowest-contrast pair detection across your active palette.Live HTML Preview Mode: Toggle a full-screen sandboxed preview displaying your active palette alongside the organized skin tone matrix.5 Warm-to-Cool Studio Themes: Smoothly scroll or click between Ember, Sand, Neutral, Cobalt, and Glacier.📦 Supported Import & Export FormatsFormatDirectionUse CaseProcreate (.swatches / .zip)Import & ExportDirect HSB swatch import/export for Procreate on iPadAdobe Swatch Exchange (.ase)ExportCompatible with Photoshop, Illustrator, and InDesignPNG Swatch Card (.png)ExportHigh-resolution visual palette card with title and HEX labelsCSS / SCSS VariablesExportReady-to-paste :root custom properties or $scss variablesTailwind Config (tailwind.config.js)ExportStructured theme.extend.colors object (100–900+)SVG Swatch Strip (.svg)ExportVector color strip for Figma, Sketch, or documentationJSON / HEX / RGB / HSL / OKLCHImport & ExportPaste any block of HEX codes to bulk-import, or export structured JSONShareable URL Hash (#p=...)Import & ExportEncode your palette name and HEX values directly into a shareable link🚀 Getting StartedBecause Chromatik is built as a self-contained single-file web app, there are no dependencies to install and no build steps required.Clone or download the repository:git clone https://github.com/your-username/chromatik.git
-Open Chromatik Computer.html directly in any modern browser (Chrome, Edge, Safari, Firefox), or serve it locally:npx serve .
-Note: Procreate .swatches import/export uses JSZip via CDN. All other features—including .ase, .png, CSS, Tailwind, JSON, and SVG exports—work 100% offline.⌨️ Keyboard ShortcutsShortcutActionSpaceRandomize all unlocked swatches?Open / close Keyboard Shortcuts modal1 – 9Jump directly to Palette Slots 1 through 9Ctrl / Cmd + ZUndo last change (50-step history)Ctrl / Cmd + Y or Ctrl / Cmd + Shift + ZRedo changeShift + ClickMulti-select a contiguous range of slotsCtrl / Cmd + ClickToggle individual slots in multi-selectionRight-Click (on slot/pin)Clear individual swatch or pinEscClose modal, exit Live Preview, or clear multi-selection📄 LicenseDistributed under the MIT License. Feel free to fork, customize, and integrate into your creative or design-system workflow.
+================================================================================
+
+CHROMATIK
+
+Palette Lab & Procreate Command Engine
+
+https://chromatik.neocities.org/
+
+================================================================================
+
+
+
+OVERVIEW
+
+--------------------------------------------------------------------------------
+
+Chromatik is a single-file, browser-based color palette studio, accessibility
+
+auditor, and Procreate swatch engine. Built with zero build-step dependencies,
+
+it provides digital artists, illustrators, and UI/UX designers with a complete
+
+30-slot palette workspace, perceptual OKLCH/OKLab color math, vision extraction,
+
+and multi-format exports.
+
+
+
+
+
+KEY FEATURES
+
+--------------------------------------------------------------------------------
+
+1. 30-Slot Palette Grid & Quick 5-Swatch Bar
+
+   - Drag-and-drop swatch reordering, Shift+Click range selection, and
+
+     Ctrl/Cmd+Click multi-selection.
+
+   - Individual slot locking to protect key colors during randomization,
+
+     sorting, inversion, or global shifts.
+
+   - Synced Quick 5-Swatch Bar (Slots 1-5) with curated trending palettes.
+
+   - Real-time Harmony & Balance Analyzer tracking average saturation,
+
+     brightness, warm/cool ratios, and lowest-contrast swatch pairs.
+
+
+
+2. Color Lab Matrix & Perceptual Scales
+
+   - Precision editing across HEX, RGB, and HSB sliders/inputs.
+
+   - Automated human color naming and color psychology notes.
+
+   - Instant generation of 10-step Tailwind Scales, 10-step Hue shifts, and
+
+     30-step OKLab Tones & Shades matrices.
+
+   - Interactive Harmony Wheel supporting Analogous, Complementary, Split
+
+     Complementary, Triadic, Tetradic, and Monochrome harmonies.
+
+   - 10-slot Pin Matrix for temporary color staging.
+
+
+
+3. Accessibility & Color Vision Simulator
+
+   - Live viewport simulation for Protanopia, Deuteranopia, Tritanopia, and
+
+     Achromatopsia.
+
+   - Real-time WCAG contrast ratio checks (AA / AAA) against light (#F8FAFC)
+
+     and dark (#090D16) backgrounds.
+
+   - Automated Delta-E palette conflict scanner to flag indistinguishable
+
+     color pairs under color vision deficiencies.
+
+
+
+4. Advanced Studio Tools
+
+   - Multi-Stop Gradient Builder: Linear, radial, and conic CSS gradients with
+
+     OKLab color sampling into 10, 20, or 30 grid slots.
+
+   - Tonal Ramp Generator: Black-to-Color-to-White, Dark-to-Light, Tints, and
+
+     Shades ramps in OKLab space.
+
+   - Hue Step Matrix (H000-H350 & B&W): Structured 19-step saturation/brightness
+
+     matrices every 25 degrees plus a 5% grayscale ramp.
+
+   - AI Prompt Palette Synthesizer: Generates mood- and keyword-driven palettes
+
+     across Vibrant, Pastel, Darkmode, Earthy, and Luxury profiles.
+
+   - Vision Extraction Engine: Upload local images or fetch URLs with an
+
+     interactive zoom/pan loupe and perceptual mood-weighted auto-extraction.
+
+   - Master Color Themes Catalog: Over 12 categorized collections (Seasonal,
+
+     Metals, Nature, Neon, Painting Mediums, and organized Skin Tones by
+
+     Undertone, Monk 01-10 Scale, Fitzpatrick Types I-VI, and Complexion)
+
+     with a live Warm-to-Cool temperature slider.
+
+   - Live HTML Preview Mode: Full-screen preview stage displaying active
+
+     swatches alongside organized skin tone matrices.
+
+
+
+5. Import, Export & Persistence
+
+   - Procreate (.swatches): Direct import and export of native Procreate
+
+     swatch archives (powered by JSZip).
+
+   - Adobe Swatch Exchange (.ASE): Binary .ase export for Photoshop,
+
+     Illustrator, and InDesign.
+
+   - Developer & Asset Formats: HEX, RGB, HSL, OKLCH, CSS Variables, SCSS
+
+     Variables, Tailwind Config, SVG Swatch Strip, JSON, and high-res PNG
+
+     swatch cards.
+
+   - Project Archive & URL Sharing: LocalStorage folder archive and hash-based
+
+     shareable palette URLs.
+
+
+
+
+
+GETTING STARTED
+
+--------------------------------------------------------------------------------
+
+No installation, package manager, or local server is required.
+
+
+
+1. Download or clone this repository.
+
+2. Open `Chromatik Computer.html` in any modern web browser (Chrome, Edge,
+
+   Firefox, Safari).
+
+3. Start building palettes immediately—or click "Load" to import an existing
+
+   Procreate `.swatches` file.
+
+
+
+Note: Exporting/importing Procreate `.swatches` files uses JSZip loaded via
+
+CDN. All other features work 100% offline.
+
+
+
+
+
+KEYBOARD SHORTCUTS
+
+--------------------------------------------------------------------------------
+
+SPACE               Randomize all unlocked swatches
+
+?                   Open / close Keyboard Shortcuts modal
+
+1 - 9               Jump directly to Palette Slots 1 through 9
+
+Ctrl / Cmd + Z      Undo last action
+
+Ctrl / Cmd + Y      Redo action
+
+Ctrl / Cmd + Shift + Z  Redo action (alternative)
+
+Shift + Click       Select a range of swatches
+
+Ctrl / Cmd + Click  Toggle individual swatches in multi-selection
+
+Right-Click         Clear an unlocked slot or pin
+
+ESC                 Close modal, exit Live Preview, or clear multi-selection
+
+
+
+
+
+UI THEMES
+
+--------------------------------------------------------------------------------
+
+Chromatik includes 5 warm-to-cool workspace themes accessible via the header
+
+temperature scroller:
+
+- Ember   (Warm Dark)
+
+- Sand    (Warm Light)
+
+- Neutral (Balanced Dark)
+
+- Cobalt  (Cool Dark - Default)
+
+- Glacier (Arctic Dark)
+
+
+
+
+
+DEPENDENCIES
+
+--------------------------------------------------------------------------------
+
+- JSZip v3.10.1 (CDN) - Used for packing and unpacking `.swatches` archives.
+
+- Google Fonts (Plus Jakarta Sans & Outfit) - UI typography.
+
+
+
+
+
+LICENSE
+
+--------------------------------------------------------------------------------
+
+MIT License
+
+================================================================================
