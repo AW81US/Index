@@ -170,7 +170,7 @@ No installation, package manager, or local build server is required.
 
 1. Download or clone this repository.
 
-2. Open "Chromatik Computer.html" in any modern web browser (Chrome, Edge,
+2. Open "Chromatik.html" in any modern web browser (Chrome, Edge,
 
    Firefox, or Safari).
 
